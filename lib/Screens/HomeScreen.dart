@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen>
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xffdbf1e9),
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Color(0xFFCBE8DD),
+        selectedItemColor: Color(0xFF009d60),
         unselectedItemColor: Color(0xFF009d60),
         selectedLabelStyle: TextStyle(
           color: Color(0xFF009d60),

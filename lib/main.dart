@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:greendice/Pages/MembershipPage.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
+import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
 import 'package:greendice/Screens/SplashScreen.dart';
+import 'Screens/ForgotPasswordScreen.dart';
 import 'Screens/HomeScreen.dart';
 
 void main() {

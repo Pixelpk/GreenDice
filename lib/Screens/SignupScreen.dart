@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'HomeScreen.dart';
 import 'SigninScreen.dart';
+import '../ModelClasses/SignupUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  var _formkey = GlobalKey<FormState>();
+
   TextEditingController user = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -23,63 +26,73 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController confirmpass = TextEditingController();
 
   Future register() async {
-    Fluttertoast.showToast(
-      msg: user.text,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-    );
-
-    Fluttertoast.showToast(
-      msg: email.text,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-    );
-
-    Fluttertoast.showToast(
-      msg: phone.text,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-    );
-
-    Fluttertoast.showToast(
-      msg: pass.text,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-    );
-
-    Fluttertoast.showToast(
-      msg: confirmpass.text,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-    );
-
-    var response = await http
-        .post(Uri.parse("http://syedu12.sg-host.com/api/register"), body: {
-      "first_name": user.text,
-      "last_name": user.text,
-      "email": email.text,
-      "phone": phone.text,
-      "password": pass.text,
-      "password_confirmation": confirmpass.text,
-    });
-
-    var data = json.decode(response.body);
-    if (data == "0") {
-      Fluttertoast.showToast(
-        msg: response.body,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
+    final isValid = _formkey.currentState!.validate();
+    if (!isValid) {
+      return;
     } else {
       Fluttertoast.showToast(
-        msg: response.body,
+        msg: user.text,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen(title: "HomScreen")),
+
+      Fluttertoast.showToast(
+        msg: email.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
       );
+
+      Fluttertoast.showToast(
+        msg: phone.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+
+      Fluttertoast.showToast(
+        msg: pass.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+
+      Fluttertoast.showToast(
+        msg: confirmpass.text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+
+      var response = await http
+          .post(Uri.parse("http://syedu12.sg-host.com/api/register"), body: {
+        "first_name": user.text,
+        "last_name": user.text,
+        "email": email.text,
+        "phone": phone.text,
+        "password": pass.text,
+        "password_confirmation": confirmpass.text,
+      });
+
+      var data = json.decode(response.body);
+      SignupUser signupScreen = SignupUser.fromJson(jsonDecode(response.body));
+      print('${signupScreen.success}');
+      var val = '${signupScreen.success}';
+
+      if (val == "0") {
+        Fluttertoast.showToast(
+          msg: response.body,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: response.body,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(title: "HomScreen")),
+        );
+      }
     }
   }
 
@@ -110,124 +123,154 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Stack(
             children: [
               Container(
-
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-
                 padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.35,
-                    ),
-                    TextField(
-                      controller: user,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Name',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextField(
-                      controller: email,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Email',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextField(
-                      controller: phone,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Phone Number',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextField(
-                      controller: pass,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextField(
-                      controller: confirmpass,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Confirm Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.07,
-                      child: ElevatedButton(
-                          child: Text("Sign Up".toUpperCase(),
-                              style: TextStyle(fontSize: 14)),
-                          style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xff009E61)),
-                              alignment: Alignment.center,
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                        color: Color(0xff009E61),
-                                      )))),
-                          onPressed: () => register()),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Already a user?",
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              signin();
-                            },
-                            child: Text(
-                              "  Login",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0xff005333),
+                child: Form(
+                  key: _formkey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.35,
+                        ),
+                        TextFormField(
+                          controller: user,
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              hintText: 'Name',
+                              hintStyle: TextStyle(
+                                color: Color(0xff9B9B9B),
+                              )),
+                          validator: (user) {
+                            if (user!.isEmpty) {
+                              return 'Please enter user name';
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        TextFormField(
+                          controller: email,
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              hintText: 'Email',
+                              hintStyle: TextStyle(
+                                color: Color(0xff9B9B9B),
+                              )),
+                          validator: (user) {
+                            if (user!.isEmpty) {
+                              return 'Please enter email';
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        TextFormField(
+                          controller: phone,
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              hintText: 'Phone Number',
+                              hintStyle: TextStyle(
+                                color: Color(0xff9B9B9B),
+                              )),
+                          validator: (user) {
+                            if (user!.isEmpty) {
+                              return 'Please enter Phone number';
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        TextFormField(
+                          controller: pass,
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              hintText: 'Password',
+                              hintStyle: TextStyle(
+                                color: Color(0xff9B9B9B),
+                              )),
+                          validator: (user) {
+                            if (user!.isEmpty) {
+                              return 'Please enter Password}';
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        TextFormField(
+                          controller: confirmpass,
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              hintText: 'Confirm Password',
+                              hintStyle: TextStyle(
+                                color: Color(0xff9B9B9B),
+                              )),
+                          validator: (user) {
+                            if (user!.isEmpty) {
+                              return 'Please enter Confirm Password}';
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.07,
+                          child: ElevatedButton(
+                              child: Text("Sign Up".toUpperCase(),
+                                  style: TextStyle(fontSize: 14)),
+                              style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Color(0xff009E61)),
+                                  alignment: Alignment.center,
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                          side: BorderSide(
+                                            color: Color(0xff009E61),
+                                          )))),
+                              onPressed: () => register()),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Already a user?",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
                               ),
-                            ),
-                          ),
-                        ])
-                  ],
+                              GestureDetector(
+                                onTap: () {
+                                  signin();
+                                },
+                                child: Text(
+                                  "  Login",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xff005333),
+                                  ),
+                                ),
+                              ),
+                            ])
+                      ],
+                    ),
+                  ),
                 ),
               ),
               Positioned(

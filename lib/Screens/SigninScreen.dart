@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'HomeScreen.dart';
 import 'SignupScreen.dart';
+import '../ModelClasses/SigninUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -43,7 +44,11 @@ class _SigninScreenState extends State<SigninScreen> {
     });
 
     var data = json.decode(response.body);
-    if(data == "0")
+    SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
+    var val = '${signinUser.success}';
+
+    print(val);
+    if(val == "0")
     {
       Fluttertoast.showToast(
         msg: response.body,

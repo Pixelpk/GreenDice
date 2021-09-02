@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
 
@@ -56,6 +57,7 @@ class _MembershipPageState extends State<MembershipPage> {
 
       body: SafeArea(
         child: Column(
+
           children: [
             Stack(
               children: [
@@ -64,21 +66,16 @@ class _MembershipPageState extends State<MembershipPage> {
                   height: MediaQuery.of(context).size.height * 0.21,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage(
-                              "assets/images/membershipimage.png"),
+                          image:
+                              AssetImage("assets/images/membershipimage.png"),
                           fit: BoxFit.cover)),
                 ),
-
                 Column(
                   children: [
                     SizedBox(
-
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.15,
-
-
                       child: Row(
-
                         children: [
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.18,
@@ -131,15 +128,342 @@ class _MembershipPageState extends State<MembershipPage> {
               ],
             ),
             Container(
-
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.03,
               color: Color(0xff009E61),
-
             ),
-            /*Center(
-              child: Text("This is Page 1"),
-            ),*/
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+              child: Center(
+                child: Column(children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Stack(
+
+                    overflow: Overflow.visible,
+
+                    children: [
+
+
+
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        child: new Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Center(
+                            child: Text("Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , as he has nice gate speed , settle behind leaders, look to be running on.",style: TextStyle(
+                            ),
+
+                            textAlign: TextAlign.left,
+
+
+                            ),
+                          ),
+
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                              image: new AssetImage(
+                                  "assets/images/membership_bg1.png"),
+                              fit: BoxFit.cover,
+                            ),
+
+
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        width: MediaQuery.of(context).size.width,
+                        child: Container(
+                          color: Color(0xff009E61),
+                          child: Row(
+                            children: [
+                              Text("     Classic Annual",style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xffffffff),
+                              ),),
+
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+
+                              ),
+
+                              Stack(
+                                children: [
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      child: SizedBox(
+                                        height: MediaQuery.of(context).size.height * 0.1,
+                                        width: MediaQuery.of(context).size.width * 0.3,
+                                        child: Container(
+
+
+
+                                          decoration: new BoxDecoration(
+                                            image: new DecorationImage(
+                                              image: new AssetImage(
+                                                  "assets/images/goldcrownbg.png"),
+                                              fit: BoxFit.cover,
+                                            ),
+
+
+                                          ),
+                                        ),
+
+                                      ),
+
+
+                                    ),
+                                  ),
+
+                                  Positioned(
+                                    top: 15,
+                                    left: 30,
+                                    child: Row(
+
+                                      children: [
+                                        Text("\$1550",style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xffffffff),
+                                        ),),
+
+
+
+                                      ],
+
+                                    ),
+                                  ),
+
+
+                                ],
+                              ),
+                            ],
+                          ),
+
+                        ),
+                      ),
+
+                      Positioned(
+                        top: 160,
+                        right: 10,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          child: ElevatedButton(
+                              child: Text("Subscribe", style: TextStyle(fontSize: 14)),
+                              style: ButtonStyle(
+                                  foregroundColor: MaterialStateProperty.all<Color>(
+                                      Colors.white),
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                      Color(0xffA40303)),
+                                  alignment: Alignment.center,
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                          side: BorderSide(
+                                            color: Color(0xffA40303),
+                                          )))),
+                              onPressed: () => null),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                 /* SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Stack(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width,
+                        child: new Container(
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                              image: new AssetImage(
+                                  "assets/images/membership_bg2.png"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),*/
+                ]),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+              child: Center(
+                child: Column(children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.00,
+                  ),
+                  Stack(
+
+                    overflow: Overflow.visible,
+
+                    children: [
+
+
+
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        child: new Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Center(
+                            child: Text("Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , as he has nice gate speed , settle behind leaders, look to be running on.",style: TextStyle(
+                            ),
+
+                              textAlign: TextAlign.left,
+
+
+                            ),
+                          ),
+
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                              image: new AssetImage(
+                                  "assets/images/membership_bg2.png"),
+                              fit: BoxFit.cover,
+                            ),
+
+
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        width: MediaQuery.of(context).size.width,
+                        child: Container(
+                          color: Color(0xff009E61),
+                          child: Row(
+                            children: [
+                              Text("     Chairman`s Club",style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xffffffff),
+                              ),),
+
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.22,
+
+                              ),
+
+                              Stack(
+                                children: [
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      child: SizedBox(
+                                        height: MediaQuery.of(context).size.height * 0.1,
+                                        width: MediaQuery.of(context).size.width * 0.3,
+                                        child: Container(
+
+
+
+                                          decoration: new BoxDecoration(
+                                            image: new DecorationImage(
+                                              image: new AssetImage(
+                                                  "assets/images/silvercrownbg.png"),
+                                              fit: BoxFit.cover,
+                                            ),
+
+
+                                          ),
+                                        ),
+
+                                      ),
+
+
+                                    ),
+                                  ),
+
+                                  Positioned(
+                                    top: 15,
+                                    left: 30,
+                                    child: Row(
+
+                                      children: [
+                                        Text("\$220",style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xffffffff),
+                                        ),),
+
+
+
+                                      ],
+
+                                    ),
+                                  ),
+
+
+                                ],
+                              ),
+                            ],
+                          ),
+
+                        ),
+                      ),
+
+                      Positioned(
+                        top: 160,
+                        right: 10,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          child: ElevatedButton(
+                              child: Text("Subscribe", style: TextStyle(fontSize: 14)),
+                              style: ButtonStyle(
+                                  foregroundColor: MaterialStateProperty.all<Color>(
+                                      Colors.white),
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                      Color(0xffA40303)),
+                                  alignment: Alignment.center,
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                          side: BorderSide(
+                                            color: Color(0xffA40303),
+                                          )))),
+                              onPressed: () => null),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                  /* SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Stack(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width,
+                        child: new Container(
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                              image: new AssetImage(
+                                  "assets/images/membership_bg2.png"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),*/
+                ]),
+              ),
+            ),
           ],
         ),
       ),
