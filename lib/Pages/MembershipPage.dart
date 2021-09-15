@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MembershipPage extends StatefulWidget {
   MembershipPage({Key? key, required this.title}) : super(key: key);
@@ -13,9 +14,31 @@ class MembershipPage extends StatefulWidget {
 }
 
 class _MembershipPageState extends State<MembershipPage> {
+
+  late String firstname,lastname,photo;
+  late final access_token;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
+
+    Loadprefs().then((value) =>
+    {
+    });
+  }
+
+  Future<void> Loadprefs() async{
+
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      access_token = prefs.getString('access_token') ?? '';
+      firstname = (prefs.getString('fname') ?? '');
+      lastname = (prefs.getString('lname') ?? '');
+      photo = (prefs.getString('image') ?? '');
+      isLoading = false;
+    });
+
   }
 
   void signin() {
@@ -56,7 +79,7 @@ class _MembershipPageState extends State<MembershipPage> {
           )),*/
 
       body: SafeArea(
-        child: Column(
+        child: isLoading ? CircularProgressIndicator() : Column(
 
           children: [
             Stack(
@@ -84,18 +107,19 @@ class _MembershipPageState extends State<MembershipPage> {
                           Container(
                             height: MediaQuery.of(context).size.height * 0.06,
                             width: MediaQuery.of(context).size.width * 0.1,
-                            decoration: BoxDecoration(
+                           /* decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage(
                                         "assets/images/profileicon.png"),
-                                    fit: BoxFit.cover)),
+                                    fit: BoxFit.cover)),*/
+                            child: photo == '' ? Image.asset("assets/images/profileimage.png") : Image.network(photo),
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.03,
                           ),
                           Container(
                             child: Text(
-                              "John Watson",
+                              firstname +" "+ lastname,
                               style: TextStyle(
                                   fontSize: 14, color: Color(0xffffffff)),
                             ),
@@ -231,6 +255,7 @@ class _MembershipPageState extends State<MembershipPage> {
                                           fontSize: 16,
                                           color: Color(0xffffffff),
                                         ),),
+
 
 
 

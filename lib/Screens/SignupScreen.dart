@@ -20,6 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   var _formkey = GlobalKey<FormState>();
 
   TextEditingController user = TextEditingController();
+  TextEditingController user_lname = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController pass = TextEditingController();
@@ -30,40 +31,12 @@ class _SignupScreenState extends State<SignupScreen> {
     if (!isValid) {
       return;
     } else {
-      Fluttertoast.showToast(
-        msg: user.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
 
-      Fluttertoast.showToast(
-        msg: email.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-
-      Fluttertoast.showToast(
-        msg: phone.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-
-      Fluttertoast.showToast(
-        msg: pass.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-
-      Fluttertoast.showToast(
-        msg: confirmpass.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
 
       var response = await http
           .post(Uri.parse("http://syedu12.sg-host.com/api/register"), body: {
         "first_name": user.text,
-        "last_name": user.text,
+        "last_name": user_lname.text,
         "email": email.text,
         "phone": phone.text,
         "password": pass.text,
@@ -77,20 +50,20 @@ class _SignupScreenState extends State<SignupScreen> {
 
       if (val == "0") {
         Fluttertoast.showToast(
-          msg: response.body,
+          msg: '${signupScreen.message}',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
       } else {
         Fluttertoast.showToast(
-          msg: response.body,
+          msg: '${signupScreen.message}',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomeScreen(title: "HomScreen")),
+              builder: (context) => SigninScreen(title: "SigninScreen")),
         );
       }
     }
@@ -138,7 +111,23 @@ class _SignupScreenState extends State<SignupScreen> {
                           controller: user,
                           decoration: InputDecoration(
                               border: UnderlineInputBorder(),
-                              hintText: 'Name',
+                              hintText: 'First Name',
+                              hintStyle: TextStyle(
+                                color: Color(0xff9B9B9B),
+                              )),
+                          validator: (user) {
+                            if (user!.isEmpty) {
+                              return 'Please enter user name';
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ), TextFormField(
+                          controller: user_lname,
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              hintText: 'Last Name',
                               hintStyle: TextStyle(
                                 color: Color(0xff9B9B9B),
                               )),

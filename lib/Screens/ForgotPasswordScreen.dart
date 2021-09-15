@@ -29,11 +29,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!isValid) {
       return;
     } else {
-      Fluttertoast.showToast(
-        msg: email.text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
+
 
       var response = await http.post(
           Uri.parse("http://syedu12.sg-host.com/api/forgotpassword"),

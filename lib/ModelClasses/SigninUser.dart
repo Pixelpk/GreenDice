@@ -50,10 +50,10 @@ class User {
   String? lastName;
   String? email;
   String? phone;
-  Null? emailVerifiedAt;
-  Null? photo;
+  String? emailVerifiedAt;
+  String? photo;
   int? status;
-  Null? verificationCode;
+  String? verificationCode;
   String? createdAt;
   String? updatedAt;
 
@@ -79,7 +79,7 @@ class User {
     email = json['email'];
     phone = json['phone'];
     emailVerifiedAt = json['email_verified_at'];
-    photo = json['photo'];
+    photo = json['photo'] ?? '';
     status = json['status'];
     verificationCode = json['verification_code'];
     createdAt = json['created_at'];

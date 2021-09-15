@@ -21,6 +21,13 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  image_picker: ^0.8.4
+  pinput: ^1.2.0
+  flutter_calendar_carousel: ^2.0.3
+  table_calendar: ^3.0.2
+  charts_flutter: ^0.11.0
+  shared_preferences: ^2.0.7
+  syncfusion_flutter_charts: ^19.2.59
   flutter:
     sdk: flutter
 
@@ -75,6 +82,20 @@ flutter:
     - assets/images/silvercrownbg.png
     - assets/images/goldcrownbg.png
     - assets/images/silverbg.png
+    - assets/images/notifItembg.png
+    - assets/images/datebar.png
+    - assets/images/flagicon.png
+    - assets/images/playicon.png
+    - assets/images/personicon.png
+    - assets/images/horseimage.png
+    - assets/images/bottombarbg.png
+    - assets/images/winbg.png
+    - assets/images/losebg.png
+    - assets/images/flagwhite.png
+    - assets/images/playwhite.png
+    - assets/images/personw.png
+    - assets/images/trophy.png
+    - assets/images/loss.png
   # To add assets to your application, add an assets section, like this:
 
   # assets:
@@ -84,7 +105,7 @@ flutter:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
-  # For details regarding adding assets from package dependencies, see
+  # For details regarding adding assets from package dependenciesd, see
   # https://flutter.dev/assets-and-images/#from-packages
 
   # To add custom fonts to your application, add a fonts section here,
