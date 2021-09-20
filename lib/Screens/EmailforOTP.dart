@@ -23,48 +23,55 @@ class EmailforOTP extends StatefulWidget {
 
 class _EmailforOTPState extends State<EmailforOTP> {
   bool _isObscure = true;
+  var _formkey = GlobalKey<FormState>();
 
   TextEditingController email = TextEditingController();
 
 
-
   Future login()async{
 
-    final prefs = await SharedPreferences.getInstance();
+    final isValid = _formkey.currentState!.validate();
+    if (!isValid) {
+      return;
+    } else {
+      final prefs = await SharedPreferences.getInstance();
 
 
-    var response = await http.post(Uri.parse("http://syedu12.sg-host.com/api/forgotpassword"),body: {
-      "email" : email.text,
-    },
+      var response = await http.post(
+        Uri.parse("http://syedu12.sg-host.com/api/forgotpassword"), body: {
+        "email": email.text,
+      },
 
-    );
-
-    var data = json.decode(response.body);
-    UserDataFromEmail userDataFromEmail = UserDataFromEmail.fromJson(jsonDecode(response.body));
-    var val = '${userDataFromEmail.success}';
-    var access_token = '${userDataFromEmail.data!.token!.id}';
-    var verification = '${userDataFromEmail.data!.token!.verificationCode}';
-
-    print("token "+access_token);
-    print("verification "+verification);
-
-    print(val);
-    if(val == "0")
-    {
-
-    }
-    else
-    {
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => OPTScreen(title: access_token,code: verification)),
       );
 
+      var data = json.decode(response.body);
+      UserDataFromEmail userDataFromEmail = UserDataFromEmail.fromJson(
+          jsonDecode(response.body));
+      var val = '${userDataFromEmail.success}';
+
+
+      print(val);
+      if (val == "0") {
+
+        Fluttertoast.showToast(
+          msg: "User does not exists",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+
+      }
+      else {
+        var access_token = '${userDataFromEmail.data!.token!.id}';
+        var verification = '${userDataFromEmail.data!.token!.verificationCode}';
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  OPTScreen(title: access_token, code: verification)),
+        );
+      }
     }
-
-
   }
 
   @override
@@ -106,14 +113,25 @@ class _EmailforOTPState extends State<EmailforOTP> {
                     Text("Please enter the email address to reset the password."),
 
 
-                    TextField(
-                      controller: email,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Email',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
+                    Form(
+                      key: _formkey,
+                      child: TextFormField(
+                        controller: email,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Email',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text){
+
+                          if(text!.isEmpty)
+                            {
+                              return "Please enter a valid email address";
+                            }
+
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.02,

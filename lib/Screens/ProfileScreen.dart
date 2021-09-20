@@ -11,6 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'HomeScreen.dart';
+
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key, required this.title}) : super(key: key);
 
@@ -24,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   late String firstname,lastname,phone,email,photo;
   var _formkey = GlobalKey<FormState>();
+  var _formkey2 = GlobalKey<FormState>();
   //final ImagePicker _picker = ImagePicker();
   TextEditingController user_ctrl = TextEditingController();
   TextEditingController user_lname = TextEditingController();
@@ -77,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
     if(pass_ctrl.text == confirmpass_ctrl.text) {
-      final isValid = _formkey.currentState!.validate();
+      final isValid = _formkey2.currentState!.validate();
       if (!isValid) {
         return;
       } else {
@@ -261,6 +264,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fit: BoxFit.cover)),
                   ),
 
+                  Padding(
+
+                    padding: EdgeInsets.fromLTRB(15,25,0,0),
+
+                    child: InkWell(
+
+                      onTap: (){
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(title: "HomScreen")),
+                        );
+
+                      },
+
+                      child: Container(
+
+                        width: MediaQuery.of(context).size.width * 0.035,
+                        height: MediaQuery.of(context).size.height * 0.035  ,
+
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: ExactAssetImage('assets/images/back.png'),
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+
+
+                      ),
+                    ),
+                  ),
+
 
                   Positioned(
 
@@ -300,213 +336,227 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.45,
             padding: EdgeInsets.symmetric(horizontal: 40),
-            child: SingleChildScrollView(
-              child: Form(
+            child: Form(
 
-                key: _formkey,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.08,
-                    ),
-                    TextFormField(
+              key: _formkey,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                  ),
+                  TextFormField(
 
-                      controller: user_ctrl,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'First Name',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter First Name";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),TextFormField(
+                    controller: user_ctrl,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        hintText: 'First Name',
+                        hintStyle: TextStyle(
+                          color: Color(0xff9B9B9B),
+                        )),
+                    validator: (text) {
+                      if (text!.isEmpty) {
+                        return "Please enter First Name";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),TextFormField(
 
-                      controller: user_lname,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Last Name',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter Last Name";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextFormField(
-                      enabled: false,
-                      controller: email_ctrl,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Email',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter a valid Email";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextFormField(
+                    controller: user_lname,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        hintText: 'Last Name',
+                        hintStyle: TextStyle(
+                          color: Color(0xff9B9B9B),
+                        )),
+                    validator: (text) {
+                      if (text!.isEmpty) {
+                        return "Please enter Last Name";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  TextFormField(
+                    enabled: false,
+                    controller: email_ctrl,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        hintText: 'Email',
+                        hintStyle: TextStyle(
+                          color: Color(0xff9B9B9B),
+                        )),
+                    validator: (text) {
+                      if (text!.isEmpty) {
+                        return "Please enter a valid Email";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  TextFormField(
 
 
-                      controller: phone_ctrl,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Phone Number',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter Phone Number";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextFormField(
-                      controller: old_pass_ctrl,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Old Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter Old Password";
-                        }
-                        else if(text.length<5)
+                    controller: phone_ctrl,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        hintText: 'Phone Number',
+                        hintStyle: TextStyle(
+                          color: Color(0xff9B9B9B),
+                        )),
+                    validator: (text) {
+                      if (text!.isEmpty) {
+                        return "Please enter Phone Number";
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+
+            ),
+          ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.7,
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Form(
+
+                  key: _formkey2,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      TextFormField(
+                        controller: old_pass_ctrl,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Old Password',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter Old Password";
+                          }
+                          else if(text.length<5)
                           {
                             return "Password should not be less then 5 characters";
                           }
-                        return null;
-                      },
+                          return null;
+                        },
 
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ), TextFormField(
-                      controller: pass_ctrl,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'New Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter New Password";
-                        }
-                        else if(text.length<5)
-                        {
-                          return "Password should not be less then 5 characters";
-                        }
-                        return null;
-                      },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ), TextFormField(
+                        controller: pass_ctrl,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'New Password',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter New Password";
+                          }
+                          else if(text.length<5)
+                          {
+                            return "Password should not be less then 5 characters";
+                          }
+                          return null;
+                        },
 
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    TextFormField(
-                      controller: confirmpass_ctrl,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Confirm Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xff9B9B9B),
-                          )),
-                      validator: (text) {
-                        if (text!.isEmpty) {
-                          return "Please enter Confirm Password";
-                        }
-                        else if(text.length<5)
-                        {
-                          return "Password should not be less then 5 characters";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.07,
-                      child: ElevatedButton(
-                          child: Text("Update Profile".toUpperCase(),
-                              style: TextStyle(fontSize: 14)),
-                          style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xff009E61)),
-                              alignment: Alignment.center,
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                        color: Color(0xff009E61),
-                                      )))),
-                          onPressed: () => update()),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.07,
-                      child: ElevatedButton(
-                          child: Text("Update Password".toUpperCase(),
-                              style: TextStyle(fontSize: 14)),
-                          style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xff009E61)),
-                              alignment: Alignment.center,
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                        color: Color(0xff009E61),
-                                      )))),
-                          onPressed: () => changePassword()),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                  ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      TextFormField(
+                        controller: confirmpass_ctrl,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Confirm Password',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter Confirm Password";
+                          }
+                          else if(text.length<5)
+                          {
+                            return "Password should not be less then 5 characters";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        child: ElevatedButton(
+                            child: Text("Update Profile".toUpperCase(),
+                                style: TextStyle(fontSize: 14)),
+                            style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.white),
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Color(0xff009E61)),
+                                alignment: Alignment.center,
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(
+                                          color: Color(0xff009E61),
+                                        )))),
+                            onPressed: () => update()),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.01,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        child: ElevatedButton(
+                            child: Text("Update Password".toUpperCase(),
+                                style: TextStyle(fontSize: 14)),
+                            style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.white),
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Color(0xff009E61)),
+                                alignment: Alignment.center,
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(
+                                          color: Color(0xff009E61),
+                                        )))),
+                            onPressed: () => changePassword()),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.01,
+                      ),
+                    ],
+                  ),
+
                 ),
               ),
-            ),
-          ),
+
             ],
           ),
         ),

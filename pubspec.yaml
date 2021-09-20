@@ -96,6 +96,7 @@ flutter:
     - assets/images/personw.png
     - assets/images/trophy.png
     - assets/images/loss.png
+    - assets/images/back.png
   # To add assets to your application, add an assets section, like this:
 
   # assets:

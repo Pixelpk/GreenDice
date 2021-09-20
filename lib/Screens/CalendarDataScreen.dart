@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/CalDataModelClass.dart';
@@ -114,11 +115,11 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
         noDataFound = true;
       });
 
-      Fluttertoast.showToast(
+      /*Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-      );
+      );*/
       /*Navigator.push(
         context,
         MaterialPageRoute(
@@ -166,56 +167,61 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                             fit: BoxFit.cover)),
                   ),
 
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1
+                  ),
+
+                  Padding(
+                    
+                    padding: EdgeInsets.fromLTRB(15,25,0,0),
+                    
+                    child: InkWell(
+
+                      onTap: (){
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(title: "HomScreen")),
+                        );
+
+                      },
+
+                      child: Container(
+
+                        width: MediaQuery.of(context).size.width * 0.035,
+                        height: MediaQuery.of(context).size.height * 0.035  ,
+
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: ExactAssetImage('assets/images/back.png'),
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+
+
+                      ),
+                    ),
+                  ),
+
                   Column(
                     children: [
+
+
+
                       SizedBox(
 
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.15,
 
-
-                    /*    child: Row(
-
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.18,
-                              width: MediaQuery.of(context).size.width * 0.1,
-                            ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              width: MediaQuery.of(context).size.width * 0.1,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/profileicon.png"),
-                                      fit: BoxFit.cover)),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.03,
-                            ),
-                            Container(
-                              child: Text(
-                                "John Watson",
-                                style: TextStyle(
-                                    fontSize: 14, color: Color(0xffffffff)),
-                              ),
-                            ),
-                          ],
-                        ),*/
                       ),
-
-                      /*   SizedBox(
-
-                        width: MediaQuery.of(context).size.width * 1,
-
-                      ),*/
 
                       Container(
                         margin: EdgeInsets.only(
                             left: 60, top: 0, right: 0, bottom: 0),
                         width: MediaQuery.of(context).size.width,
                         child: Text(
-                          "Dashboard",
+                          "Race Data",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: 30,
@@ -348,7 +354,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                                                    fontSize: 12,
                                                    color: Colors.white
                                                ),),
-                                               Text("\$ " + notificationmodel!.data!.calenderSignal![index].oods!,style: TextStyle(
+                                               Text(notificationmodel!.data!.calenderSignal![index].oods!,style: TextStyle(
                                                    fontSize: 40,
                                                    color: Colors.white
                                                ),),

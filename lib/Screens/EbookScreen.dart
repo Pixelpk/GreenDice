@@ -145,6 +145,38 @@ class _EbookScreenState extends State<EbookScreen> {
                                 "assets/images/dashboardappbarimage.png"),
                             fit: BoxFit.cover)),
                   ),
+                  Padding(
+
+                    padding: EdgeInsets.fromLTRB(15,25,0,0),
+
+                    child: InkWell(
+
+                      onTap: (){
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(title: "HomScreen")),
+                        );
+
+                      },
+
+                      child: Container(
+
+                        width: MediaQuery.of(context).size.width * 0.035,
+                        height: MediaQuery.of(context).size.height * 0.035  ,
+
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: ExactAssetImage('assets/images/back.png'),
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+
+
+                      ),
+                    ),
+                  ),
 
                   Column(
                     children: [
@@ -194,86 +226,88 @@ class _EbookScreenState extends State<EbookScreen> {
                     shrinkWrap: true,
                     itemCount: data == null ? 0 : eBookModelClass!.data!.ebooks!.length,
                     itemBuilder: (BuildContext context,int index){
-
                       /* return new Card(
                         child: new Text(notificationmodel!.data!.notificationSignal![index].horse!),
                       );*/
-                      return Container(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                          child: Stack(
-                            overflow: Overflow.visible,
-                            children: [
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.7,
-                                width: MediaQuery.of(context).size.width,
-                                child: Container(
-                                  decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    image: new DecorationImage(
-                                      image: new AssetImage("assets/images/winbg.png"),
-                                      fit: BoxFit.cover,
+                      return InkWell(
+
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            child: Stack(
+                              overflow: Overflow.visible,
+                              children: [
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.7,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Container(
+                                    decoration: new BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      image: new DecorationImage(
+                                        image: new AssetImage("assets/images/winbg.png"),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Image.asset("assets/images/horseimage.png"),
+                                Row(
+                                  children: [
+                                    Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(18.0),
+                                        child: Image.asset("assets/images/horseimage.png"),
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                                  0.04,
-                                            ),
-                                            Text("E-book: "+(index+1).toString(),
-                                                style: TextStyle(
-                                                    fontSize: 24, color: Colors.white)),
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    0.04,
+                                              ),
+                                              Text("E-book: "+(index+1).toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 24, color: Colors.white)),
 
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                                  0.02,
-                                            ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    0.02,
+                                              ),
 
-                                            Row(
-                                              children: [
-                                                Text("Description: ",style: TextStyle(
+                                              Row(
+                                                children: [
+                                                  Text("Description: ",style: TextStyle(
 
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                    fontSize: 14
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 14
 
-                                                ),),
-                                                Text(eBookModelClass!.data!.ebooks![index].description!,
-                                                    style: TextStyle(
-                                                        fontSize: 12, color: Colors.white))
-                                              ],
-                                            ),
+                                                  ),),
+                                                  Text(eBookModelClass!.data!.ebooks![index].description!,
+                                                      style: TextStyle(
+                                                          fontSize: 12, color: Colors.white))
+                                                ],
+                                              ),
 
-                                          ],
-                                        ),
+                                            ],
+                                          ),
 
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );

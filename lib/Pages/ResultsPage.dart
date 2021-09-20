@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:greendice/ModelClasses/ResultsModelClass.dart';
 import 'package:greendice/Screens/HomeScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
@@ -26,36 +27,14 @@ class _ResultsPageState extends State<ResultsPage> {
   late String firstname,lastname,photo;
   late final access_token;
 
-  List<SalesData> data = [
-    SalesData('Jan', "35"),
-    SalesData('Feb', "28"),
-    SalesData('Mar', "34"),
-    SalesData('Apr', "32"),
-    SalesData('May', "40")
-  ];
+  List<SalesData> data = [];
 
-  List<SalesData> data2 = [
-    SalesData('Jan', "1.3"),
-    SalesData('Feb', "5.2"),
-    SalesData('Mar', "1"),
-    SalesData('Apr', "2.5"),
-    SalesData('May', "3.8")
-  ];
+  List<SalesData> data2 = [];
 
-  List<SalesData> data3 = [
-    SalesData('Jan', "1.2"),
-    SalesData('Feb', "3.5"),
-    SalesData('Mar', "8.3"),
-    SalesData('Apr', "6.9"),
-    SalesData('May', "1.3"),
-    SalesData('Jun', "2.3"),
-    SalesData('Jul', "3.3"),
-    SalesData('Aug', "4.3"),
-    SalesData('Sep', "5.3"),
-    SalesData('Oct', "6.3"),
-    SalesData('Nov', "7.3"),
-    SalesData('Dec', "8.3"),
-  ];
+  List<SalesData> data3 = [];
+
+
+  List<SalesData> data4 = [];
 
   bool isLoading = true;
 
@@ -75,23 +54,25 @@ class _ResultsPageState extends State<ResultsPage> {
 
     final prefs = await SharedPreferences.getInstance();
     setState(() {
+
       access_token = prefs.getString('access_token') ?? '';
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
       isLoading = false;
+
     });
 
 
   }
 
-  Future<notifcationModelClass> Signalapi() async{
+  Future<ResultsModelClass> Signalapi() async{
 
 
     final prefs = await SharedPreferences.getInstance();
     final access_token = prefs.getString('access_token') ?? '';
     //print("token = "+access_token);
-    var response = await http.post(Uri.parse("http://syedu12.sg-host.com/api/signalnotifications"),
+    var response = await http.post(Uri.parse("http://syedu12.sg-host.com/api/getgraphdata"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer "+access_token,
       },
@@ -99,9 +80,9 @@ class _ResultsPageState extends State<ResultsPage> {
 
 
     //  var data = json.decode(response.body);
-    notifcationModelClass notificationmodel = notifcationModelClass.fromJson(jsonDecode(response.body));
+    ResultsModelClass resultsModelClass = ResultsModelClass.fromJson(jsonDecode(response.body));
     //notifcationModelClass notification_success = notifcationModelClass.fromJson(jsonDecode(response.body));
-    var val = '${notificationmodel.success}';
+    var val = '${resultsModelClass.success}';
 
     this.setState(() {
 
@@ -116,15 +97,39 @@ class _ResultsPageState extends State<ResultsPage> {
     if(val == "1")
     {
 
-     /* for (int i=0;i<notificationmodel.data!.notificationSignal!.length;i++)
+      for (int i=0;i<resultsModelClass.data!.graphData!.yearlyProfit!.length;i++)
         {
 
-          SalesData salesData = new SalesData(notificationmodel.data!.notificationSignal![i].signalDate.toString(), notificationmodel.data!.notificationSignal![i].profit!);
+          SalesData salesData = new SalesData(resultsModelClass.data!.graphData!.yearlyProfit![i].month.toString(), resultsModelClass.data!.graphData!.yearlyProfit![i].profit.toString());
           data.add(salesData);
 
         }
-*/
 
+
+      for (int i=0;i<resultsModelClass.data!.graphData!.currentYearRoi!.length;i++)
+      {
+
+        SalesData salesData = new SalesData(resultsModelClass.data!.graphData!.currentYearRoi![i].month.toString(), resultsModelClass.data!.graphData!.currentYearRoi![i].roi.toString());
+        data2.add(salesData);
+
+      }
+
+      for (int i=0;i<resultsModelClass.data!.graphData!.lastYearRoi!.length;i++)
+      {
+
+        SalesData salesData = new SalesData(resultsModelClass.data!.graphData!.lastYearRoi![i].month.toString(), resultsModelClass.data!.graphData!.lastYearRoi![i].roi.toString());
+        data3.add(salesData);
+
+      }
+
+
+      for (int i=0;i<resultsModelClass.data!.graphData!.lastWeekProfit!.length;i++)
+      {
+
+        SalesData salesData = new SalesData(resultsModelClass.data!.graphData!.lastWeekProfit![i].month.toString() + resultsModelClass.data!.graphData!.lastWeekProfit![i].day.toString(), resultsModelClass.data!.graphData!.lastWeekProfit![i].profit.toString());
+        data4.add(salesData);
+
+      }
 
     }
     else
@@ -141,9 +146,10 @@ class _ResultsPageState extends State<ResultsPage> {
       );*/
     }
 
-    return notificationmodel;
+    return resultsModelClass;
 
   }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -336,20 +342,23 @@ class _ResultsPageState extends State<ResultsPage> {
 
 
 
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
 
+                      ),
 
                       Container(
                         child: SfCartesianChart(
                             primaryXAxis: CategoryAxis(),
                             // Chart title
-                            title: ChartTitle(text: '4th graph'),
+                            title: ChartTitle(text: 'Last Week Profit'),
                             // Enable legend
                             legend: Legend(isVisible: false),
                             // Enable tooltip
                             tooltipBehavior: TooltipBehavior(enable: true),
                             series: <ChartSeries<SalesData, String>>[
                               LineSeries<SalesData, String>(
-                                  dataSource: data3,
+                                  dataSource: data4,
                                   xValueMapper: (SalesData sales, _) => sales.year,
                                   yValueMapper: (SalesData sales, _) => double.parse(sales.sales),
                                   //        name: 'Sales', sales.sales,

@@ -146,11 +146,11 @@ class _CalendarPageState extends State<CalendarPage> {
     }
     else
     {
-      Fluttertoast.showToast(
+      /*Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-      );
+      );*/
       /*Navigator.push(
         context,
         MaterialPageRoute(

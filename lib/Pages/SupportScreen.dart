@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greendice/Screens/HomeScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
 
@@ -54,6 +55,42 @@ class _SupportScreenState extends State<SupportScreen> {
                             AssetImage("assets/images/membershipimage.png"),
                             fit: BoxFit.cover)),
                   ),
+
+
+                  Padding(
+
+                    padding: EdgeInsets.fromLTRB(15,25,0,0),
+
+                    child: InkWell(
+
+                      onTap: (){
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(title: "HomScreen")),
+                        );
+
+                      },
+
+                      child: Container(
+
+                        width: MediaQuery.of(context).size.width * 0.035,
+                        height: MediaQuery.of(context).size.height * 0.035  ,
+
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: ExactAssetImage('assets/images/back.png'),
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+
+
+                      ),
+                    ),
+                  ),
+
+
                   Column(
                     children: [
 
@@ -62,6 +99,8 @@ class _SupportScreenState extends State<SupportScreen> {
                       height: MediaQuery.of(context).size.height * 0.14,
 
                     ),
+
+
 
                       Container(
                         margin: EdgeInsets.only(

@@ -98,62 +98,72 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     .size
                     .height * .6,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
 
 
-                children: [
+                  children: [
 
 
-                  Column(children: [
+                    Column(children: [
 
-                    ElevatedButton(
-                        child: Text("Sign in".toUpperCase(),
-                            style: TextStyle(fontSize: 14)),
-                        style: ButtonStyle(
-                            foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.black),
-                            backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                            alignment: Alignment.center,
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    side: BorderSide(color: Colors.white)))),
-                        onPressed: () => signin()),
-                    SizedBox(
-                      height: MediaQuery
+                      SizedBox(
+
+                        width: MediaQuery.of(context).size.width * 0.3,
+
+                        child: ElevatedButton(
+                            child: Text("Sign in".toUpperCase(),
+                                style: TextStyle(fontSize: 14)),
+                            style: ButtonStyle(
+                                foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.black),
+                                backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                                alignment: Alignment.center,
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: BorderSide(color: Colors.white)))),
+                            onPressed: () => signin()),
+                      ),
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 0,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: ElevatedButton(
+                            child: Text("Sign up  ".toUpperCase(),
+                                style: TextStyle(fontSize: 14)),
+                            style: ButtonStyle(
+                                foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.black),
+                                backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                                alignment: Alignment.center,
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: BorderSide(color: Colors.white)))),
+                            onPressed: () => signup()),
+                      )
+                    ]),
+
+
+                   /* SizedBox(
+                      width: MediaQuery
                           .of(context)
                           .size
-                          .height * 0,
-                    ),
-                    ElevatedButton(
-                        child: Text("Sign up  ".toUpperCase(),
-                            style: TextStyle(fontSize: 14)),
-                        style: ButtonStyle(
-                            foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.black),
-                            backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                            alignment: Alignment.center,
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    side: BorderSide(color: Colors.white)))),
-                        onPressed: () => signup())
-                  ]),
-
-
-                  SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .height * .1,
-                  ),
-                ],
+                          .height * .1,
+                    ),*/
+                  ],
+                ),
               )
             ],
           ),
