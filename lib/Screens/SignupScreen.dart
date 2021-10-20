@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'HomeScreen.dart';
@@ -26,8 +27,16 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController pass = TextEditingController();
   TextEditingController confirmpass = TextEditingController();
 
+  bool isLoading = false;
+
   Future register() async {
+
+    setState(() {
+      isLoading = true;
+    });
+
     final isValid = _formkey.currentState!.validate();
+
     if (!isValid) {
       return;
     } else {
@@ -60,11 +69,15 @@ class _SignupScreenState extends State<SignupScreen> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
-        Navigator.push(
+
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => SigninScreen(title: "SigninScreen")),
         );
+
+
+
       }
     }
   }
@@ -94,7 +107,9 @@ class _SignupScreenState extends State<SignupScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
+            alignment: AlignmentDirectional.center,
             children: [
+
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -229,7 +244,17 @@ class _SignupScreenState extends State<SignupScreen> {
                                           side: BorderSide(
                                             color: Color(0xff009E61),
                                           )))),
-                              onPressed: () => register()),
+                              onPressed: isLoading ? null : () {
+
+                                register().then((value) {
+
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+
+                                });
+
+                              }),
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.01,
@@ -263,6 +288,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               Positioned(
+                top: 0,
                 right: 290,
                 child: SizedBox(
                   width: 240,
@@ -271,8 +297,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               Positioned(
-                right: 100,
+                right: 0,
                 top: 100,
+                left: 0,
                 child: Column(children: [
                   Text(
                     "Create",
@@ -289,7 +316,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ]),
-              )
+              ),
+
+              Visibility(
+                visible: isLoading,
+                child: CircularProgressIndicator(),
+              ),
+
             ],
           ),
         ),

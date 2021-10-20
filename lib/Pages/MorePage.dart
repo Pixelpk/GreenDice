@@ -117,7 +117,7 @@ class _MorePageState extends State<MorePage> {
     }
     else {
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => SigninScreen(title: "SigninScreen")),

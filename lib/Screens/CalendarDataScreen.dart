@@ -171,38 +171,15 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                     height: MediaQuery.of(context).size.height * 0.1
                   ),
 
-                  Padding(
-                    
-                    padding: EdgeInsets.fromLTRB(15,25,0,0),
-                    
-                    child: InkWell(
+                  IconButton(
+                    icon: Image.asset('assets/images/back.png'),
+                    onPressed: () {
 
-                      onTap: (){
+                      Navigator.pop(context);
 
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen(title: "HomScreen")),
-                        );
-
-                      },
-
-                      child: Container(
-
-                        width: MediaQuery.of(context).size.width * 0.035,
-                        height: MediaQuery.of(context).size.height * 0.035  ,
-
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: ExactAssetImage('assets/images/back.png'),
-                            fit: BoxFit.fitHeight,
-                          ),
-                        ),
-
-
-                      ),
-                    ),
+                    },
                   ),
+
 
                   Column(
                     children: [

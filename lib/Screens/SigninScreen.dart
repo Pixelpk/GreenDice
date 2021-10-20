@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greendice/Screens/EmailforOTP.dart';
 import 'package:http/http.dart' as http;
@@ -24,11 +25,17 @@ class _SigninScreenState extends State<SigninScreen> {
   bool _isObscure = true;
   var _formkey = GlobalKey<FormState>();
 
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
+  TextEditingController email = TextEditingController(text: 'raheelk740@gmail.com');
+  TextEditingController pass = TextEditingController(text: '123456');
+
+  bool isLoading = false;
+
+  Future login() async {
 
 
-  Future login()async{
+    setState(() {
+      isLoading = true;
+    });
 
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
@@ -37,7 +44,8 @@ class _SigninScreenState extends State<SigninScreen> {
       final prefs = await SharedPreferences.getInstance();
 
       var response = await http.post(
-        Uri.parse("http://syedu12.sg-host.com/api/login"), body: {
+        Uri.parse("http://syedu12.sg-host.com/api/login"),
+        body: {
         "email": email.text,
         "password": pass.text,
       },
@@ -74,18 +82,26 @@ class _SigninScreenState extends State<SigninScreen> {
 
       }
       else {
+
         var access_token = '${signinUser.data!.accessToken}';
+
         prefs.setString('access_token', access_token);
         prefs.setString('fname', signinUser.data!.user!.firstName!);
         prefs.setString('lname', signinUser.data!.user!.lastName!);
         prefs.setString('phone', signinUser.data!.user!.phone!);
         prefs.setString('email', signinUser.data!.user!.email!);
         prefs.setString('image', signinUser.data!.user!.photo!);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomeScreen(title: access_token)),
-        );
+
+
+          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+            CupertinoPageRoute(
+              builder: (BuildContext context) {
+                return HomeScreen(title: access_token);
+              },
+            ),
+                (_) => false,
+          );
+
       }
     }
   }
@@ -106,16 +122,12 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
+            alignment: AlignmentDirectional.center,
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -235,7 +247,17 @@ class _SigninScreenState extends State<SigninScreen> {
                                         side: BorderSide(
                                           color: Color(0xff009E61),
                                         )))),
-                            onPressed: () => login()),
+                            onPressed: isLoading ? null : () {
+
+                              login().then((value) {
+
+                                setState(() {
+                                  isLoading = false;
+                                });
+
+                              });
+
+                            },),
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.01,
@@ -272,6 +294,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
               ),
               Positioned(
+                top: 0,
                 right: 290,
                 child: SizedBox(
                   width: 240,
@@ -280,8 +303,9 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
               ),
               Positioned(
-                right: 100,
+                right: 0,
                 top: 100,
+                left: 0,
                 child: Column(children: [
                   Text(
                     "Welcome",
@@ -298,7 +322,14 @@ class _SigninScreenState extends State<SigninScreen> {
                     ),
                   ),
                 ]),
-              )
+              ),
+
+
+              Visibility(
+                visible: isLoading,
+                child: CircularProgressIndicator(),
+              ),
+
             ],
           ),
         ),
