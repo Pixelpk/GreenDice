@@ -23,10 +23,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-  late String firstname,lastname,phone,email,photo;
+  late String firstname, lastname, phone, email, photo;
   var _formkey = GlobalKey<FormState>();
   var _formkey2 = GlobalKey<FormState>();
+
   //final ImagePicker _picker = ImagePicker();
   TextEditingController user_ctrl = TextEditingController();
   TextEditingController user_lname = TextEditingController();
@@ -45,41 +45,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
 
     _loadCounter().then((value) => {
-
-    user_ctrl.value = user_ctrl.value.copyWith(
-    text: firstname,
-    selection: TextSelection.collapsed(offset: user_ctrl.value.selection.baseOffset + firstname.length,),
-    ),
-
-      user_lname.value = user_lname.value.copyWith(
-        text: lastname,
-        selection: TextSelection.collapsed(offset: user_lname.value.selection.baseOffset + lastname.length,),
-      ),
-
-      email_ctrl.value = email_ctrl.value.copyWith(
-        text: email,
-        selection: TextSelection.collapsed(offset: email_ctrl.value.selection.baseOffset + email.length,),
-      ),
-
-      phone_ctrl.value = phone_ctrl.value.copyWith(
-        text: phone,
-        selection: TextSelection.collapsed(offset: phone_ctrl.value.selection.baseOffset + phone.length,),
-      ),
-
-
-
-    });
-
-
-
+          user_ctrl.value = user_ctrl.value.copyWith(
+            text: firstname,
+            selection: TextSelection.collapsed(
+              offset: user_ctrl.value.selection.baseOffset + firstname.length,
+            ),
+          ),
+          user_lname.value = user_lname.value.copyWith(
+            text: lastname,
+            selection: TextSelection.collapsed(
+              offset: user_lname.value.selection.baseOffset + lastname.length,
+            ),
+          ),
+          email_ctrl.value = email_ctrl.value.copyWith(
+            text: email,
+            selection: TextSelection.collapsed(
+              offset: email_ctrl.value.selection.baseOffset + email.length,
+            ),
+          ),
+          phone_ctrl.value = phone_ctrl.value.copyWith(
+            text: phone,
+            selection: TextSelection.collapsed(
+              offset: phone_ctrl.value.selection.baseOffset + phone.length,
+            ),
+          ),
+        });
   }
 
-
-
-  Future changePassword()async{
-
-
-    if(pass_ctrl.text == confirmpass_ctrl.text) {
+  Future changePassword() async {
+    if (pass_ctrl.text == confirmpass_ctrl.text) {
       final isValid = _formkey2.currentState!.validate();
       if (!isValid) {
         return;
@@ -87,35 +81,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final prefs = await SharedPreferences.getInstance();
         final access_token = prefs.getString('access_token') ?? '';
 
-        var response = await http
-            .post(
-          Uri.parse("http://syedu12.sg-host.com/api/changepassword"), body: {
-          "old_password": old_pass_ctrl.text,
-          "password": pass_ctrl.text,
-          //"image": user_lname.text,
-          "password_confirmation": confirmpass_ctrl.text,
-        },
+        var response = await http.post(
+          Uri.parse("http://syedu12.sg-host.com/api/changepassword"),
+          body: {
+            "old_password": old_pass_ctrl.text,
+            "password": pass_ctrl.text,
+            //"image": user_lname.text,
+            "password_confirmation": confirmpass_ctrl.text,
+          },
           headers: {
             HttpHeaders.authorizationHeader: "Bearer " + access_token,
           },
         );
 
         var data = json.decode(response.body);
-        ChangePasswordModelClass changePasswordModelClass = ChangePasswordModelClass
-            .fromJson(jsonDecode(response.body));
+        ChangePasswordModelClass changePasswordModelClass =
+            ChangePasswordModelClass.fromJson(jsonDecode(response.body));
         var val = '${changePasswordModelClass.success}';
         var message = '${changePasswordModelClass.message}';
-
 
         print(response);
         if (val == "0") {
           Fluttertoast.showToast(
-            msg: "Icorrect Old Password! Please enter a correct old password or use Forgot password from Signin Screen",
+            msg:
+                "Icorrect Old Password! Please enter a correct old password or use Forgot password from Signin Screen",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
           );
-        }
-        else {
+        } else {
           Fluttertoast.showToast(
             msg: "Password Updated Successfully",
             toastLength: Toast.LENGTH_SHORT,
@@ -123,21 +116,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         }
       }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Error! Password and Confirm Password Fields does not match",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
     }
-    else
-      {
-        Fluttertoast.showToast(
-          msg: "Error! Password and Confirm Password Fields does not match",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-      }
   }
 
-
-
-  Future update()async{
-
+  Future update() async {
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
@@ -158,7 +146,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       //   },
       // );
 
-
       var headers = {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
@@ -173,8 +160,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
 
       if (_imageFile != null) {
-        request.files.add(
-            await http.MultipartFile.fromPath('image', _imageFile!.path));
+        request.files
+            .add(await http.MultipartFile.fromPath('image', _imageFile!.path));
       }
 
       request.headers.addAll(headers);
@@ -183,7 +170,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       print("status code -> ${response.statusCode}");
       print("response -> $v");
-
 
       //SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
       SigninUser signinUser = SigninUser.fromJson(jsonDecode(v));
@@ -195,7 +181,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       prefs.setString('email', signinUser.data!.user!.email!);
       prefs.setString('image', signinUser.data!.user!.photo!);
 
-
       print(response);
       if (val == "0") {
         Fluttertoast.showToast(
@@ -203,8 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
-      }
-      else {
+      } else {
         Fluttertoast.showToast(
           msg: message,
           toastLength: Toast.LENGTH_SHORT,
@@ -212,17 +196,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       }
     }
-
   }
 
   Future<void> _loadCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      firstname = (prefs.getString('fname')??'');
-      lastname = (prefs.getString('lname')??'');
-      phone = (prefs.getString('phone')??'');
-      email = (prefs.getString('email')??'');
-      photo = (prefs.getString('image')??'');
+      firstname = (prefs.getString('fname') ?? '');
+      lastname = (prefs.getString('lname') ?? '');
+      phone = (prefs.getString('phone') ?? '');
+      email = (prefs.getString('email') ?? '');
+      photo = (prefs.getString('image') ?? '');
     });
   }
 
@@ -252,7 +235,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               Stack(
-
                 overflow: Overflow.visible,
                 children: [
                   Container(
@@ -260,56 +242,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: MediaQuery.of(context).size.height * 0.21,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage("assets/images/profilebackground.png"),
+                            image: AssetImage(
+                                "assets/images/profilebackground.png"),
                             fit: BoxFit.cover)),
                   ),
 
-                  Padding(
-
-                    padding: EdgeInsets.fromLTRB(15,25,0,0),
-
+                  /*Padding(
+                    padding: EdgeInsets.fromLTRB(15, 25, 0, 0),
                     child: InkWell(
-
-                      onTap: (){
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen(title: "HomScreen")),
-                        );
-
+                      onTap: () {
+                        Navigator.pop(context);
                       },
-
                       child: Container(
-
                         width: MediaQuery.of(context).size.width * 0.035,
-                        height: MediaQuery.of(context).size.height * 0.035  ,
-
+                        height: MediaQuery.of(context).size.height * 0.035,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: ExactAssetImage('assets/images/back.png'),
                             fit: BoxFit.fitHeight,
                           ),
                         ),
-
-
                       ),
                     ),
+                  ),*/
+
+                  IconButton(
+                    onPressed: () {
+
+                      Navigator.pop(context);
+
+                    },
+                    icon: Image.asset('assets/images/back.png'),
                   ),
 
-
                   Positioned(
-
                     left: 0,
                     right: 0,
                     bottom: -70,
-
                     child: InkWell(
                       onTap: () async {
 
                         print('cliked');
                         //await _picker.pickImage(source: ImageSource.gallery);
-
                         _showPicker(context);
 
                       },
@@ -318,118 +292,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: MediaQuery.of(context).size.width * 0.2,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-
                         ),
-                        child: photo != '' ?
-                            Image.network(photo) : _imageFile != null ?
-                              Image.file(File(_imageFile!.path), fit: BoxFit.contain,) :
-                                Image.asset("assets/images/profileimage.png"),
-                        ),
-
-
+                        child: photo != ''
+                            ? Container(
+                                width: 72.0,
+                                height: 72.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      photo,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : _imageFile != null
+                                ? Container(
+                                    width: 72.0,
+                                    height: 72.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: FileImage(
+                                            File(_imageFile!.path),
+                                          )),
+                                    ),
+                                  )
+                                : Image.asset("assets/images/profileimage.png"),
                       ),
                     ),
-
-
-                ],
-              ),
-
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.45,
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            child: Form(
-
-              key: _formkey,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                  ),
-                  TextFormField(
-
-                    controller: user_ctrl,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'First Name',
-                        hintStyle: TextStyle(
-                          color: Color(0xff9B9B9B),
-                        )),
-                    validator: (text) {
-                      if (text!.isEmpty) {
-                        return "Please enter First Name";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),TextFormField(
-
-                    controller: user_lname,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'Last Name',
-                        hintStyle: TextStyle(
-                          color: Color(0xff9B9B9B),
-                        )),
-                    validator: (text) {
-                      if (text!.isEmpty) {
-                        return "Please enter Last Name";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  TextFormField(
-                    enabled: false,
-                    controller: email_ctrl,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'Email',
-                        hintStyle: TextStyle(
-                          color: Color(0xff9B9B9B),
-                        )),
-                    validator: (text) {
-                      if (text!.isEmpty) {
-                        return "Please enter a valid Email";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  TextFormField(
-
-
-                    controller: phone_ctrl,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'Phone Number',
-                        hintStyle: TextStyle(
-                          color: Color(0xff9B9B9B),
-                        )),
-                    validator: (text) {
-                      if (text!.isEmpty) {
-                        return "Please enter Phone Number";
-                      }
-                      return null;
-                    },
                   ),
                 ],
               ),
-
-            ),
-          ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.45,
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.08,
+                      ),
+                      TextFormField(
+                        controller: user_ctrl,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'First Name',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter First Name";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      TextFormField(
+                        controller: user_lname,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Last Name',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter Last Name";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      TextFormField(
+                        enabled: false,
+                        controller: email_ctrl,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Email',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter a valid Email";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      TextFormField(
+                        controller: phone_ctrl,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Phone Number',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (text!.isEmpty) {
+                            return "Please enter Phone Number";
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.7,
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Form(
-
                   key: _formkey2,
                   child: Column(
                     children: [
@@ -447,18 +433,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         validator: (text) {
                           if (text!.isEmpty) {
                             return "Please enter Old Password";
-                          }
-                          else if(text.length<5)
-                          {
+                          } else if (text.length < 5) {
                             return "Password should not be less then 5 characters";
                           }
                           return null;
                         },
-
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
-                      ), TextFormField(
+                      ),
+                      TextFormField(
                         controller: pass_ctrl,
                         decoration: InputDecoration(
                             border: UnderlineInputBorder(),
@@ -469,14 +453,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         validator: (text) {
                           if (text!.isEmpty) {
                             return "Please enter New Password";
-                          }
-                          else if(text.length<5)
-                          {
+                          } else if (text.length < 5) {
                             return "Password should not be less then 5 characters";
                           }
                           return null;
                         },
-
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
@@ -492,9 +473,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         validator: (text) {
                           if (text!.isEmpty) {
                             return "Please enter Confirm Password";
-                          }
-                          else if(text.length<5)
-                          {
+                          } else if (text.length < 5) {
                             return "Password should not be less then 5 characters";
                           }
                           return null;
@@ -510,13 +489,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text("Update Profile".toUpperCase(),
                                 style: TextStyle(fontSize: 14)),
                             style: ButtonStyle(
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                    Colors.white),
-                                backgroundColor: MaterialStateProperty.all<Color>(
-                                    Color(0xff009E61)),
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color(0xff009E61)),
                                 alignment: Alignment.center,
                                 shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
                                         side: BorderSide(
@@ -534,13 +515,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text("Update Password".toUpperCase(),
                                 style: TextStyle(fontSize: 14)),
                             style: ButtonStyle(
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                    Colors.white),
-                                backgroundColor: MaterialStateProperty.all<Color>(
-                                    Color(0xff009E61)),
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color(0xff009E61)),
                                 alignment: Alignment.center,
                                 shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
                                         side: BorderSide(
@@ -553,10 +536,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-
                 ),
               ),
-
             ],
           ),
         ),
@@ -622,7 +603,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('image picker error: $e');
     }
   }
-
-
-
 }

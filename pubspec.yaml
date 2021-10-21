@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.3
   fluttertoast: ^8.0.8
+  flutter_svg: ^0.23.0+1
   
 dev_dependencies:
   flutter_test:
@@ -55,50 +56,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/green_bg.png
     - assets/images/
-    - assets/images/grid.png
-    - assets/images/logo.png
-    - assets/images/welcome_bg.png
-    - assets/images/sign_logo.png
-    - assets/images/bell.png
-    - assets/images/creditcard.png
-    - assets/images/more.png
-    - assets/images/analytics.png
-    - assets/images/calendar.png
-    - assets/images/dashboardappbarimage.png
-    - assets/images/profileicon.png
-    - assets/images/membershipimage.png
-    - assets/images/resultsimage.png
-    - assets/images/calendarimage.png
-    - assets/images/ebook.png
-    - assets/images/profile.png
-    - assets/images/support.png
-    - assets/images/logout.png
-    - assets/images/profilebackground.png
-    - assets/images/profileimage.png
-    - assets/images/membership_bg1.png
-    - assets/images/membership_bg2.png
-    - assets/images/goldcrown.png
-    - assets/images/silvercrown.png
-    - assets/images/silvercrownbg.png
-    - assets/images/goldcrownbg.png
-    - assets/images/silverbg.png
-    - assets/images/notifItembg.png
-    - assets/images/datebar.png
-    - assets/images/flagicon.png
-    - assets/images/playicon.png
-    - assets/images/personicon.png
-    - assets/images/horseimage.png
-    - assets/images/bottombarbg.png
-    - assets/images/winbg.png
-    - assets/images/losebg.png
-    - assets/images/flagwhite.png
-    - assets/images/playwhite.png
-    - assets/images/personw.png
-    - assets/images/trophy.png
-    - assets/images/loss.png
-    - assets/images/back.png
+
   # To add assets to your application, add an assets section, like this:
 
   # assets:

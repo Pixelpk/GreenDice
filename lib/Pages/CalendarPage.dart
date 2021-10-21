@@ -31,6 +31,7 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+
   late String firstname, lastname, photo;
   late final access_token;
   bool isLoading = true;
@@ -39,7 +40,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   String _currentMonth = DateFormat.yMMM().format(DateTime.now());
 
-  DateTime _targetDateTime = DateTime(2019, 2, 3);
+  //DateTime _targetDateTime = DateTime(2019, 2, 3);
+  DateTime _targetDateTime = DateTime.now();
   DateTime _maxDateTime = DateTime(2100, 2, 3);
 
   static Widget _eventIcon = new Container(
@@ -300,21 +302,33 @@ class _CalendarPageState extends State<CalendarPage> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.1,
                                   ),
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.06,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.1,
-                                    /*decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/profileicon.png"),
-                                      fit: BoxFit.cover)),*/
-                                    child: photo == ''
-                                        ? Image.asset(
-                                            "assets/images/profileimage.png")
-                                        : Image.network(photo),
+
+                                  photo == ''
+                                      ? Container(
+                                    width: 72.0,
+                                    height: 72.0,
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: new DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: new AssetImage(
+                                            "assets/images/profileimage.png"),
+                                      ),
+                                    ),
+                                  )
+                                      : Container(
+                                    width: 72.0,
+                                    height: 72.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                          photo,
+                                        ),
+                                      ),),
                                   ),
+
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.03,
@@ -499,7 +513,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                   customGridViewPhysics:
                                       NeverScrollableScrollPhysics(),
                                   markedDateCustomShapeBorder: CircleBorder(
-                                      side: BorderSide(color: Colors.yellow)),
+                                      side: BorderSide(color: Colors.yellow),),
                                   markedDateCustomTextStyle: TextStyle(
                                     fontSize: 18,
                                     color: Colors.blue,

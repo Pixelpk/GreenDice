@@ -203,16 +203,33 @@ class _ResultsPageState extends State<ResultsPage> {
                               height: MediaQuery.of(context).size.height * 0.18,
                               width: MediaQuery.of(context).size.width * 0.1,
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              width: MediaQuery.of(context).size.width * 0.1,
-                             /* decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/profileicon.png"),
-                                      fit: BoxFit.cover)),*/
-                              child: photo == '' ? Image.asset("assets/images/profileimage.png") : Image.network(photo),
+
+                            photo == ''
+                                ? Container(
+                              width: 72.0,
+                              height: 72.0,
+                              decoration: new BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: new DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: new AssetImage(
+                                      "assets/images/profileimage.png"),
+                                ),
+                              ),
+                            )
+                                : Container(
+                              width: 72.0,
+                              height: 72.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(
+                                    photo,
+                                  ),
+                                ),),
                             ),
+
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.03,
                             ),
