@@ -23,7 +23,7 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
-  late String firstname,lastname,photo;
+  late String firstname, lastname, photo;
   late final access_token;
   bool isLoading = true;
 
@@ -35,23 +35,18 @@ class _MorePageState extends State<MorePage> {
   ];
   List<String> titles = ["Profile", "Support", "E-Book", "Logout"];
 
-
   List<MoreModel> moreList = [];
 
   @override
   void initState() {
     super.initState();
 
-
-    Loadprefs().then((value) =>
-    {
-    _gerMoreList(),
-
-    });
+    Loadprefs().then((value) => {
+          _gerMoreList(),
+        });
   }
 
-  Future<void> Loadprefs() async{
-
+  Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       access_token = prefs.getString('access_token') ?? '';
@@ -60,15 +55,13 @@ class _MorePageState extends State<MorePage> {
       photo = (prefs.getString('image') ?? '');
       isLoading = false;
     });
-
   }
 
-
   _gerMoreList() {
-    moreList.add(
-        MoreModel(icon: 'assets/images/profile.png', title: 'Profile'));
-    moreList.add(
-        MoreModel(icon: 'assets/images/support.png', title: 'Support'));
+    moreList
+        .add(MoreModel(icon: 'assets/images/profile.png', title: 'Profile'));
+    moreList
+        .add(MoreModel(icon: 'assets/images/support.png', title: 'Support'));
     moreList.add(MoreModel(icon: 'assets/images/ebook.png', title: 'E-Book'));
     moreList.add(MoreModel(icon: 'assets/images/logout.png', title: 'Logout'));
   }
@@ -89,7 +82,6 @@ class _MorePageState extends State<MorePage> {
     );
   }
 
-
   Future Logout() async {
     final prefs = await SharedPreferences.getInstance();
     final access_token = prefs.getString('access_token') ?? '';
@@ -102,10 +94,9 @@ class _MorePageState extends State<MorePage> {
     );
 
     var data = json.decode(response.body);
-    LogoutModelClass logoutModelClass = LogoutModelClass.fromJson(
-        jsonDecode(response.body));
+    LogoutModelClass logoutModelClass =
+        LogoutModelClass.fromJson(jsonDecode(response.body));
     var val = '${logoutModelClass.data!.message}';
-
 
     print(val);
     if (val == "0") {
@@ -114,9 +105,7 @@ class _MorePageState extends State<MorePage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
-    }
-    else {
-
+    } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -124,7 +113,6 @@ class _MorePageState extends State<MorePage> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -148,139 +136,150 @@ class _MorePageState extends State<MorePage> {
           )),*/
 
       body: SafeArea(
-        child: isLoading ? CircularProgressIndicator() : Column(
-          children: [
-            Stack(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.21,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image:
-                              AssetImage("assets/images/membershipimage.png"),
-                          fit: BoxFit.cover)),
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: Row(
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Column(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.21,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/membershipimage.png"),
+                                fit: BoxFit.cover)),
+                      ),
+                      Column(
                         children: [
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.18,
-                            width: MediaQuery.of(context).size.width * 0.1,
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.06,
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            /*decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/profileicon.png"),
-                                    fit: BoxFit.cover)),*/
-                            child: photo == '' ? Image.asset("assets/images/profileimage.png") : Image.network(photo),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.03,
-                          ),
-                          Container(
-                            child: Text(
-                              firstname +" "+ lastname,
-                              style: TextStyle(
-                                  fontSize: 14, color: Color(0xffffffff)),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.18,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                ),
+                                photo == ''
+                                    ? Container(
+                                        width: 72.0,
+                                        height: 72.0,
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: new AssetImage(
+                                                "assets/images/profileimage.png"),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        width: 72.0,
+                                        height: 72.0,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(
+                                                photo,
+                                              ),
+                                            ),),
+                                      ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.03,
+                                ),
+                                Container(
+                                  child: Text(
+                                    firstname + " " + lastname,
+                                    style: TextStyle(
+                                        fontSize: 14, color: Color(0xffffffff)),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
 
-                    /*   SizedBox(
+                          /*   SizedBox(
 
                       width: MediaQuery.of(context).size.width * 1,
 
                     ),*/
 
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: 60, top: 0, right: 0, bottom: 0),
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        "More",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff0ECB82)),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 60, top: 0, right: 0, bottom: 0),
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(
+                              "More",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff0ECB82)),
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.03,
-              color: Color(0xff009E61),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.6,
-   //           color: Color(0xff005333),
-              child: Stack(
-
-                children: [
-                  ListView.builder(
-                     itemCount: moreList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                     return ListTile( title: Text(moreList[index].title!), leading: Image.asset(moreList[index].icon!),
-                       onTap: (){
-
-                       if(index==0)
-                         {
-                           Navigator.push(context,
-                             MaterialPageRoute(
-                                 builder: (context) => ProfileScreen(title: "ProfileScreen")),
-                           );
-                         }
-                       else if(index==1)
-                         {
-                           Navigator.push(context,
-                             MaterialPageRoute(
-                                 builder: (context) => SupportScreen(title: "SupportScreen")),
-                           );
-                         }
-                       else if(index==2)
-                         {
-                           Navigator.push(context,
-                             MaterialPageRoute(
-                                 builder: (context) => EbookScreen(title: "EbookScreen")),
-                           );
-                         }
-                       else if(index==3)
-                         {
-                            Logout();
-                         }
-
-
-
-                       },);
-                    },
-                    padding: const EdgeInsets.all(8),
-
+                    ],
                   ),
-
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.03,
+                    color: Color(0xff009E61),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    //           color: Color(0xff005333),
+                    child: Stack(
+                      children: [
+                        ListView.builder(
+                          itemCount: moreList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(moreList[index].title!),
+                              leading: Image.asset(moreList[index].icon!),
+                              onTap: () {
+                                if (index == 0) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProfileScreen(
+                                            title: "ProfileScreen")),
+                                  );
+                                } else if (index == 1) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SupportScreen(
+                                            title: "SupportScreen")),
+                                  );
+                                } else if (index == 2) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EbookScreen(title: "EbookScreen")),
+                                  );
+                                } else if (index == 3) {
+                                  Logout();
+                                }
+                              },
+                            );
+                          },
+                          padding: const EdgeInsets.all(8),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-
               ),
-
-
-            ),
-          ],
-        ),
       ),
     );
   }
 }
-

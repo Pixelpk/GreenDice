@@ -145,7 +145,7 @@ class _EbookScreenState extends State<EbookScreen> {
                                 "assets/images/dashboardappbarimage.png"),
                             fit: BoxFit.cover)),
                   ),
-                  Padding(
+                  /*Padding(
 
                     padding: EdgeInsets.fromLTRB(15,25,0,0),
 
@@ -176,6 +176,15 @@ class _EbookScreenState extends State<EbookScreen> {
 
                       ),
                     ),
+                  ),*/
+
+                  IconButton(
+                    onPressed: () {
+
+                      Navigator.pop(context);
+
+                    },
+                    icon: Image.asset('assets/images/back.png'),
                   ),
 
                   Column(

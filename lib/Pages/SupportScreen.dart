@@ -13,6 +13,7 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +58,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
 
 
-                  Padding(
+                  /*Padding(
 
                     padding: EdgeInsets.fromLTRB(15,25,0,0),
 
@@ -88,7 +89,17 @@ class _SupportScreenState extends State<SupportScreen> {
 
                       ),
                     ),
+                  ),*/
+
+                  IconButton(
+                    onPressed: () {
+
+                      Navigator.pop(context);
+
+                    },
+                    icon: Image.asset('assets/images/back.png'),
                   ),
+
 
 
                   Column(

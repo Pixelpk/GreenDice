@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/CalDataModelClass.dart';
 import 'package:greendice/Screens/HomeScreen.dart';
@@ -34,6 +35,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
   bool isloading = true;
   bool noDataFound = false;
 
+  String? trophyImage;
 
   _scrollListener() {
 
@@ -184,10 +186,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                   Column(
                     children: [
 
-
-
                       SizedBox(
-
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.15,
 
@@ -225,6 +224,21 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                     itemCount: data == null ? 0 : notificationmodel!.data!.calenderSignal!.length,
                     itemBuilder: (BuildContext context,int index){
 
+                      if(notificationmodel!.data!.calenderSignal![index].placing! == '1') {
+                        trophyImage = 'assets/images/goldertrophy.svg';
+                      }
+                      else if(notificationmodel!.data!.calenderSignal![index].placing! == '2') {
+                        trophyImage = 'assets/images/silver_trophy.svg';
+                      }
+                      else if(notificationmodel!.data!.calenderSignal![index].placing! == '3') {
+                        trophyImage = 'assets/images/bronzetrophy.svg';
+                      }
+                      else if(notificationmodel!.data!.calenderSignal![index].placing! == '4') {
+                        trophyImage = 'assets/images/loss.svg';
+                      }
+
+
+
                        return Container(
                          height: MediaQuery.of(context).size.height * 0.3,
                          child: Padding(
@@ -253,143 +267,159 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                                        child: Image.asset("assets/images/horseimage.png"),
                                      ),
                                    ),
-                                   Container(
-                                     child: Row(
+
+                                   Column(
+                                     mainAxisAlignment: MainAxisAlignment.start,
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+                                       SizedBox(
+                                         height: MediaQuery.of(context)
+                                             .size
+                                             .height *
+                                             0.03,
+                                       ),
+                                       Text(notificationmodel!.data!.calenderSignal![index].location!,
+                                           style: TextStyle(
+                                               fontSize: 24, color: Colors.white)),
+
+                                       SizedBox(
+                                         height: MediaQuery.of(context)
+                                             .size
+                                             .height *
+                                             0.02,
+                                       ),
+
+                                       Row(
+                                         children: [
+                                           Image.asset("assets/images/flagwhite.png"),
+                                           SizedBox(width: 8.0),
+                                           Text(notificationmodel!.data!.calenderSignal![index].location!,
+                                               style: TextStyle(
+                                                   fontSize: 12, color: Colors.white), ),
+                                         ],
+                                       ),
+
+                                       SizedBox(
+                                         height: MediaQuery.of(context)
+                                             .size
+                                             .height *
+                                             0.01,
+                                       ),
+
+                                       Row(
+                                         children: [
+                                           Image.asset("assets/images/playwhite.png"),
+                                           SizedBox(width: 8.0),
+                                           Text("Race " + notificationmodel!.data!.calenderSignal![index].raceId.toString()!,
+                                               style: TextStyle(
+                                                   fontSize: 12, color: Colors.white))
+                                         ],
+                                       ),
+
+                                       SizedBox(
+                                         height: MediaQuery.of(context)
+                                             .size
+                                             .height *
+                                             0.01,
+                                       ),
+
+                                       Row(
+                                         children: [
+                                           Image.asset("assets/images/personw.png"),
+                                           SizedBox(width: 8.0),
+                                           Text(notificationmodel!.data!.calenderSignal![index].horse!, style: TextStyle(
+                                               fontSize: 12, color: Colors.white))
+                                         ],
+                                       ),
+
+                                     ],
+                                   ),
+
+                                   Expanded(child: SizedBox()),
+
+                                   Padding(
+                                     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                     child: Column(
+                                       mainAxisAlignment: MainAxisAlignment.start,
+                                       crossAxisAlignment: CrossAxisAlignment.center,
                                        children: [
-                                         Column(
-                                           mainAxisAlignment: MainAxisAlignment.start,
-                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                           children: [
-                                             SizedBox(
-                                               height: MediaQuery.of(context)
-                                                   .size
-                                                   .height *
-                                                   0.03,
-                                             ),
-                                             Text(notificationmodel!.data!.calenderSignal![index].location!,
-                                                 style: TextStyle(
-                                                     fontSize: 24, color: Colors.white)),
 
-                                             SizedBox(
-                                               height: MediaQuery.of(context)
-                                                   .size
-                                                   .height *
-                                                   0.02,
-                                             ),
-
-                                             Row(
-                                               children: [
-                                                 Image.asset("assets/images/flagwhite.png"),
-                                                 Text(notificationmodel!.data!.calenderSignal![index].location!,
-                                                     style: TextStyle(
-                                                         fontSize: 12, color: Colors.white))
-                                               ],
-                                             ),
-                                             SizedBox(
-                                               height: MediaQuery.of(context)
-                                                   .size
-                                                   .height *
-                                                   0.01,
-                                             ),
-                                             Row(
-                                               children: [
-                                                 Image.asset("assets/images/playwhite.png"),
-                                                 Text("  Race " + notificationmodel!.data!.calenderSignal![index].raceId.toString()!,
-                                                     style: TextStyle(
-                                                         fontSize: 12, color: Colors.white))
-                                               ],
-                                             ),
-                                             SizedBox(
-                                               height: MediaQuery.of(context)
-                                                   .size
-                                                   .height *
-                                                   0.01,
-                                             ),
-                                             Row(
-                                               children: [
-                                                 Image.asset("assets/images/personw.png"),
-                                                 Text(" " + notificationmodel!.data!.calenderSignal![index].horse!, style: TextStyle(
-                                                     fontSize: 12, color: Colors.white))
-                                               ],
-                                             ),
-                                           ],
+                                         SizedBox(
+                                           height: MediaQuery.of(context)
+                                               .size
+                                               .height *
+                                               0.03,
                                          ),
-                                         Padding(
-                                           padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                                           child: Column(
-                                             mainAxisAlignment: MainAxisAlignment.start,
-                                             crossAxisAlignment: CrossAxisAlignment.center,
-                                             children: [
-
-                                               SizedBox(
-                                                 height: MediaQuery.of(context)
-                                                     .size
-                                                     .height *
-                                                     0.03,
-                                               ),
-                                               Text("Current market odds",style: TextStyle(
-                                                   fontSize: 12,
-                                                   color: Colors.white
-                                               ),),
-                                               Text(notificationmodel!.data!.calenderSignal![index].oods!,style: TextStyle(
-                                                   fontSize: 40,
-                                                   color: Colors.white
-                                               ),),
-                                               Container(
-                                                 height: MediaQuery.of(context).size.height * 0.05,
-                                                 width: MediaQuery.of(context).size.width * 0.25,
-                                                 color: Colors.white,
-                                                 child: Center(child: Text(notificationmodel!.data!.calenderSignal![index].roi!,style: TextStyle(
-
-                                                     fontSize: 18
-
-                                                 ),)),
-                                               ),
-
-                                               SizedBox(
-
-                                                 height: MediaQuery.of(context).size.height * 0.01,
-
-                                               ),
-
-
-                                               Row(
-
-                                                 children: [
-
-                                                   Container(
-
-                                                     color: Colors.white,
-                                                     height: MediaQuery.of(context).size.height * 0.05,
-                                                     width: MediaQuery.of(context).size.width * 0.1,
-                                                     child: Center(child: Text(notificationmodel!.data!.calenderSignal![index].placing!,)),
-                                                   ),
-
-                                                   SizedBox(
-
-                                                     width: MediaQuery.of(context).size.width * 0.05,
-
-                                                   ),
-
-                                                   Container(
-
-                                                     color: Colors.white,
-                                                     height: MediaQuery.of(context).size.height * 0.05,
-                                                     width: MediaQuery.of(context).size.width * 0.1,
-                                                     child: Image.asset("assets/images/trophy.png"),
-                                                   )
-
-                                                 ],
-
-                                               )
-
-
-                                             ],
-
-
+                                         Text("Current market odds",style: TextStyle(
+                                             fontSize: 12,
+                                             color: Colors.white
+                                         ),),
+                                         Text('\$' +notificationmodel!.data!.calenderSignal![index].oods!,style: TextStyle(
+                                             fontSize: 40,
+                                             color: Colors.white
+                                         ),),
+                                         Container(
+                                           height: MediaQuery.of(context).size.height * 0.05,
+                                           width: MediaQuery.of(context).size.width * 0.25,
+                                           decoration: BoxDecoration(
+                                             color: Colors.white,
+                                             borderRadius: BorderRadius.all(Radius.circular(4.0),),
                                            ),
+                                           child: Center(child: Text(notificationmodel!.data!.calenderSignal![index].roi! +'%',style: TextStyle(
+
+                                               fontSize: 18
+
+                                           ),)),
                                          ),
+
+                                         SizedBox(
+
+                                           height: MediaQuery.of(context).size.height * 0.01,
+
+                                         ),
+
+
+                                         Row(
+
+                                           children: [
+
+                                             Container(
+                                               height: MediaQuery.of(context).size.height * 0.05,
+                                               width: MediaQuery.of(context).size.width * 0.1,
+                                               decoration: BoxDecoration(
+                                                 color: Colors.white,
+                                                 borderRadius: BorderRadius.all(Radius.circular(4.0),),
+                                               ),
+                                               child: Center(child: Text(notificationmodel!.data!.calenderSignal![index].placing!, style: TextStyle(fontSize: 18),), ),
+                                             ),
+
+                                             SizedBox(
+
+                                               width: MediaQuery.of(context).size.width * 0.05,
+
+                                             ),
+
+                                             Container(
+                                               height: MediaQuery.of(context).size.height * 0.05,
+                                               width: MediaQuery.of(context).size.width * 0.1,
+                                               padding: EdgeInsets.all(4.0),
+                                               decoration: BoxDecoration(
+                                                   color: Colors.white,
+                                                   borderRadius: BorderRadius.all(Radius.circular(4.0),),
+                                               ),
+                                               child: SvgPicture.asset(
+                                                 trophyImage!,
+                                               ),
+                                             ),
+
+                                           ],
+
+                                         )
+
+
                                        ],
+
+
                                      ),
                                    ),
                                  ],
