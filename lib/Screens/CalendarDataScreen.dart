@@ -219,7 +219,8 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
 
               ),
               Center(
-                  child: isloading ? Center(child: CircularProgressIndicator()) : noDataFound ? noDataWidget() : ListView.builder(
+                  child: isloading ? Center(child: CircularProgressIndicator( color: Color(0xff009E61),
+                    backgroundColor: Color(0xff0ECB82),)) : noDataFound ? noDataWidget() : ListView.builder(
                     controller: _controller,
                     shrinkWrap: true,
                     itemCount: data == null ? 0 : notificationmodel!.data!.calenderSignal!.length,
@@ -294,7 +295,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                                              Row(
                                                children: [
                                                  Image.asset("assets/images/playwhite.png"),
-                                                 Text("  Race " + notificationmodel!.data!.calenderSignal![index].raceId.toString()!,
+                                                 Text("  Race " + notificationmodel!.data!.calenderSignal![index].raceId.toString(),
                                                      style: TextStyle(
                                                          fontSize: 12, color: Colors.white))
                                                ],
