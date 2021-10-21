@@ -32,10 +32,13 @@ class _SigninScreenState extends State<SigninScreen> {
 
   Future login() async {
 
+if(mounted)
+   {
+     setState(() {
+       isLoading = true;
+     });
+   }
 
-    setState(() {
-      isLoading = true;
-    });
 
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
@@ -184,10 +187,10 @@ class _SigninScreenState extends State<SigninScreen> {
                               color: Color(0xff9B9B9B),
                             )),
                         validator: (text) {
-                          if (!(text!.length > 5) && text!.isNotEmpty) {
+                          if (!(text!.length > 5) && text.isNotEmpty) {
                             return "Enter valid name of more then 5 characters!";
                           }
-                          else if(!(text!.length > 1) && text!.isEmpty)
+                          else if(!(text.length > 1) && text.isEmpty)
                             {
                               return "Please enter a valid password";
                             }
@@ -327,7 +330,8 @@ class _SigninScreenState extends State<SigninScreen> {
 
               Visibility(
                 visible: isLoading,
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator( color: Color(0xff009E61),
+                  backgroundColor: Color(0xff0ECB82),),
               ),
 
             ],

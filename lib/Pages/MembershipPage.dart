@@ -79,7 +79,8 @@ class _MembershipPageState extends State<MembershipPage> {
           )),*/
 
       body: SafeArea(
-        child: isLoading ? CircularProgressIndicator() : Column(
+        child: isLoading ? CircularProgressIndicator( color: Color(0xff009E61),
+          backgroundColor: Color(0xff0ECB82),) : Column(
 
           children: [
             Stack(

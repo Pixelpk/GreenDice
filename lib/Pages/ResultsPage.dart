@@ -173,7 +173,8 @@ class _ResultsPageState extends State<ResultsPage> {
 
       body: SafeArea(
         child: SingleChildScrollView(
-          child: isLoading ? CircularProgressIndicator() : Column(
+          child: isLoading ? CircularProgressIndicator( color: Color(0xff009E61),
+            backgroundColor: Color(0xff0ECB82),) : Column(
             children: [
               Stack(
                 children: [

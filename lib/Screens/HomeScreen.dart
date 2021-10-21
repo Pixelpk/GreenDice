@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greendice/Pages/CalendarPage.dart';
 import 'package:greendice/Pages/MembershipPage.dart';
 import 'package:greendice/Pages/MorePage.dart';
@@ -21,11 +22,11 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   int _currentindex = 0;
   List<Widget> _tabList = [
-   new NotificationPage(title: "Notification"),
-   new MembershipPage(title: "Membership"),
-   new ResultsPage(title: "Results"),
-   new CalendarPage(title: "Calendar"),
-   new MorePage(title: "Notification")
+    new NotificationPage(title: "Notification"),
+    new MembershipPage(title: "Membership"),
+    new ResultsPage(title: "Results"),
+    new CalendarPage(title: "Calendar"),
+    new MorePage(title: "Notification")
   ];
 
   late TabController _tabController;
@@ -45,14 +46,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-
       body: TabBarView(
         controller: _tabController,
         children: _tabList,
@@ -60,61 +54,110 @@ class _HomeScreenState extends State<HomeScreen>
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xffdbf1e9),
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Color(0xFF009d60),
-        unselectedItemColor: Color(0xFF009d60),
+        // selectedItemColor: Color(0xFF009d60),
+
         selectedLabelStyle: TextStyle(
           color: Color(0xFF009d60),
           fontSize: 10,
         ),
-        unselectedLabelStyle: TextStyle(
-          color: Color(0xFF009d60),
-          fontSize: 10,
-        ),
+        // unselectedLabelStyle: TextStyle(
+        //   color: Colors.grey,
+        //   fontSize: 10,
+        // ),
         onTap: (currentIndex) {
           setState(() {
             _currentindex = currentIndex;
-
           });
           _tabController.animateTo(_currentindex);
         },
-        items: const <BottomNavigationBarItem>[
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/images/bell.png"),
-              color: Color(0xFF009d60),
+            icon: customNavBARitem(
+              currentindex: _currentindex,
+              assetsPath: "assets/images/bell-line.svg",
+              defaultIndex: 0,
+              labelString: 'Notification',
             ),
+
+            // ImageIcon(
+            //   AssetImage("assets/images/bell.png"),
+            //   color: Color(0xFF009d60),
+            // ),
             label: 'Notification',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/images/creditcard.png"),
-              color: Color(0xFF009d60),
+            icon: customNavBARitem(
+              currentindex: _currentindex,
+              assetsPath: "assets/images/credit-card-2-back.svg",
+              defaultIndex: 1,
+              labelString: 'Pricing',
             ),
             label: 'Pricing',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/images/analytics.png"),
-              color: Color(0xFF009d60),
+            icon: customNavBARitem(
+              currentindex: _currentindex,
+              assetsPath: "assets/images/analytics.svg",
+              defaultIndex: 2,
+              labelString: 'Results',
             ),
             label: 'Results',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/images/calendar.png"),
-              color: Color(0xFF009d60),
+            icon: customNavBARitem(
+              currentindex: _currentindex,
+              assetsPath: "assets/images/calender.svg",
+              defaultIndex: 3,
+              labelString: 'Calendar',
             ),
             label: 'Calendar',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("assets/images/more.png"),
-              color: Color(0xFF009d60),
+            icon: customNavBARitem(
+              currentindex: _currentindex,
+              assetsPath: "assets/images/more.svg",
+              defaultIndex: 4,
+              labelString: 'More',
             ),
             label: 'More',
           ),
         ],
       ),
+    );
+  }
+
+  Widget customNavBARitem(
+      {required assetsPath,
+      required currentindex,
+      required defaultIndex,
+      required labelString}) {
+    return Column(
+      mainAxisAlignment: defaultIndex == 4
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(
+          height: defaultIndex == 4 ? 7 : 0,
+        ),
+        SvgPicture.asset(assetsPath,
+            height: defaultIndex == 4 ? 5 : 20,
+            color: _currentindex == defaultIndex
+                ? Color(0xFF009d60)
+                : Colors.grey),
+        SizedBox(
+          height: defaultIndex == 4 ? 10 : 4,
+        ),
+        Text(
+          labelString!,
+          style: TextStyle(
+              color: _currentindex == defaultIndex
+                  ? Color(0xFF009d60)
+                  : Colors.grey,
+              fontSize: 10),
+        )
+      ],
     );
   }
 }

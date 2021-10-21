@@ -230,7 +230,8 @@ class _EbookScreenState extends State<EbookScreen> {
 
               ),
               Center(
-                  child: isloading ? Center(child: CircularProgressIndicator()) : ListView.builder(
+                  child: isloading ? Center(child: CircularProgressIndicator( color: Color(0xff009E61),
+                    backgroundColor: Color(0xff0ECB82),)) : ListView.builder(
                     controller: _controller,
                     shrinkWrap: true,
                     itemCount: data == null ? 0 : eBookModelClass!.data!.ebooks!.length,

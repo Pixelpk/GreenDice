@@ -274,7 +274,8 @@ class _CalendarPageState extends State<CalendarPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: isLoading
-              ? CircularProgressIndicator()
+              ? CircularProgressIndicator( color: Color(0xff009E61),
+            backgroundColor: Color(0xff0ECB82),)
               : Column(
                   children: [
                     Stack(

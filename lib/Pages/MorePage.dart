@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/LogoutModelClass.dart';
 import 'package:greendice/ModelClasses/more_model.dart';
@@ -35,15 +36,18 @@ class _MorePageState extends State<MorePage> {
   ];
   List<String> titles = ["Profile", "Support", "E-Book", "Logout"];
 
-  List<MoreModel> moreList = [];
+  List<MoreModel> moreList = [
+    MoreModel(icon: 'assets/images/profil.svg', title: 'Profile'),
+    MoreModel(icon: 'assets/images/support.svg', title: 'Support'),
+    MoreModel(icon: 'assets/images/ebook.svg', title: 'E-Book'),
+    MoreModel(icon: 'assets/images/logout.svg', title: 'Logout')
+  ];
 
   @override
   void initState() {
     super.initState();
 
-    Loadprefs().then((value) => {
-          _gerMoreList(),
-        });
+    Loadprefs();
   }
 
   Future<void> Loadprefs() async {
@@ -55,15 +59,6 @@ class _MorePageState extends State<MorePage> {
       photo = (prefs.getString('image') ?? '');
       isLoading = false;
     });
-  }
-
-  _gerMoreList() {
-    moreList
-        .add(MoreModel(icon: 'assets/images/profile.png', title: 'Profile'));
-    moreList
-        .add(MoreModel(icon: 'assets/images/support.png', title: 'Support'));
-    moreList.add(MoreModel(icon: 'assets/images/ebook.png', title: 'E-Book'));
-    moreList.add(MoreModel(icon: 'assets/images/logout.png', title: 'Logout'));
   }
 
   void signin() {
@@ -106,12 +101,24 @@ class _MorePageState extends State<MorePage> {
         gravity: ToastGravity.CENTER,
       );
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SigninScreen(title: "SigninScreen")),
-      );
+      resetSharedPref().then((value) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => SigninScreen(title: "SigninScreen")),
+            (route) => false);
+      });
     }
+  }
+
+  Future<void> resetSharedPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('access_token', '');
+    prefs.setString('fname', '');
+    prefs.setString('lname', '');
+    prefs.setString('phone', '');
+    prefs.setString('email', '');
+    prefs.setString('image', '');
+    return Future.value();
   }
 
   @override
@@ -137,18 +144,17 @@ class _MorePageState extends State<MorePage> {
 
       body: SafeArea(
         child: isLoading
-            ? CircularProgressIndicator()
+            ? CircularProgressIndicator(
+                color: Color(0xff009E61),
+                backgroundColor: Color(0xff0ECB82),
+              )
             : Column(
                 children: [
                   Stack(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.21,
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
-                                    "assets/images/membershipimage.png"),
                                 fit: BoxFit.cover)),
                       ),
                       Column(
@@ -243,7 +249,10 @@ class _MorePageState extends State<MorePage> {
                           itemBuilder: (BuildContext context, int index) {
                             return ListTile(
                               title: Text(moreList[index].title!),
-                              leading: Image.asset(moreList[index].icon!),
+                              leading: SvgPicture.asset(
+                                moreList[index].icon!,
+
+                              ),
                               onTap: () {
                                 if (index == 0) {
                                   Navigator.push(

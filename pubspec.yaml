@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  flutter_svg: ^0.23.0+1
   image_picker: ^0.8.4
   pinput: ^1.2.0
   flutter_calendar_carousel: ^2.0.3

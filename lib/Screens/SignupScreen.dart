@@ -320,7 +320,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
               Visibility(
                 visible: isLoading,
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator( color: Color(0xff009E61),
+                  backgroundColor: Color(0xff0ECB82),),
               ),
 
             ],
