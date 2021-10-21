@@ -25,7 +25,7 @@ class _NotificationPageState extends State<NotificationPage> {
   // late ScrollController _controller;
   notifcationModelClass? notificationmodel;
   late String firstname = '', lastname = '', photo = '';
-  late final access_token;
+  late String access_token = '';
   bool isLoading = false;
 
   // _scrollListener() {
@@ -70,6 +70,7 @@ class _NotificationPageState extends State<NotificationPage> {
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
     });
+
   }
 
   Future<notifcationModelClass> Signalapi() async {
@@ -228,7 +229,7 @@ class _NotificationPageState extends State<NotificationPage> {
                             color: Color(0xff009E61),
                             backgroundColor: Color(0xff0ECB82),
                           ))
-                        : ListView.builder(
+                        : notificationmodel != null ? ListView.builder(
                             // controller: _controller,
                             shrinkWrap: true,
                             itemCount: data == null
@@ -613,7 +614,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 ),
                               );
                             },
-                          )),
+                          ):Container()),
               ),
             ],
           ),
