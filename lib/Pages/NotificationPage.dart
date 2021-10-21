@@ -23,6 +23,14 @@ class _NotificationPageState extends State<NotificationPage> {
   late String access_token = '';
   bool isLoading = false;
 
+  List<String> _shirtImagesList = [
+    'assets/images/shirt1.svg',
+    'assets/images/shirt2.svg',
+    'assets/images/shirt3.svg',
+    'assets/images/shirt4.svg',
+    'assets/images/shirt5.svg',
+    'assets/images/shirt6.svg',
+  ];
   // _scrollListener() {
   //   if (_controller.offset >= _controller.position.maxScrollExtent &&
   //       !_controller.position.outOfRange) {
@@ -49,9 +57,12 @@ class _NotificationPageState extends State<NotificationPage> {
 
     Loadprefs().then((value) => {
           Signalapi().then((value) => {
-                setState(() {
-                  this.notificationmodel = value;
-                }),
+                if (mounted)
+                  {
+                    setState(() {
+                      this.notificationmodel = value;
+                    }),
+                  }
               }),
         });
   }
@@ -91,9 +102,11 @@ class _NotificationPageState extends State<NotificationPage> {
     print(val);
     if (val == "1") {
       print('API STATUS SUCCESS');
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       return notificationmodel;
     } else {
       Fluttertoast.showToast(
@@ -101,9 +114,11 @@ class _NotificationPageState extends State<NotificationPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       return notificationmodel;
       /*Navigator.push(
         context,
@@ -144,6 +159,7 @@ class _NotificationPageState extends State<NotificationPage> {
                             fit: BoxFit.cover)),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -154,24 +170,37 @@ class _NotificationPageState extends State<NotificationPage> {
                               height: MediaQuery.of(context).size.height * 0.18,
                               width: MediaQuery.of(context).size.width * 0.1,
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              width: MediaQuery.of(context).size.width * 0.1,
-                              /*decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/profileicon.png"),
-                                      fit: BoxFit.cover)),*/
-                              child: photo == ''
-                                  ? Image.asset(
-                                      "assets/images/profileimage.png")
-                                  : Image.network(
-                                      photo,
-                                      height: 60,
-                                      width: 60,
-                                      fit: BoxFit.cover,
+                            photo == ''
+                                ? Container(
+                                    width: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.green,
+                                      image: new DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: new AssetImage(
+                                            "assets/images/profileimage.png"),
+                                      ),
                                     ),
-                            ),
+                                  )
+                                : Container(
+                                    width: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                          photo,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.03,
                             ),
@@ -188,21 +217,20 @@ class _NotificationPageState extends State<NotificationPage> {
                         width: MediaQuery.of(context).size.width * 1,
 
                       ),*/
-
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 60, top: 0, right: 0, bottom: 0),
-                              width: MediaQuery.of(context).size.width,
-                              child: Text(
-                                "Dashboard",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff0ECB82)),
-                              ),
-                            )
                           ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: 60, top: 0, right: 0, bottom: 0),
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                          "Dashboard",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff0ECB82)),
                         ),
                       )
                     ],
@@ -502,14 +530,18 @@ class _NotificationPageState extends State<NotificationPage> {
                                                             horizontal: 5),
                                                     child: Row(
                                                       children: [
-                                                        Image.asset(
-                                                            "assets/images/horseimage.png"),
+                                                        SvgPicture.asset(
+                                                          _shirtImagesList[
+                                                              (index % 6)],
+                                                          width: 72,
+                                                          height: 72,
+                                                        ),
                                                         SizedBox(
                                                           width: MediaQuery.of(
                                                                       context)
                                                                   .size
                                                                   .width *
-                                                              0.1,
+                                                              0.03,
                                                         ),
                                                         Expanded(
                                                           child: Text(
