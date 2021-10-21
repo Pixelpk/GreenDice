@@ -24,16 +24,11 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
-  late String firstname, lastname, photo;
+  late String firstname ='', lastname = '', photo = '';
   late final access_token;
-  bool isLoading = true;
+  bool isLoading = false;
 
-  List<String> icons = [
-    "assets/images/profile.png",
-    "assets/images/support.png",
-    "assets/images/ebook.png",
-    "assets/images/logout.png"
-  ];
+
   List<String> titles = ["Profile", "Support", "E-Book", "Logout"];
 
   List<MoreModel> moreList = [
@@ -57,7 +52,6 @@ class _MorePageState extends State<MorePage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
-      isLoading = false;
     });
   }
 
@@ -78,9 +72,13 @@ class _MorePageState extends State<MorePage> {
   }
 
   Future Logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    final access_token = prefs.getString('access_token') ?? '';
 
+if(mounted)
+  {
+    setState(() {
+      isLoading = true ;
+    });
+  }
     var response = await http.get(
       Uri.parse("http://syedu12.sg-host.com/api/logout"),
       headers: {
@@ -95,12 +93,24 @@ class _MorePageState extends State<MorePage> {
 
     print(val);
     if (val == "0") {
+      if(mounted)
+      {
+        setState(() {
+          isLoading = false ;
+        });
+      }
       Fluttertoast.showToast(
         msg: val,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
     } else {
+      if(mounted)
+      {
+        setState(() {
+          isLoading = false ;
+        });
+      }
       resetSharedPref().then((value) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -176,8 +186,10 @@ class _MorePageState extends State<MorePage> {
                                 ),
                                 photo == ''
                                     ? Container(
-                                        width: 72.0,
-                                        height: 72.0,
+                                        width: MediaQuery.of(context).size.height *
+                                            0.09,
+                                        height: MediaQuery.of(context).size.height *
+                                            0.09,
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
@@ -188,8 +200,10 @@ class _MorePageState extends State<MorePage> {
                                         ),
                                       )
                                     : Container(
-                                        width: 72.0,
-                                        height: 72.0,
+                                        width:MediaQuery.of(context).size.height *
+                                            0.09,
+                                        height:MediaQuery.of(context).size.height *
+                                            0.09,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(

@@ -57,9 +57,12 @@ class _NotificationPageState extends State<NotificationPage> {
 
     Loadprefs().then((value) => {
           Signalapi().then((value) => {
-                setState(() {
-                  this.notificationmodel = value;
-                }),
+                if (mounted)
+                  {
+                    setState(() {
+                      this.notificationmodel = value;
+                    }),
+                  }
               }),
         });
   }
@@ -99,9 +102,11 @@ class _NotificationPageState extends State<NotificationPage> {
     print(val);
     if (val == "1") {
       print('API STATUS SUCCESS');
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       return notificationmodel;
     } else {
       Fluttertoast.showToast(
@@ -109,9 +114,11 @@ class _NotificationPageState extends State<NotificationPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       return notificationmodel;
       /*Navigator.push(
         context,
@@ -152,6 +159,7 @@ class _NotificationPageState extends State<NotificationPage> {
                             fit: BoxFit.cover)),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -164,10 +172,13 @@ class _NotificationPageState extends State<NotificationPage> {
                             ),
                             photo == ''
                                 ? Container(
-                                    width: 72.0,
-                                    height: 72.0,
+                                    width: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
                                     decoration: new BoxDecoration(
                                       shape: BoxShape.circle,
+                                      color: Colors.green,
                                       image: new DecorationImage(
                                         fit: BoxFit.fill,
                                         image: new AssetImage(
@@ -176,8 +187,10 @@ class _NotificationPageState extends State<NotificationPage> {
                                     ),
                                   )
                                 : Container(
-                                    width: 72.0,
-                                    height: 72.0,
+                                    width: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
@@ -204,21 +217,20 @@ class _NotificationPageState extends State<NotificationPage> {
                         width: MediaQuery.of(context).size.width * 1,
 
                       ),*/
-
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 60, top: 0, right: 0, bottom: 0),
-                              width: MediaQuery.of(context).size.width,
-                              child: Text(
-                                "Dashboard",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff0ECB82)),
-                              ),
-                            )
                           ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: 60, top: 0, right: 0, bottom: 0),
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                          "Dashboard",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff0ECB82)),
                         ),
                       )
                     ],

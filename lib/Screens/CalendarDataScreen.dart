@@ -324,7 +324,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                                                                 .calenderSignal![
                                                                     index]
                                                                 .raceId
-                                                                .toString()!,
+                                                                .toString(),
                                                         style: TextStyle(
                                                             fontSize: 12,
                                                             color:

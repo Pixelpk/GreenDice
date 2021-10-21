@@ -23,7 +23,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String firstname, lastname, phone, email, photo;
+  late String firstname = '', lastname = '', phone = '', email = '', photo = '';
   var _formkey = GlobalKey<FormState>();
   var _formkey2 = GlobalKey<FormState>();
 
@@ -39,6 +39,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final _picker = ImagePicker();
   PickedFile? _imageFile;
+  @override
+  void dispose() {
+    user_ctrl.dispose();
+    user_lname.dispose();
+    email_ctrl.dispose();
+    phone_ctrl.dispose();
+    old_pass_ctrl.dispose();
+    pass_ctrl.dispose();
+    confirmpass_ctrl.dispose();
+    profilepic_ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -268,24 +280,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   IconButton(
                     onPressed: () {
-
                       Navigator.pop(context);
-
                     },
                     icon: Image.asset('assets/images/back.png'),
                   ),
-
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: -70,
                     child: InkWell(
                       onTap: () async {
-
                         print('cliked');
                         //await _picker.pickImage(source: ImageSource.gallery);
                         _showPicker(context);
-
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.2,
