@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:greendice/Screens/PaymentScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
+import 'package:greendice/Screens/SubscriptionPlanScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MembershipPage extends StatefulWidget {
@@ -74,7 +76,7 @@ class _MembershipPageState extends State<MembershipPage> {
                 backgroundColor: Color(0xff0ECB82),
               )
             : SingleChildScrollView(
-              child: Column(
+                child: Column(
                   children: [
                     Stack(
                       children: [
@@ -95,16 +97,20 @@ class _MembershipPageState extends State<MembershipPage> {
                               child: Row(
                                 children: [
                                   SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.height * 0.18,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.18,
                                     width:
                                         MediaQuery.of(context).size.width * 0.1,
                                   ),
                                   photo == ''
                                       ? Container(
-                                          width: MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
-                                          height:MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
                                           decoration: new BoxDecoration(
                                             shape: BoxShape.circle,
@@ -116,9 +122,13 @@ class _MembershipPageState extends State<MembershipPage> {
                                           ),
                                         )
                                       : Container(
-                                          width: MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
@@ -131,14 +141,15 @@ class _MembershipPageState extends State<MembershipPage> {
                                           ),
                                         ),
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.03,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.03,
                                   ),
                                   Container(
                                     child: Text(
                                       firstname + " " + lastname,
                                       style: TextStyle(
-                                          fontSize: 14, color: Color(0xffffffff)),
+                                          fontSize: 14,
+                                          color: Color(0xffffffff)),
                                     ),
                                   ),
                                 ],
@@ -185,10 +196,12 @@ class _MembershipPageState extends State<MembershipPage> {
                             overflow: Overflow.visible,
                             children: [
                               SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.3,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
                                 width: MediaQuery.of(context).size.width,
                                 child: new Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Center(
                                     child: Text(
                                       "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , as he has nice gate speed , settle behind leaders, look to be running on.",
@@ -206,7 +219,8 @@ class _MembershipPageState extends State<MembershipPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.08,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.08,
                                 width: MediaQuery.of(context).size.width,
                                 child: Container(
                                   color: Color(0xff009E61),
@@ -219,8 +233,8 @@ class _MembershipPageState extends State<MembershipPage> {
                                           color: Color(0xffffffff),
                                         ),
                                       ),
-                                      Expanded(child: Container())
-,                                    Stack(
+                                      Expanded(child: Container()),
+                                      Stack(
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -274,7 +288,8 @@ class _MembershipPageState extends State<MembershipPage> {
                                 top: 160,
                                 right: 10,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.4,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
                                   height:
                                       MediaQuery.of(context).size.height * 0.06,
                                   child: ElevatedButton(
@@ -296,7 +311,12 @@ class _MembershipPageState extends State<MembershipPage> {
                                                   side: BorderSide(
                                                     color: Color(0xffA40303),
                                                   )))),
-                                      onPressed: () => null),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    SubscriptionPlanScreen()));
+                                      }),
                                 ),
                               ),
                             ],
@@ -336,14 +356,15 @@ class _MembershipPageState extends State<MembershipPage> {
                             overflow: Overflow.visible,
                             children: [
                               SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.3,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
                                 width: MediaQuery.of(context).size.width,
                                 child: new Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Center(
                                     child: Text(
                                       "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , as he has nice gate speed , settle behind leaders, look to be running on.",
-
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
@@ -357,7 +378,8 @@ class _MembershipPageState extends State<MembershipPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.08,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.08,
                                 width: MediaQuery.of(context).size.width,
                                 child: Container(
                                   color: Color(0xff009E61),
@@ -425,7 +447,8 @@ class _MembershipPageState extends State<MembershipPage> {
                                 top: 160,
                                 right: 10,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.4,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
                                   height:
                                       MediaQuery.of(context).size.height * 0.06,
                                   child: ElevatedButton(
@@ -447,7 +470,12 @@ class _MembershipPageState extends State<MembershipPage> {
                                                   side: BorderSide(
                                                     color: Color(0xffA40303),
                                                   )))),
-                                      onPressed: () => null),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    SubscriptionPlanScreen()));
+                                      }),
                                 ),
                               ),
                             ],
@@ -475,12 +503,13 @@ class _MembershipPageState extends State<MembershipPage> {
                         ]),
                       ),
                     ),
-                /////TEMPORARAY//////////////////////
-                SizedBox(height: 20,)
-
-                 ],
+                    /////TEMPORARAY//////////////////////
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
                 ),
-            ),
+              ),
       ),
     );
   }
