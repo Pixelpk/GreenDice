@@ -177,7 +177,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                       color: Colors.green,
                                       image: new DecorationImage(
                                         fit: BoxFit.cover,
-                                            "assets/images/profileimage.png"),
+                                            image: AssetImage("assets/images/profileimage.png"),)))
                                 : Container(
                                     width: MediaQuery.of(context).size.height *
                                         0.09,
