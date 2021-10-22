@@ -23,7 +23,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String firstname, lastname, phone, email, photo;
+
+  late String firstname, lastname, phone, email;
+  String? photo;
+
   var _formkey = GlobalKey<FormState>();
   var _formkey2 = GlobalKey<FormState>();
 
@@ -40,11 +43,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _picker = ImagePicker();
   PickedFile? _imageFile;
 
+  bool isLoading = true;
+  bool isLoading2 = false;
+
   @override
   void initState() {
     super.initState();
 
     _loadCounter().then((value) => {
+
+          setState(() {
+            isLoading = false;
+          }),
+
           user_ctrl.value = user_ctrl.value.copyWith(
             text: firstname,
             selection: TextSelection.collapsed(
@@ -69,6 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               offset: phone_ctrl.value.selection.baseOffset + phone.length,
             ),
           ),
+
+          print('photo: $photo'),
+
         });
   }
 
@@ -126,7 +140,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future update() async {
+
     final isValid = _formkey.currentState!.validate();
+
+    setState(() {
+      isLoading2 = true;
+    });
+
     if (!isValid) {
       return;
     } else {
@@ -186,13 +206,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Fluttertoast.showToast(
           msg: "Unable to update profile. Please try again later",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
         );
       } else {
         Fluttertoast.showToast(
           msg: message,
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
         );
       }
     }
@@ -211,333 +231,332 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      /*  appBar: new PreferredSize(
-          preferredSize: Size.fromHeight(100.0), // here the desired height
-          child: new AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Image(
-              image: AssetImage('assets/images/dashboardappbarimage.png'),
-              fit: BoxFit.cover,
-            ),
-            backgroundColor: Colors.transparent,
-            // ...
-          )),*/
-
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
+          child: isLoading ? Center(child: CircularProgressIndicator()) : Stack(
+            alignment: AlignmentDirectional.center,
             children: [
-              Stack(
-                overflow: Overflow.visible,
+              Column(
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.21,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                                "assets/images/profilebackground.png"),
-                            fit: BoxFit.cover)),
-                  ),
-
-                  /*Padding(
-                    padding: EdgeInsets.fromLTRB(15, 25, 0, 0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.035,
-                        height: MediaQuery.of(context).size.height * 0.035,
+                  Stack(
+                    overflow: Overflow.visible,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.21,
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: ExactAssetImage('assets/images/back.png'),
-                            fit: BoxFit.fitHeight,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/profilebackground.png"),
+                                fit: BoxFit.cover)),
+                      ),
+
+                      /*Padding(
+                        padding: EdgeInsets.fromLTRB(15, 25, 0, 0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.035,
+                            height: MediaQuery.of(context).size.height * 0.035,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: ExactAssetImage('assets/images/back.png'),
+                                fit: BoxFit.fitHeight,
+                              ),
+                            ),
                           ),
                         ),
+                      ),*/
+
+                      IconButton(
+                        onPressed: () {
+
+                          Navigator.pop(context);
+
+                        },
+                        icon: Image.asset('assets/images/back.png'),
                       ),
-                    ),
-                  ),*/
 
-                  IconButton(
-                    onPressed: () {
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: -70,
+                        child: InkWell(
+                          onTap: () async {
 
-                      Navigator.pop(context);
+                            print('cliked');
+                            //await _picker.pickImage(source: ImageSource.gallery);
+                            _showPicker(context);
 
-                    },
-                    icon: Image.asset('assets/images/back.png'),
-                  ),
-
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: -70,
-                    child: InkWell(
-                      onTap: () async {
-
-                        print('cliked');
-                        //await _picker.pickImage(source: ImageSource.gallery);
-                        _showPicker(context);
-
-                      },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: photo != ''
-                            ? Container(
-                                width: 72.0,
-                                height: 72.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      photo,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : _imageFile != null
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: (photo != '' && _imageFile == null)
                                 ? Container(
                                     width: 72.0,
                                     height: 72.0,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: FileImage(
-                                            File(_imageFile!.path),
-                                          )),
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                          photo!,
+                                        ),
+                                      ),
                                     ),
                                   )
-                                : Image.asset("assets/images/profileimage.png"),
+                                : _imageFile != null
+                                    ? Container(
+                                        width: 72.0,
+                                        height: 72.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: FileImage(
+                                                File(_imageFile!.path),
+                                              )),
+                                        ),
+                                      )
+                                    : Image.asset("assets/images/profileimage.png", width: 72, height: 72,),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Form(
+                      key: _formkey,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                          ),
+                          TextFormField(
+                            controller: user_ctrl,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'First Name',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter First Name";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          TextFormField(
+                            controller: user_lname,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'Last Name',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter Last Name";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          TextFormField(
+                            enabled: false,
+                            controller: email_ctrl,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'Email',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter a valid Email";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          TextFormField(
+                            controller: phone_ctrl,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'Phone Number',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter Phone Number";
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Form(
+                      key: _formkey2,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          TextFormField(
+                            controller: old_pass_ctrl,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'Old Password',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter Old Password";
+                              } else if (text.length < 5) {
+                                return "Password should not be less then 5 characters";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          TextFormField(
+                            controller: pass_ctrl,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'New Password',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter New Password";
+                              } else if (text.length < 5) {
+                                return "Password should not be less then 5 characters";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          TextFormField(
+                            controller: confirmpass_ctrl,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                hintText: 'Confirm Password',
+                                hintStyle: TextStyle(
+                                  color: Color(0xff9B9B9B),
+                                )),
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Please enter Confirm Password";
+                              } else if (text.length < 5) {
+                                return "Password should not be less then 5 characters";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            child: ElevatedButton(
+                                child: Text("Update Profile".toUpperCase(),
+                                    style: TextStyle(fontSize: 14)),
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Color(0xff009E61)),
+                                    alignment: Alignment.center,
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(25),
+                                            side: BorderSide(
+                                              color: Color(0xff009E61),
+                                            )))),
+                                onPressed: () => update().then((value) {
+
+                                  setState(() {
+                                    isLoading2 = false;
+                                  });
+
+                                })),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            child: ElevatedButton(
+                                child: Text("Update Password".toUpperCase(),
+                                    style: TextStyle(fontSize: 14)),
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Color(0xff009E61)),
+                                    alignment: Alignment.center,
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(25),
+                                            side: BorderSide(
+                                              color: Color(0xff009E61),
+                                            )))),
+                                onPressed: () => changePassword()),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.45,
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.08,
-                      ),
-                      TextFormField(
-                        controller: user_ctrl,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'First Name',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter First Name";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      TextFormField(
-                        controller: user_lname,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Last Name',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter Last Name";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      TextFormField(
-                        enabled: false,
-                        controller: email_ctrl,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Email',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter a valid Email";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      TextFormField(
-                        controller: phone_ctrl,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Phone Number',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter Phone Number";
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+
+              Visibility(
+                visible: isLoading2,
+                child: CircularProgressIndicator(),
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.7,
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Form(
-                  key: _formkey2,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      TextFormField(
-                        controller: old_pass_ctrl,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Old Password',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter Old Password";
-                          } else if (text.length < 5) {
-                            return "Password should not be less then 5 characters";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      TextFormField(
-                        controller: pass_ctrl,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'New Password',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter New Password";
-                          } else if (text.length < 5) {
-                            return "Password should not be less then 5 characters";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      TextFormField(
-                        controller: confirmpass_ctrl,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Confirm Password',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter Confirm Password";
-                          } else if (text.length < 5) {
-                            return "Password should not be less then 5 characters";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.07,
-                        child: ElevatedButton(
-                            child: Text("Update Profile".toUpperCase(),
-                                style: TextStyle(fontSize: 14)),
-                            style: ButtonStyle(
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Color(0xff009E61)),
-                                alignment: Alignment.center,
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
-                                        side: BorderSide(
-                                          color: Color(0xff009E61),
-                                        )))),
-                            onPressed: () => update()),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.07,
-                        child: ElevatedButton(
-                            child: Text("Update Password".toUpperCase(),
-                                style: TextStyle(fontSize: 14)),
-                            style: ButtonStyle(
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Color(0xff009E61)),
-                                alignment: Alignment.center,
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
-                                        side: BorderSide(
-                                          color: Color(0xff009E61),
-                                        )))),
-                            onPressed: () => changePassword()),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
             ],
           ),
         ),
@@ -581,9 +600,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         source: ImageSource.gallery,
         imageQuality: 50,
       );
-      setState(() {
-        _imageFile = pickedFile;
-      });
+
+      if(mounted) {
+        setState(() {
+          _imageFile = pickedFile;
+        });
+      }
+
     } catch (e) {
       print('image picker error: $e');
     }
@@ -595,9 +618,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         source: ImageSource.camera,
         imageQuality: 50,
       );
-      setState(() {
-        _imageFile = pickedFile;
-      });
+
+      if(mounted) {
+        setState(() {
+          _imageFile = pickedFile;
+        });
+      }
+
       //print(‘img file 1 = ${_imgFile!.path}’);
     } catch (e) {
       print('image picker error: $e');

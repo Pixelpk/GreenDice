@@ -193,7 +193,7 @@ if(mounted)
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             image: new AssetImage(
                                                 "assets/images/profileimage.png"),
                                           ),
@@ -207,7 +207,7 @@ if(mounted)
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             image: NetworkImage(
                                               photo,
                                             ),
