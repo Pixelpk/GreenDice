@@ -24,10 +24,9 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
-  late String firstname ='', lastname = '', photo = '';
+  late String firstname = '', lastname = '', photo = '';
   late final access_token;
   bool isLoading = false;
-
 
   List<String> titles = ["Profile", "Support", "E-Book", "Logout"];
 
@@ -72,13 +71,11 @@ class _MorePageState extends State<MorePage> {
   }
 
   Future Logout() async {
-
-if(mounted)
-  {
-    setState(() {
-      isLoading = true ;
-    });
-  }
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     var response = await http.get(
       Uri.parse("http://syedu12.sg-host.com/api/logout"),
       headers: {
@@ -93,10 +90,9 @@ if(mounted)
 
     print(val);
     if (val == "0") {
-      if(mounted)
-      {
+      if (mounted) {
         setState(() {
-          isLoading = false ;
+          isLoading = false;
         });
       }
       Fluttertoast.showToast(
@@ -105,10 +101,9 @@ if(mounted)
         gravity: ToastGravity.CENTER,
       );
     } else {
-      if(mounted)
-      {
+      if (mounted) {
         setState(() {
-          isLoading = false ;
+          isLoading = false;
         });
       }
       resetSharedPref().then((value) {
@@ -186,10 +181,12 @@ if(mounted)
                                 ),
                                 photo == ''
                                     ? Container(
-                                        width: MediaQuery.of(context).size.height *
-                                            0.09,
-                                        height: MediaQuery.of(context).size.height *
-                                            0.09,
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
@@ -200,10 +197,12 @@ if(mounted)
                                         ),
                                       )
                                     : Container(
-                                        width:MediaQuery.of(context).size.height *
-                                            0.09,
-                                        height:MediaQuery.of(context).size.height *
-                                            0.09,
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(

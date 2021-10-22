@@ -31,10 +31,9 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-
-  late String firstname, lastname, photo;
+  late String firstname = '', lastname = '', photo = '';
   late final access_token;
-  bool isLoading = true;
+  bool isLoading = false;
 
   DateTime _currentDate = DateTime.now();
 
@@ -87,7 +86,7 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
 
-    Loadprefs().then((value) => {});
+    Loadprefs().then((value) {});
 
     /*Signalapi().then((value) => {
 
@@ -103,13 +102,16 @@ class _CalendarPageState extends State<CalendarPage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
-      isLoading = false;
     });
+    return Future.value();
   }
 
   Future<notifcationModelClass> Signalapi() async {
-    final prefs = await SharedPreferences.getInstance();
-    final access_token = prefs.getString('access_token') ?? '';
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     //print("token = "+access_token);
     var response = await http.post(
       Uri.parse("http://syedu12.sg-host.com/api/signalnotifications"),
@@ -124,14 +126,22 @@ class _CalendarPageState extends State<CalendarPage> {
     //notifcationModelClass notification_success = notifcationModelClass.fromJson(jsonDecode(response.body));
     var val = '${notificationmodel.success}';
 
-    this.setState(() {});
-
     //data = jsonDecode('${notification_success.data!.notificationSignal}');
     print(jsonDecode(response.body));
 
     print(val);
     if (val == "1") {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } else {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       /*Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,
@@ -149,13 +159,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-
 //     final _calendarCarouselNoHeader = CalendarCarousel<Event>(
 //       todayBorderColor: Colors.green,
 //       onDayPressed: (date, events) {
@@ -272,11 +275,15 @@ class _CalendarPageState extends State<CalendarPage> {
           )),*/
 
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: isLoading
-              ? CircularProgressIndicator( color: Color(0xff009E61),
-            backgroundColor: Color(0xff0ECB82),)
-              : Column(
+        child: isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xff009E61),
+                  backgroundColor: Color(0xff0ECB82),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
                   children: [
                     Stack(
                       children: [
@@ -302,33 +309,44 @@ class _CalendarPageState extends State<CalendarPage> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.1,
                                   ),
-
                                   photo == ''
                                       ? Container(
-                                    width: 72.0,
-                                    height: 72.0,
-                                    decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: new DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: new AssetImage(
-                                            "assets/images/profileimage.png"),
-                                      ),
-                                    ),
-                                  )
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.09,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.09,
+                                          decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: new DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: new AssetImage(
+                                                  "assets/images/profileimage.png"),
+                                            ),
+                                          ),
+                                        )
                                       : Container(
-                                    width: 72.0,
-                                    height: 72.0,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                          photo,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.09,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.09,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(
+                                                photo,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),),
-                                  ),
-
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.03,
@@ -408,33 +426,40 @@ class _CalendarPageState extends State<CalendarPage> {
                                     FlatButton(
                                       child: Text('PREV'),
                                       onPressed: () {
-                                        setState(() {
-                                          /*_targetDateTime = DateTime(_targetDateTime.year, _targetDateTime.month - 1);
+                                        if (mounted) {
+                                          setState(() {
+                                            /*_targetDateTime = DateTime(_targetDateTime.year, _targetDateTime.month - 1);
                                         _currentMonth = DateFormat.yMMM().format(_targetDateTime);
                                         */
 
-                                          _targetDateTime = DateTime(
-                                              _currentDate.year,
-                                              _currentDate.month - 1);
-                                          _currentMonth = DateFormat.yMMM()
-                                              .format(_targetDateTime);
-                                          _currentDate = _targetDateTime;
-                                        });
+                                            _targetDateTime = DateTime(
+                                                _currentDate.year,
+                                                _currentDate.month - 1);
+                                            _currentMonth = DateFormat.yMMM()
+                                                .format(_targetDateTime);
+                                            _currentDate = _targetDateTime;
+                                          });
+                                        }
                                       },
                                     ),
                                     FlatButton(
                                       child: Text('NEXT'),
                                       onPressed: () {
-                                        setState(() {
-                                          /*_targetDateTime = DateTime(
+                                        if (mounted) {
+                                          setState(() {
+                                            /*_targetDateTime = DateTime(
                                             _targetDateTime.year, _targetDateTime.month + 1);
                                         _currentMonth =
                                             DateFormat.yMMM().format(_targetDateTime);*/
 
-                                          _targetDateTime = DateTime(_currentDate.year, _currentDate.month + 1);
-                                          _currentMonth = DateFormat.yMMM().format(_targetDateTime);
-                                          _currentDate = _targetDateTime;
-                                        });
+                                            _targetDateTime = DateTime(
+                                                _currentDate.year,
+                                                _currentDate.month + 1);
+                                            _currentMonth = DateFormat.yMMM()
+                                                .format(_targetDateTime);
+                                            _currentDate = _targetDateTime;
+                                          });
+                                        }
                                       },
                                     )
                                   ],
@@ -446,8 +471,9 @@ class _CalendarPageState extends State<CalendarPage> {
                                 child: CalendarCarousel<Event>(
                                   todayBorderColor: Colors.green,
                                   onDayPressed: (date, events) {
-                                    this.setState(() => _currentDate = date);
-
+                                    if (mounted) {
+                                      this.setState(() => _currentDate = date);
+                                    }
                                     //events.forEach((event) => print(event.title));
 
                                     var val = "0";
@@ -493,10 +519,13 @@ class _CalendarPageState extends State<CalendarPage> {
                                     );
                                   },
                                   onCalendarChanged: (DateTime date) {
-                                    this.setState(() {
-                                      _targetDateTime = date;
-                                      _currentMonth = DateFormat.yMMM().format(_targetDateTime);
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        _targetDateTime = date;
+                                        _currentMonth = DateFormat.yMMM()
+                                            .format(_targetDateTime);
+                                      });
+                                    }
                                   },
                                   daysHaveCircularBorder: true,
                                   showOnlyCurrentMonthDate: false,
@@ -513,7 +542,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                   customGridViewPhysics:
                                       NeverScrollableScrollPhysics(),
                                   markedDateCustomShapeBorder: CircleBorder(
-                                      side: BorderSide(color: Colors.yellow),),
+                                    side: BorderSide(color: Colors.yellow),
+                                  ),
                                   markedDateCustomTextStyle: TextStyle(
                                     fontSize: 18,
                                     color: Colors.blue,
@@ -557,7 +587,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     )),
                   ],
                 ),
-        ),
+              ),
       ),
     );
   }

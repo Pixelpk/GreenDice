@@ -47,10 +47,12 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabList,
-      ),
+      body: _tabList.elementAt(_currentindex) ,
+
+      // TabBarView(
+      //   controller: _tabController,
+      //   children: _tabList,
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0xffdbf1e9),
         type: BottomNavigationBarType.fixed,

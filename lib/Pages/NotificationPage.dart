@@ -30,7 +30,6 @@ class _NotificationPageState extends State<NotificationPage> {
     'assets/images/shirt5.svg',
     'assets/images/shirt6.svg',
   ];
-
   @override
   void dispose() {
     // _controller.dispose();
@@ -178,11 +177,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                       color: Colors.green,
                                       image: new DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: new AssetImage(
                                             "assets/images/profileimage.png"),
-                                      ),
-                                    ),
-                                  )
                                 : Container(
                                     width: MediaQuery.of(context).size.height *
                                         0.09,
