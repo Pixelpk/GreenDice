@@ -8,6 +8,7 @@ import 'package:greendice/ModelClasses/LogoutModelClass.dart';
 import 'package:greendice/ModelClasses/more_model.dart';
 import 'package:greendice/Pages/SupportScreen.dart';
 import 'package:greendice/Screens/EbookScreen.dart';
+import 'package:greendice/Screens/LogoutLoading.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
@@ -24,10 +25,9 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
-  late String firstname ='', lastname = '', photo = '';
+  late String firstname = '', lastname = '', photo = '';
   late final access_token;
   bool isLoading = false;
-
 
   List<String> titles = ["Profile", "Support", "E-Book", "Logout"];
 
@@ -71,54 +71,7 @@ class _MorePageState extends State<MorePage> {
     );
   }
 
-  Future Logout() async {
 
-if(mounted)
-  {
-    setState(() {
-      isLoading = true ;
-    });
-  }
-    var response = await http.get(
-      Uri.parse("http://syedu12.sg-host.com/api/logout"),
-      headers: {
-        HttpHeaders.authorizationHeader: "Bearer " + access_token,
-      },
-    );
-
-    var data = json.decode(response.body);
-    LogoutModelClass logoutModelClass =
-        LogoutModelClass.fromJson(jsonDecode(response.body));
-    var val = '${logoutModelClass.data!.message}';
-
-    print(val);
-    if (val == "0") {
-      if(mounted)
-      {
-        setState(() {
-          isLoading = false ;
-        });
-      }
-      Fluttertoast.showToast(
-        msg: val,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-    } else {
-      if(mounted)
-      {
-        setState(() {
-          isLoading = false ;
-        });
-      }
-      resetSharedPref().then((value) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (context) => SigninScreen(title: "SigninScreen")),
-            (route) => false);
-      });
-    }
-  }
 
   Future<void> resetSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
@@ -153,12 +106,8 @@ if(mounted)
           )),*/
 
       body: SafeArea(
-        child: isLoading
-            ? CircularProgressIndicator(
-                color: Color(0xff009E61),
-                backgroundColor: Color(0xff0ECB82),
-              )
-            : Column(
+        child:
+             Column(
                 children: [
                   Stack(
                     children: [
@@ -186,28 +135,32 @@ if(mounted)
                                 ),
                                 photo == ''
                                     ? Container(
-                                        width: MediaQuery.of(context).size.height *
-                                            0.09,
-                                        height: MediaQuery.of(context).size.height *
-                                            0.09,
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             image: new AssetImage(
                                                 "assets/images/profileimage.png"),
                                           ),
                                         ),
                                       )
                                     : Container(
-                                        width:MediaQuery.of(context).size.height *
-                                            0.09,
-                                        height:MediaQuery.of(context).size.height *
-                                            0.09,
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             image: NetworkImage(
                                               photo,
                                             ),
@@ -294,7 +247,7 @@ if(mounted)
                                             EbookScreen(title: "EbookScreen")),
                                   );
                                 } else if (index == 3) {
-                                  Logout();
+                               Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>LogoutLoading(token: access_token)), (route) => false);
                                 }
                               },
                             );

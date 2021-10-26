@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/PaymenyResponse.dart';
 import 'package:http/http.dart' as http;
@@ -56,15 +57,15 @@ class PaymenyScreenState extends State<PaymenyScreen> {
         resizeToAvoidBottomInset: false,
         body: isLoading
             ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
                     child: Lottie.asset('assets/images/paymentProcessing.json'),
                   ),
-                SizedBox(height:50),
-                Text("Processing . . .")
-              ],
-            )
+                  SizedBox(height: 50),
+                  Text("Processing . . .")
+                ],
+              )
             : Container(
                 decoration: BoxDecoration(
                   color: Color(0xffdbf1e9),
@@ -116,7 +117,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                 cardHolderName: cardHolderName,
                                 expiryDate: expiryDate,
                                 themeColor: Colors.blue,
-                                textColor: Colors.white,
+                                textColor: Colors.black,
                                 cardNumberDecoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
@@ -265,15 +266,13 @@ class PaymenyScreenState extends State<PaymenyScreen> {
           "exp_year": exp_year,
           "cvc": cvc
         });
-
+    print(response.body);
     PaymentResponse paymentResponse =
         PaymentResponse.fromJson(jsonDecode(response.body));
 
     var val = '${paymentResponse.success}';
-    print(jsonDecode(response.body));
-
     print(val);
-    if (val == "1") {
+    if (val == "1" && paymentResponse.message != "Already subscribed") {
       print('API STATUS SUCCESS');
       if (mounted) {
         setState(() {
@@ -285,11 +284,30 @@ class PaymenyScreenState extends State<PaymenyScreen> {
           builder: (_) => PaymentSuccessScreen(
                 accesstoken: widget.accessToken,
               )));
-    } else {
+    }
+    if (val == "1" && paymentResponse.message == "Already subscribed") {
+      print('API STATUS SUCCESS , PACKAGE ALREADY SUBSCRIBED');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Fluttertoast.showToast(
+        msg: "Package is Already Active",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.SNACKBAR,
+
+        backgroundColor:Colors.white,
+        textColor:  Color(0xFF009d60)
+      );
+
+    }else {
       Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
+          backgroundColor: Color(0xFF009d60),
+          textColor: Colors.white
       );
       if (mounted) {
         setState(() {

@@ -311,9 +311,13 @@ class _CalendarPageState extends State<CalendarPage> {
                                   ),
                                   photo == ''
                                       ? Container(
-                                          width:MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
                                           decoration: new BoxDecoration(
                                             shape: BoxShape.circle,
@@ -325,9 +329,13 @@ class _CalendarPageState extends State<CalendarPage> {
                                           ),
                                         )
                                       : Container(
-                                          width: MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,

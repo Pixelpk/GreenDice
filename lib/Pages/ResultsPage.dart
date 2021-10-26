@@ -41,9 +41,7 @@ class _ResultsPageState extends State<ResultsPage> {
   void initState() {
     super.initState();
 
-    Loadprefs().then((value) => {
-          Signalapi()
-        });
+    Loadprefs().then((value) => {Signalapi()});
   }
 
   Future<void> Loadprefs() async {
@@ -122,22 +120,22 @@ class _ResultsPageState extends State<ResultsPage> {
                 .toString());
         data4.add(salesData);
       }
-      if(mounted){
+      if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
     } else {
-      if(mounted){
-      setState(() {
-        isLoading = false;
-      });}
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
-
     }
 
     return resultsModelClass;
@@ -145,7 +143,6 @@ class _ResultsPageState extends State<ResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       /*  appBar: new PreferredSize(
           preferredSize: Size.fromHeight(100.0), // here the desired height
@@ -160,15 +157,15 @@ class _ResultsPageState extends State<ResultsPage> {
           )),*/
 
       body: SafeArea(
-        child:isLoading
+        child: isLoading
             ? Center(
-          child: CircularProgressIndicator(
-            color: Color(0xff009E61),
-            backgroundColor: Color(0xff0ECB82),
-          ),
-        ): SingleChildScrollView(
-          child:
-               Column(
+                child: CircularProgressIndicator(
+                  color: Color(0xff009E61),
+                  backgroundColor: Color(0xff0ECB82),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
                   children: [
                     Stack(
                       children: [
@@ -196,28 +193,36 @@ class _ResultsPageState extends State<ResultsPage> {
                                   ),
                                   photo == ''
                                       ? Container(
-                                          width:MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
                                           decoration: new BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: new DecorationImage(
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.cover,
                                               image: new AssetImage(
                                                   "assets/images/profileimage.png"),
                                             ),
                                           ),
                                         )
                                       : Container(
-                                          width:MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.09,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.cover,
                                               image: NetworkImage(
                                                 photo,
                                               ),
@@ -375,7 +380,7 @@ class _ResultsPageState extends State<ResultsPage> {
                     )),
                   ],
                 ),
-        ),
+              ),
       ),
     );
   }
