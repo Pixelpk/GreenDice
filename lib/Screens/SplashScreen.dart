@@ -25,22 +25,30 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Loadprefs().then((token) {
-      print("TOKEN IS SPLASH SCREEN $token");
+    Loadprefs().then((token) async {
       if (token == '' || token == null) {
         Timer(
             Duration(seconds: 2),
-                () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) => WelcomeScreen(
-                  title: 'WelcomeScreen',
-                ))));
+                      title: 'WelcomeScreen',
+                    ))));
       } else {
+        final prefs = await SharedPreferences.getInstance();
 
+       bool ispremium = prefs.getString('isYearlyPkg') == '1'
+            ? true
+            : prefs.getString('isFourMonthPkg') == '1'
+            ? true
+            : false;
+        print("ISPREMIUM FROM SHAREDPREF $ispremium");
         Timer(
             Duration(seconds: 2),
-                () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => HomeScreen(title: token))));
-
+            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => HomeScreen(
+                      title: token,
+                      ispremiumUser: ispremium,
+                    ))));
 
         // WelcomeScreen(title: 'WelcomeScreen',);
       }
@@ -78,21 +86,18 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.height * 0.2,
-            // decoration: BoxDecoration(
-            //   image: DecorationImage(
-            //     image: AssetImage("assets/images/logo.png"),
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
-            child:  SvgPicture.asset(
-                  "assets/images/splashLogo.svg"
-                      ,
-              color: Colors.white,
-
-              )
-          )
+              width: MediaQuery.of(context).size.width * 0.3,
+              height: MediaQuery.of(context).size.height * 0.2,
+              // decoration: BoxDecoration(
+              //   image: DecorationImage(
+              //     image: AssetImage("assets/images/logo.png"),
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
+              child: SvgPicture.asset(
+                "assets/images/splashLogo.svg",
+                color: Colors.white,
+              ))
         ],
       ),
     );

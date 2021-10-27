@@ -14,9 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class MembershipPage extends StatefulWidget {
-  MembershipPage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
+
+
 
   @override
   _MembershipPageState createState() => _MembershipPageState();
@@ -49,7 +49,10 @@ class _MembershipPageState extends State<MembershipPage> {
       });
     });
   }
-
+  String isYearlyPkg = '0' ;
+  String isFourMonthPkg = '0';
+  String isCharmans = '0';
+  bool ispremium =false ;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -57,6 +60,14 @@ class _MembershipPageState extends State<MembershipPage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
+      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
+      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      ispremium = prefs.getString('isYearlyPkg') == '1'
+          ? true
+          : prefs.getString('isFourMonthPkg') == '1'
+          ? true
+          : false;
     });
   }
 
@@ -177,14 +188,35 @@ class _MembershipPageState extends State<MembershipPage> {
                                                   .width *
                                               0.03,
                                         ),
-                                        Container(
-                                          child: Text(
-                                            firstname + " " + lastname,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Color(0xffffffff)),
-                                          ),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(height: 8,),
+                                            Container(
+                                              child: Text(
+                                                firstname + " " + lastname,
+                                                style: TextStyle(
+                                                    fontSize: 14, color: Color(0xffffffff)),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white
+                                              ),
+                                            ),
+                                            SizedBox(height: 4,),
+                                            isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white
+                                            ),):Container()
+                                          ],
                                         ),
+
                                       ],
                                     ),
                                   ),
@@ -511,16 +543,21 @@ class _MembershipPageState extends State<MembershipPage> {
                                             MediaQuery.of(context).size.height *
                                                 0.06,
                                         child: ElevatedButton(
-                                            child: Text("Subscribe",
-                                                style: TextStyle(fontSize: 14)),
+                                            child: Text( "Subscribe",
+                                                style: TextStyle(fontSize: 14
+                                                ,
+                                                  color: ispremium ? Colors.white:Colors.grey
+                                                )),
                                             style: ButtonStyle(
                                                 foregroundColor:
                                                     MaterialStateProperty.all<
                                                         Color>(Colors.white),
-                                                backgroundColor:
+                                                backgroundColor:ispremium ?
                                                     MaterialStateProperty.all<
                                                             Color>(
-                                                        Color(0xffA40303)),
+                                                        Color(0xffA40303)):MaterialStateProperty.all<
+                                                    Color>(
+                                                    Color(0xffE8E8E8)),
                                                 alignment: Alignment.center,
                                                 shape: MaterialStateProperty.all<
                                                         RoundedRectangleBorder>(
@@ -529,21 +566,21 @@ class _MembershipPageState extends State<MembershipPage> {
                                                             BorderRadius
                                                                 .circular(25),
                                                         side: BorderSide(
-                                                          color:
-                                                              Color(0xffA40303),
+                                                          color:ispremium ?
+                                                              Color(0xffA40303):Color(0xffE8E8E8)
                                                         )))),
-                                            onPressed: () {
+                                            onPressed:ispremium ? () {
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (_) =>
                                                           PaymenyScreen(
                                                             accessToken:
                                                                 access_token,
-                                                            packagePriceID:
+                                                            packageId:
                                                                 chairmansPackages!
-                                                                    .priceId!,
+                                                                    .id!.toString(),
                                                           )));
-                                            }),
+                                            }:(){})
                                       ),
                                     ),
                                   ],

@@ -11,13 +11,15 @@ import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'PaymentSuccessScreen.dart';
 
 class PaymenyScreen extends StatefulWidget {
   String? accessToken;
-  String? packagePriceID;
-  PaymenyScreen({required this.accessToken, required this.packagePriceID});
+
+  String? packageId;
+  PaymenyScreen({required this.accessToken, required this.packageId});
   @override
   State<StatefulWidget> createState() {
     return PaymenyScreenState();
@@ -206,13 +208,13 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
                                     print('valid!');
-                                    if (widget.packagePriceID != null &&
+                                    if (widget.packageId != null &&
                                         widget.accessToken != null) {
                                       BuyPackage(
                                           cardNumber: cardNumber,
                                           cvc: cvvCode,
                                           expiry: expiryDate,
-                                          priceId: widget.packagePriceID!);
+                                          package_id: widget.packageId!);
                                     }
                                   } else {
                                     print('invalid!');
@@ -242,7 +244,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
   }
 
   Future BuyPackage(
-      {required String priceId,
+      {required String package_id,
       required String cardNumber,
       required String expiry,
       required String cvc}) async {
@@ -250,6 +252,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
     String exp_month = expiry.split("/")[0];
     print("expire year $exp_year");
     print("expire motn $exp_month");
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
       isLoading = true;
     });
@@ -260,32 +263,38 @@ class PaymenyScreenState extends State<PaymenyScreen> {
           HttpHeaders.authorizationHeader: "Bearer " + widget.accessToken!,
         },
         body: {
-          "price": priceId,
+          "package_id": package_id,
           "number": cardNumber,
           "exp_month": exp_month,
           "exp_year": exp_year,
           "cvc": cvc
         });
     print(response.body);
-    PaymentResponse paymentResponse =
-        PaymentResponse.fromJson(jsonDecode(response.body));
 
-    var val = '${paymentResponse.success}';
-    print(val);
-    if (val == "1" && paymentResponse.message != "Already subscribed") {
+
+    if (response.body.contains("Subscription successfull")) {
+      PaymentResponse paymentResponse =
+      PaymentResponse.fromJson(jsonDecode(response.body));
       print('API STATUS SUCCESS');
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
+if(widget.packageId=='3')
+  {
+    prefs.setString('isChairman', widget.packageId == "3" ? '1' : '0');
+  }
+      prefs.setString('isYearlyPkg', widget.packageId == "1" ? '1' : '0');
+      prefs.setString('isFourMonthPkg', widget.packageId == "2" ? '1' : '0');
+
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => PaymentSuccessScreen(
+                ispremiumUser: true,
                 accesstoken: widget.accessToken,
               )));
-    }
-    if (val == "1" && paymentResponse.message == "Already subscribed") {
+    } else if (response.body.contains("Already subscribed") ) {
       print('API STATUS SUCCESS , PACKAGE ALREADY SUBSCRIBED');
       if (mounted) {
         setState(() {
@@ -293,22 +302,18 @@ class PaymenyScreenState extends State<PaymenyScreen> {
         });
       }
       Fluttertoast.showToast(
-        msg: "Package is Already Active",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-
-        backgroundColor:Colors.white,
-        textColor:  Color(0xFF009d60)
-      );
-
-    }else {
+          msg: "Package is Already Active",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.white,
+          textColor: Color(0xFF009d60));
+    } else {
       Fluttertoast.showToast(
-        msg: "Error! Please try again later",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+          msg: "Error! Please try again later",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
           backgroundColor: Color(0xFF009d60),
-          textColor: Colors.white
-      );
+          textColor: Colors.white);
       if (mounted) {
         setState(() {
           isLoading = false;

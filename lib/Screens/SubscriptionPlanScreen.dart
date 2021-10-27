@@ -191,7 +191,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => PaymenyScreen(
                               accessToken:accessToken ,
-                              packagePriceID: classicQuaterly!.priceId!,
+                              packageId: classicQuaterly!.id.toString(),
 
                             )));
                       } else if (yearlyplanSelected) {
@@ -199,7 +199,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => PaymenyScreen(
                               accessToken:accessToken ,
-                              packagePriceID: classicYearly!.priceId!,
+                              packageId: classicYearly!.id.toString(),
                             )));
                       }
                     },

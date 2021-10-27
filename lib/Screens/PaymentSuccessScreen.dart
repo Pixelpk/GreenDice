@@ -5,7 +5,8 @@ import 'HomeScreen.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
   String? accesstoken;
-  PaymentSuccessScreen({Key? key, required this.accesstoken}) : super(key: key);
+  bool ispremiumUser ;
+  PaymentSuccessScreen({Key? key, required this.accesstoken,required this.ispremiumUser}) : super(key: key);
 
   @override
   _PaymentSuccessScreenState createState() => _PaymentSuccessScreenState();
@@ -19,6 +20,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
           MaterialPageRoute(
               builder: (_) => HomeScreen(
                     title: widget.accesstoken!,
+                ispremiumUser: widget.ispremiumUser,
                   )),
           (route) => false);
     });

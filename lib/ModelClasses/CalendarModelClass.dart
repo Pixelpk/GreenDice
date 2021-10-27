@@ -87,22 +87,21 @@ class GraphData {
 }
 
 class YearlyProfit {
-  int? id;
+
   String? signalDate;
   String? profit;
 
-  YearlyProfit({required this.id, required this.signalDate, required this.profit});
+  YearlyProfit({ required this.signalDate, required this.profit});
 
   YearlyProfit.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    signalDate = json['signal_date'];
+    signalDate = json['month'];
     profit = json['profit'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['signal_date'] = this.signalDate;
+
+    data['month'] = this.signalDate;
     data['profit'] = this.profit;
     return data;
   }

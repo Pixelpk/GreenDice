@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greendice/Screens/EmailforOTP.dart';
@@ -16,7 +15,6 @@ class SigninScreen extends StatefulWidget {
 
   final String title;
 
-
   @override
   _SigninScreenState createState() => _SigninScreenState();
 }
@@ -25,20 +23,17 @@ class _SigninScreenState extends State<SigninScreen> {
   bool _isObscure = true;
   var _formkey = GlobalKey<FormState>();
 
-  TextEditingController email = TextEditingController(text: 't@gmail.com');
-  TextEditingController pass = TextEditingController(text: '123456');
+  TextEditingController email = TextEditingController(text: 'textt5@gmail.com');
+  TextEditingController pass = TextEditingController(text: '123123');
 
   bool isLoading = false;
 
   Future login() async {
-
-if(mounted)
-   {
-     setState(() {
-       isLoading = true;
-     });
-   }
-
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
@@ -49,9 +44,9 @@ if(mounted)
       var response = await http.post(
         Uri.parse("http://syedu12.sg-host.com/api/login"),
         body: {
-        "email": email.text,
-        "password": pass.text,
-      },
+          "email": email.text,
+          "password": pass.text,
+        },
         headers: <String, String>{
           'Accept': 'application/json',
         },
@@ -61,50 +56,48 @@ if(mounted)
       SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
       var val = '${signinUser.success}';
 
-
-
       print(response);
       if (val == "0") {
-
-        if('${signinUser.message}' == "AccessDenied")
-          {
-            Fluttertoast.showToast(
-              msg: "Incorrect email or password",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-            );
-          }
-        else
-          {
-            Fluttertoast.showToast(
-              msg: "Network error! Please check your internet connection and try again",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-            );
-          }
-
-      }
-      else {
-
+        if ('${signinUser.message}' == "AccessDenied") {
+          Fluttertoast.showToast(
+            msg: "Incorrect email or password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg:
+                "Network error! Please check your internet connection and try again",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+          );
+        }
+      } else {
         var access_token = '${signinUser.data!.accessToken}';
-
         prefs.setString('access_token', access_token);
         prefs.setString('fname', signinUser.data!.user!.firstName!);
         prefs.setString('lname', signinUser.data!.user!.lastName!);
         prefs.setString('phone', signinUser.data!.user!.phone!);
         prefs.setString('email', signinUser.data!.user!.email!);
         prefs.setString('image', signinUser.data!.user!.photo!);
-
-
-          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-            CupertinoPageRoute(
-              builder: (BuildContext context) {
-                return HomeScreen(title: access_token);
-              },
-            ),
-                (_) => false,
-          );
-
+        prefs.setString('isYearlyPkg',
+            signinUser.data!.user!.isYearlyPkg.toString());
+        prefs.setString('isFourMonthPkg',
+            signinUser.data!.user!.isFourMonthPkg.toString());
+        prefs.setString('isChairman',
+            signinUser.data!.user!.isChairman.toString());
+        bool ispremiumUser = signinUser.data!.user!.isYearlyPkg == 1 ? true :signinUser.data!.user!.isFourMonthPkg ==1 ? true :false ;
+        print("////////////////////////////////////${signinUser.data!.user!.isYearlyPkg.toString()}  $ispremiumUser");
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          CupertinoPageRoute(
+            builder: (BuildContext context) {
+              return HomeScreen(title: access_token,
+              ispremiumUser: ispremiumUser,
+              );
+            },
+          ),
+          (_) => false,
+        );
       }
     }
   }
@@ -122,10 +115,8 @@ if(mounted)
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -158,10 +149,8 @@ if(mounted)
                           return null;
                         },
                         onChanged: (value) {
-                          if(value.length > 0) {
-                            setState(() {
-
-                            });
+                          if (value.length > 0) {
+                            setState(() {});
                           }
                         },
                       ),
@@ -189,11 +178,9 @@ if(mounted)
                         validator: (text) {
                           if (!(text!.length > 5) && text.isNotEmpty) {
                             return "Enter valid name of more then 5 characters!";
+                          } else if (!(text.length > 1) && text.isEmpty) {
+                            return "Please enter a valid password";
                           }
-                          else if(!(text.length > 1) && text.isEmpty)
-                            {
-                              return "Please enter a valid password";
-                            }
                         },
                       ),
                       SizedBox(
@@ -202,32 +189,24 @@ if(mounted)
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
                         width: MediaQuery.of(context).size.width * 1,
-
                         child: GestureDetector(
-
-                          onTap: (){
-
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => EmailforOTP(title: "EmailforOTP")),
+                                  builder: (context) =>
+                                      EmailforOTP(title: "EmailforOTP")),
                             );
-
                           },
-
                           child: Text(
-
                             "Forgot Password?",
-
                             textAlign: TextAlign.start,
-
                             style: TextStyle(
                               fontSize: 12,
                               color: Color(0xff005333),
                             ),
                           ),
                         ),
-
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.05,
@@ -236,31 +215,30 @@ if(mounted)
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.07,
                         child: ElevatedButton(
-                            child: Text("Login", style: TextStyle(fontSize: 14)),
-                            style: ButtonStyle(
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                    Colors.white),
-                                backgroundColor: MaterialStateProperty.all<Color>(
-                                    Color(0xff009E61)),
-                                alignment: Alignment.center,
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
-                                        side: BorderSide(
-                                          color: Color(0xff009E61),
-                                        )))),
-                            onPressed: isLoading ? null : () {
-
-                              login().then((value) {
-
-                                setState(() {
-                                  isLoading = false;
-                                });
-
-                              });
-
-                            },),
+                          child: Text("Login", style: TextStyle(fontSize: 14)),
+                          style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Color(0xff009E61)),
+                              alignment: Alignment.center,
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(
+                                        color: Color(0xff009E61),
+                                      )))),
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  login().then((value) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  });
+                                },
+                        ),
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.01,
@@ -276,13 +254,9 @@ if(mounted)
                               ),
                             ),
                             GestureDetector(
-
-                              onTap: (){
-
+                              onTap: () {
                                 signup();
                               },
-
-
                               child: Text(
                                 "  Signup",
                                 style: TextStyle(
@@ -326,14 +300,13 @@ if(mounted)
                   ),
                 ]),
               ),
-
-
               Visibility(
                 visible: isLoading,
-                child: CircularProgressIndicator( color: Color(0xff009E61),
-                  backgroundColor: Color(0xff0ECB82),),
+                child: CircularProgressIndicator(
+                  color: Color(0xff009E61),
+                  backgroundColor: Color(0xff0ECB82),
+                ),
               ),
-
             ],
           ),
         ),

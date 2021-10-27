@@ -22,6 +22,8 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
+import 'MembershipPage.dart';
+
 class CalendarPage extends StatefulWidget {
   CalendarPage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -94,7 +96,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
     });*/
   }
-
+  String isYearlyPkg = '0' ;
+  String isFourMonthPkg = '0';
+  String isCharmans = '0';
+bool ispremium = true ;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -102,6 +107,15 @@ class _CalendarPageState extends State<CalendarPage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
+      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
+      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      ispremium = prefs.getString('isYearlyPkg') == '1'
+          ? true
+          : prefs.getString('isFourMonthPkg') == '1'
+          ? true
+          : false;
+
     });
     return Future.value();
   }
@@ -351,14 +365,35 @@ class _CalendarPageState extends State<CalendarPage> {
                                     width: MediaQuery.of(context).size.width *
                                         0.03,
                                   ),
-                                  Container(
-                                    child: Text(
-                                      firstname + " " + lastname,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xffffffff)),
-                                    ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(height: 8,),
+                                      Container(
+                                        child: Text(
+                                          firstname + " " + lastname,
+                                          style: TextStyle(
+                                              fontSize: 14, color: Color(0xffffffff)),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                      SizedBox(height: 4,),
+                                      isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white
+                                      ),):Container()
+                                    ],
                                   ),
+
                                 ],
                               ),
                             ),
@@ -391,7 +426,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       height: MediaQuery.of(context).size.height * 0.03,
                       color: Color(0xff009E61),
                     ),
-                    Center(
+                    ispremium ?  Center(
                         child: Column(
                       children: [
                         SingleChildScrollView(
@@ -474,46 +509,62 @@ class _CalendarPageState extends State<CalendarPage> {
                                     if (mounted) {
                                       this.setState(() => _currentDate = date);
                                     }
-                                    //events.forEach((event) => print(event.title));
-
-                                    var val = "0";
-                                    if (date.month < 10 && date.day < 10) {
-                                      val = date.year.toString() +
-                                          "-0" +
-                                          date.month.toString() +
-                                          "-0" +
-                                          date.day.toString();
-                                    } else if (date.month > 10 &&
-                                        date.day < 10) {
-                                      val = date.year.toString() +
-                                          "-" +
-                                          date.month.toString() +
-                                          "-0" +
-                                          date.day.toString();
-                                    } else if (date.month < 10 &&
-                                        date.day > 10) {
-                                      val = date.year.toString() +
-                                          "-0" +
-                                          date.month.toString() +
-                                          "-" +
-                                          date.day.toString();
-                                    } else if (date.month > 10 &&
-                                        date.day > 10) {
-                                      val = date.year.toString() +
-                                          "-" +
-                                          date.month.toString() +
-                                          "-" +
-                                          date.day.toString();
+                                    String formateddate = DateFormat.yMd().format(date);
+                                    //print(formateddate);
+                                    List<String>splitteddate = formateddate.split('/') ;
+                                   // print(splitteddate);
+                                    String month = splitteddate[0];
+                                    if(month.length == 1)
+                                      {
+                                        month = "0$month" ;
+                                      }
+                                    String selecteddate = splitteddate[1];
+                                    if(selecteddate.length == 1)
+                                    {
+                                      selecteddate = "0$selecteddate" ;
                                     }
+                                    String year = splitteddate[2];
+                                    List<String> requiredFormatList = [year,month,selecteddate];
+                                    String finaldate =requiredFormatList.join('-');
+                                   // print(finaldate);
+                                    // var val = "0";
+                                    // if (date.month < 10 && date.day < 10) {
+                                    //   val = date.year.toString() +
+                                    //       "-0" +
+                                    //       date.month.toString() +
+                                    //       "-0" +
+                                    //       date.day.toString();
+                                    // } else if (date.month > 10 &&
+                                    //     date.day < 10) {
+                                    //   val = date.year.toString() +
+                                    //       "-" +
+                                    //       date.month.toString() +
+                                    //       "-0" +
+                                    //       date.day.toString();
+                                    // } else if (date.month < 10 &&
+                                    //     date.day > 10) {
+                                    //   val = date.year.toString() +
+                                    //       "-0" +
+                                    //       date.month.toString() +
+                                    //       "-" +
+                                    //       date.day.toString();
+                                    // } else if (date.month > 10 &&
+                                    //     date.day > 10) {
+                                    //   val = date.year.toString() +
+                                    //       "-" +
+                                    //       date.month.toString() +
+                                    //       "-" +
+                                    //       date.day.toString();
+                                    // }
 
-                                    print('date: $val');
+                                    print('date: $finaldate');
 
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             CalendarDataScreen(
-                                          title: val,
+                                          title: finaldate,
                                         ),
                                       ),
                                     );
@@ -584,7 +635,35 @@ class _CalendarPageState extends State<CalendarPage> {
                           ),
                         )
                       ],
-                    )),
+                    )): Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height*0.65,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Buy Package to see All Events'),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (_) => MembershipPage(
+                                          )));
+                                },
+                                minWidth:
+                                MediaQuery.of(context).size.width *
+                                    0.1,
+                                height:
+                                MediaQuery.of(context).size.height *
+                                    0.06,
+                                child: Text("Buy Now"),
+                                color: Colors.green,
+                              )
+                            ],
+                          )),
+                    )
                   ],
                 ),
               ),

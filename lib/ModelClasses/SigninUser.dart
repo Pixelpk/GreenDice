@@ -56,6 +56,9 @@ class User {
   String? verificationCode;
   String? createdAt;
   String? updatedAt;
+  int? isYearlyPkg;
+  int? isFourMonthPkg;
+  int? isChairman;
 
   User(
       {this.id,
@@ -68,7 +71,9 @@ class User {
         this.photo,
         this.status,
         this.verificationCode,
-        this.createdAt,
+        this.createdAt,   this.isYearlyPkg,
+        this.isFourMonthPkg,
+        this.isChairman,
         this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -83,7 +88,11 @@ class User {
     status = json['status'];
     verificationCode = json['verification_code'];
     createdAt = json['created_at'];
+    isYearlyPkg = json['is_yearly_pkg'];
+    isFourMonthPkg = json['is_four_month_pkg'];
+    isChairman = json['is_chairman'];
     updatedAt = json['updated_at'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +109,10 @@ class User {
     data['verification_code'] = this.verificationCode;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['is_yearly_pkg'] = this.isYearlyPkg;
+    data['is_four_month_pkg'] = this.isFourMonthPkg;
+    data['is_chairman'] = this.isChairman;
+
     return data;
   }
 }

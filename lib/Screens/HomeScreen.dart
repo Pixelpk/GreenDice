@@ -10,7 +10,8 @@ import 'package:greendice/Screens/CalendarDataScreen.dart';
 import 'SignupScreen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key, required this.title}) : super(key: key);
+  bool ispremiumUser ;
+  HomeScreen({Key? key, required this.title ,required this.ispremiumUser }) : super(key: key);
 
   final String title;
 
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen>
   int _currentindex = 0;
   List<Widget> _tabList = [
     new NotificationPage(title: "Notification"),
-    new MembershipPage(title: "Membership"),
+    new MembershipPage(),
     new ResultsPage(title: "Results"),
     new CalendarPage(title: "Calendar"),
     new MorePage(title: "Notification")
@@ -34,6 +35,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+    if(!widget.ispremiumUser)
+      {
+        _currentindex = 1 ;
+      }
     _tabController = TabController(vsync: this, length: _tabList.length);
   }
 

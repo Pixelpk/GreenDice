@@ -15,6 +15,8 @@ import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import '../ModelClasses/notificationModelClass.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
+import 'MembershipPage.dart';
+
 class ResultsPage extends StatefulWidget {
   ResultsPage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -41,9 +43,17 @@ class _ResultsPageState extends State<ResultsPage> {
   void initState() {
     super.initState();
 
-    Loadprefs().then((value) => {Signalapi()});
+    Loadprefs().then((value) {
+      if(ispremium)
+        {
+          Signalapi();
+        }
+     });
   }
-
+  String isYearlyPkg = '0' ;
+  String isFourMonthPkg = '0';
+  String isCharmans = '0';
+bool ispremium = true ;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -51,6 +61,14 @@ class _ResultsPageState extends State<ResultsPage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
+      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
+      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      ispremium = prefs.getString('isYearlyPkg') == '1'
+          ? true
+          : prefs.getString('isFourMonthPkg') == '1'
+          ? true
+          : false;
     });
   }
 
@@ -157,14 +175,8 @@ class _ResultsPageState extends State<ResultsPage> {
           )),*/
 
       body: SafeArea(
-        child: isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xff009E61),
-                  backgroundColor: Color(0xff0ECB82),
-                ),
-              )
-            : SingleChildScrollView(
+        child:
+             SingleChildScrollView(
                 child: Column(
                   children: [
                     Stack(
@@ -233,14 +245,35 @@ class _ResultsPageState extends State<ResultsPage> {
                                     width: MediaQuery.of(context).size.width *
                                         0.03,
                                   ),
-                                  Container(
-                                    child: Text(
-                                      firstname + " " + lastname,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xffffffff)),
-                                    ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(height: 8,),
+                                      Container(
+                                        child: Text(
+                                          firstname + " " + lastname,
+                                          style: TextStyle(
+                                              fontSize: 14, color: Color(0xffffffff)),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                      SizedBox(height: 4,),
+                                      isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white
+                                      ),):Container()
+                                    ],
                                   ),
+
                                 ],
                               ),
                             ),
@@ -273,7 +306,16 @@ class _ResultsPageState extends State<ResultsPage> {
                       height: MediaQuery.of(context).size.height * 0.03,
                       color: Color(0xff009E61),
                     ),
-                    Center(
+                    ispremium ?   isLoading
+                        ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.65,
+                          child: Center(
+                      child: CircularProgressIndicator(
+                          color: Color(0xff009E61),
+                          backgroundColor: Color(0xff0ECB82),
+                      ),
+                    ),
+                        ) :Center(
                         child: Column(
                       children: [
                         SizedBox(
@@ -377,10 +419,38 @@ class _ResultsPageState extends State<ResultsPage> {
                               ]),
                         ),
                       ],
-                    )),
+                    )): Center(
+                      child: Container(
+                          height: MediaQuery.of(context).size.height*0.65,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Buy Packages to see Results'),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (_) => MembershipPage(
+                                          )));
+                                },
+                                minWidth:
+                                MediaQuery.of(context).size.width *
+                                    0.1,
+                                height:
+                                MediaQuery.of(context).size.height *
+                                    0.06,
+                                child: Text("Buy Now"),
+                                color: Colors.green,
+                              )
+                            ],
+                          )),
+                    )
                   ],
                 ),
-              ),
+              )
       ),
     );
   }

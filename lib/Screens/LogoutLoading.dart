@@ -25,6 +25,12 @@ class _LogoutLoadingState extends State<LogoutLoading> {
     prefs.setString('phone', '');
     prefs.setString('email', '');
     prefs.setString('image', '');
+    prefs.setString('isYearlyPkg',
+        '0');
+    prefs.setString('isFourMonthPkg',
+        '0');
+    prefs.setString('isChairman',
+        '0');
     return Future.value();
   }
   Future Logout() async {

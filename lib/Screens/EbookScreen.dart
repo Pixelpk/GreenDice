@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/EBookModelClass.dart';
@@ -224,6 +225,22 @@ class _EbookScreenState extends State<EbookScreen> {
                         child: new Text(notificationmodel!.data!.notificationSignal![index].horse!),
                       );*/
                                 return InkWell(
+                                  onTap: () async {
+                                   try {
+                                      PDFDocument doc = await PDFDocument.fromURL(
+                                          eBookModelClass!.data!.ebooks![index].fileName!);
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PDFViewer(document: doc)));
+                                      print("on tab ebook");
+                                    }catch(e){
+                                     Fluttertoast.showToast(
+                                         msg: "Couldn't open this Ebook",
+                                         toastLength: Toast.LENGTH_SHORT,
+                                         gravity: ToastGravity.CENTER,
+                                         backgroundColor: Color(0xFF009d60),
+                                         textColor: Colors.white);
+                                   }
+
+                                  },
                                   child: Container(
                                     height: MediaQuery.of(context).size.height *
                                         0.2,

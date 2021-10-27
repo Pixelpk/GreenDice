@@ -44,7 +44,9 @@ class _MorePageState extends State<MorePage> {
 
     Loadprefs();
   }
-
+  String isYearlyPkg = '0' ;
+  String isFourMonthPkg = '0';
+  String isCharmans = '0';
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -52,6 +54,9 @@ class _MorePageState extends State<MorePage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
+      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
+      isCharmans =  prefs.getString('isChairman') ?? '0' ;
     });
   }
 
@@ -171,13 +176,35 @@ class _MorePageState extends State<MorePage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.03,
                                 ),
-                                Container(
-                                  child: Text(
-                                    firstname + " " + lastname,
-                                    style: TextStyle(
-                                        fontSize: 14, color: Color(0xffffffff)),
-                                  ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(height: 8,),
+                                    Container(
+                                      child: Text(
+                                        firstname + " " + lastname,
+                                        style: TextStyle(
+                                            fontSize: 14, color: Color(0xffffffff)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white
+                                      ),
+                                    ),
+                                    SizedBox(height: 4,),
+                                    isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white
+                                    ),):Container()
+                                  ],
                                 ),
+
                               ],
                             ),
                           ),

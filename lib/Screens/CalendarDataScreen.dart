@@ -181,11 +181,14 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
               ),
               Center(
                   child: isloading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                          color: Color(0xff009E61),
-                          backgroundColor: Color(0xff0ECB82),
-                        ))
+                      ? Container(
+                    height:MediaQuery.of(context).size.height * 0.65 ,
+                        child: Center(
+                            child: CircularProgressIndicator(
+                            color: Color(0xff009E61),
+                            backgroundColor: Color(0xff0ECB82),
+                          )),
+                      )
                       : noDataFound
                           ? noDataWidget()
                           : ListView.builder(
@@ -516,11 +519,10 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
   }
 
   Widget noDataWidget() {
-    return Center(
-      child: Column(
-        children: [
-          Text('No data found'),
-        ],
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.65,
+      child: Center(
+        child: Text('No Race Record'),
       ),
     );
   }
