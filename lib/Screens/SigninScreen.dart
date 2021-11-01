@@ -25,7 +25,7 @@ class _SigninScreenState extends State<SigninScreen> {
   bool _isObscure = true;
   var _formkey = GlobalKey<FormState>();
 
-  TextEditingController email = TextEditingController(text: 'raheelk740@gmail.com');
+  TextEditingController email = TextEditingController(text: 't@gmail.com');
   TextEditingController pass = TextEditingController(text: '123456');
 
   bool isLoading = false;

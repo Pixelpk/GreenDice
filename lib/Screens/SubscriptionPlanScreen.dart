@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:greendice/ModelClasses/Packages.dart';
 import 'package:greendice/Screens/PaymentScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+enum PlanType { classicPlan, chairmansPlan }
+
 class SubscriptionPlanScreen extends StatefulWidget {
-  const SubscriptionPlanScreen({Key? key}) : super(key: key);
+  SubscriptionPackages subscriptionPackages;
+  PlanType planType;
+  SubscriptionPlanScreen(
+      {Key? key, required this.subscriptionPackages, required this.planType})
+      : super(key: key);
 
   @override
   _SubscriptionPlanScreenState createState() => _SubscriptionPlanScreenState();
@@ -12,6 +20,32 @@ class SubscriptionPlanScreen extends StatefulWidget {
 class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   bool quaterlyplanSelected = false;
   bool yearlyplanSelected = false;
+
+  Packages? classicYearly;
+  Packages? classicQuaterly;
+  String? accessToken ;
+  Future<void> Loadprefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      accessToken = prefs.getString('access_token') ?? '';
+    });
+  }
+  @override
+  void initState() {
+    Loadprefs() ;
+    widget.subscriptionPackages.data!.packages!.forEach((element) {
+      if (element.type == 1) {
+        //yearly packages
+        classicYearly = element;
+      }
+      if (element.type == 2) {
+        //Quaterly package
+        classicQuaterly = element;
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -42,7 +76,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                     children: [
                       Text(
                         "Choose your Plan",
-                        style: TextStyle(fontSize: 30,color: Colors.white),
+                        style: TextStyle(fontSize: 30, color: Colors.white),
                       ),
                     ],
                   ),
@@ -80,13 +114,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  "3-Months",
+                                  "4-Months",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  "619\$",
+                                  "${classicQuaterly!.price}\$",
                                   style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold),
@@ -130,7 +164,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  "2476\$",
+                                  "${classicYearly!.price}\$",
                                   style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold),
@@ -155,11 +189,18 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                       if (quaterlyplanSelected) {
                         print("quaterlyplanSelected");
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => PaymenyScreen()));
+                            MaterialPageRoute(builder: (_) => PaymenyScreen(
+                              accessToken:accessToken ,
+                              packagePriceID: classicQuaterly!.priceId!,
+
+                            )));
                       } else if (yearlyplanSelected) {
                         print("quaterlyplanSelected");
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => PaymenyScreen()));
+                            MaterialPageRoute(builder: (_) => PaymenyScreen(
+                              accessToken:accessToken ,
+                              packagePriceID: classicYearly!.priceId!,
+                            )));
                       }
                     },
               minWidth: size.width * 0.86,

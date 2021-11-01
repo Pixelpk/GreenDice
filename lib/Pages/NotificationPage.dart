@@ -173,11 +173,13 @@ class _NotificationPageState extends State<NotificationPage> {
                                     height: MediaQuery.of(context).size.height *
                                         0.09,
                                     decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.green,
-                                      image: new DecorationImage(
-                                        fit: BoxFit.cover,
-                                            image: AssetImage("assets/images/profileimage.png"),)))
+                                        shape: BoxShape.circle,
+                                        color: Colors.green,
+                                        image: new DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              "assets/images/profileimage.png"),
+                                        )))
                                 : Container(
                                     width: MediaQuery.of(context).size.height *
                                         0.09,
@@ -243,7 +245,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           color: Color(0xff009E61),
                           backgroundColor: Color(0xff0ECB82),
                         ))
-                      : notificationmodel!.data != null
+                      : notificationmodel != null
                           ? ListView.builder(
                               shrinkWrap: true,
                               primary: true,
@@ -505,7 +507,8 @@ class _NotificationPageState extends State<NotificationPage> {
 
                                                     ClipRRect(
                                                       borderRadius:
-                                                          BorderRadius.circular(16.0),
+                                                          BorderRadius.circular(
+                                                              16.0),
                                                       child: Image.asset(
                                                         'assets/images/horse.jpeg',
                                                         width: 72,

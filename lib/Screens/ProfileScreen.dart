@@ -238,11 +238,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: isLoading
-              ? Center(child: CircularProgressIndicator())
-              : Stack(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Color(0xff009E61),
+              backgroundColor: Color(0xff0ECB82),
+            ))
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
                     Column(
@@ -576,12 +580,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Visibility(
                       visible: isLoading2,
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: Color(0xff009E61),
+                        backgroundColor: Color(0xff0ECB82),
+                      ),
                     ),
                   ],
                 ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 

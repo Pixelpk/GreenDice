@@ -8,6 +8,7 @@ import 'package:greendice/ModelClasses/LogoutModelClass.dart';
 import 'package:greendice/ModelClasses/more_model.dart';
 import 'package:greendice/Pages/SupportScreen.dart';
 import 'package:greendice/Screens/EbookScreen.dart';
+import 'package:greendice/Screens/LogoutLoading.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
@@ -148,163 +149,155 @@ class _MorePageState extends State<MorePage> {
           )),*/
 
       body: SafeArea(
-        child: isLoading
-            ? CircularProgressIndicator(
-                color: Color(0xff009E61),
-                backgroundColor: Color(0xff0ECB82),
-              )
-            : Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.21,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(
-                                    "assets/images/membershipimage.png"),
-                                fit: BoxFit.cover)),
-                      ),
-                      Column(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.21,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image:
+                              AssetImage("assets/images/membershipimage.png"),
+                          fit: BoxFit.cover)),
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: Row(
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            child: Row(
-                              children: [
-                                SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.18,
+                            width: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                          photo == ''
+                              ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.height * 0.09,
                                   height:
-                                      MediaQuery.of(context).size.height * 0.18,
+                                      MediaQuery.of(context).size.height * 0.09,
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: new DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: new AssetImage(
+                                          "assets/images/profileimage.png"),
+                                    ),
+                                  ),
+                                )
+                              : Container(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                ),
-                                photo == ''
-                                    ? Container(
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.09,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.09,
-                                        decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: new DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: new AssetImage(
-                                                "assets/images/profileimage.png"),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.09,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.09,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(
-                                              photo,
-                                            ),
-                                          ),
-                                        ),
+                                      MediaQuery.of(context).size.height * 0.09,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                        photo,
                                       ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.03,
-                                ),
-                                Container(
-                                  child: Text(
-                                    firstname + " " + lastname,
-                                    style: TextStyle(
-                                        fontSize: 14, color: Color(0xffffffff)),
+                                    ),
                                   ),
                                 ),
-                              ],
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.03,
+                          ),
+                          Container(
+                            child: Text(
+                              firstname + " " + lastname,
+                              style: TextStyle(
+                                  fontSize: 14, color: Color(0xffffffff)),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
 
-                          /*   SizedBox(
+                    /*   SizedBox(
 
                       width: MediaQuery.of(context).size.width * 1,
 
                     ),*/
 
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 60, top: 0, right: 0, bottom: 0),
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                              "More",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff0ECB82)),
-                            ),
-                          )
-                        ],
+                    Container(
+                      margin: EdgeInsets.only(
+                          left: 60, top: 0, right: 0, bottom: 0),
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        "More",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff0ECB82)),
                       ),
-                    ],
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.03,
-                    color: Color(0xff009E61),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    //           color: Color(0xff005333),
-                    child: Stack(
-                      children: [
-                        ListView.builder(
-                          itemCount: moreList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                              title: Text(moreList[index].title!),
-                              leading: SvgPicture.asset(
-                                moreList[index].icon!,
-                              ),
-                              onTap: () {
-                                if (index == 0) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfileScreen(
-                                            title: "ProfileScreen")),
-                                  );
-                                } else if (index == 1) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SupportScreen(
-                                            title: "SupportScreen")),
-                                  );
-                                } else if (index == 2) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EbookScreen(title: "EbookScreen")),
-                                  );
-                                } else if (index == 3) {
-                                  Logout();
-                                }
-                              },
-                            );
-                          },
-                          padding: const EdgeInsets.all(8),
+                    )
+                  ],
+                ),
+              ],
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.03,
+              color: Color(0xff009E61),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.6,
+              //           color: Color(0xff005333),
+              child: Stack(
+                children: [
+                  ListView.builder(
+                    itemCount: moreList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(moreList[index].title!),
+                        leading: SvgPicture.asset(
+                          moreList[index].icon!,
                         ),
-                      ],
-                    ),
+                        onTap: () {
+                          if (index == 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProfileScreen(title: "ProfileScreen")),
+                            );
+                          } else if (index == 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SupportScreen(title: "SupportScreen")),
+                            );
+                          } else if (index == 2) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EbookScreen(title: "EbookScreen")),
+                            );
+                          } else if (index == 3) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        LogoutLoading(token: access_token)),
+                                (route) => false);
+                          }
+                        },
+                      );
+                    },
+                    padding: const EdgeInsets.all(8),
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
