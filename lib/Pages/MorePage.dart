@@ -274,7 +274,52 @@ class _MorePageState extends State<MorePage> {
                                             EbookScreen(title: "EbookScreen")),
                                   );
                                 } else if (index == 3) {
-                               Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>LogoutLoading(token: access_token)), (route) => false);
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title:  Text('Exit App'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text('Are you sure you want to Logout ?'),
+                                            SizedBox(height: 16.0),
+                                            Row(
+                                              children: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>LogoutLoading(token: access_token)), (route) => false);
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    primary: Color(0xFF009d60),
+                                                  ),
+                                                  child: Text(
+                                                    'Yes',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 16.0),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    primary: Color(0xFF009d60),
+                                                  ),
+                                                  child: Text(
+                                                    'No',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ));
+
                                 }
                               },
                             );

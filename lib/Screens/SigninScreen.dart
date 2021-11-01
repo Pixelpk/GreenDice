@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greendice/Screens/EmailforOTP.dart';
@@ -23,8 +24,8 @@ class _SigninScreenState extends State<SigninScreen> {
   bool _isObscure = true;
   var _formkey = GlobalKey<FormState>();
 
-  TextEditingController email = TextEditingController(text: 'textt5@gmail.com');
-  TextEditingController pass = TextEditingController(text: '123123');
+  TextEditingController email = TextEditingController();
+  TextEditingController pass = TextEditingController();
 
   bool isLoading = false;
 
@@ -143,10 +144,11 @@ class _SigninScreenState extends State<SigninScreen> {
                               color: Color(0xff9B9B9B),
                             )),
                         validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter a valid email address";
-                          }
-                          return null;
+                         if (EmailValidator.validate(text!))
+                         {
+                           return null;
+                         }
+                        return "Please enter valid email";
                         },
                         onChanged: (value) {
                           if (value.length > 0) {
@@ -177,7 +179,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             )),
                         validator: (text) {
                           if (!(text!.length > 5) && text.isNotEmpty) {
-                            return "Enter valid name of more then 5 characters!";
+                            return "Password Length should be at-least 6-digit";
                           } else if (!(text.length > 1) && text.isEmpty) {
                             return "Please enter a valid password";
                           }
@@ -241,7 +243,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
+                        height: MediaQuery.of(context).size.height * 0.018,
                       ),
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -250,7 +252,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             Text(
                               "Don`t have an account?",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 14,
                               ),
                             ),
                             GestureDetector(
@@ -260,7 +262,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               child: Text(
                                 "  Signup",
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   color: Color(0xff005333),
                                 ),
                               ),

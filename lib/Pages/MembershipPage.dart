@@ -38,8 +38,7 @@ class _MembershipPageState extends State<MembershipPage> {
       if(mounted)  {
           setState(() {
             _subscriptionPackages = subscriptionPackages;
-            classicprice = _subscriptionPackages!.data!.packages![0].price! +
-                _subscriptionPackages!.data!.packages![1].price!;
+            classicprice = _subscriptionPackages!.data!.packages![0].price! ;
             chairmansPackages =
                 _subscriptionPackages!.data!.packages![2].type == 0
                     ? _subscriptionPackages!.data!.packages![2]

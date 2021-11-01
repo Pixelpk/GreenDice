@@ -34,10 +34,25 @@ class PaymenyScreenState extends State<PaymenyScreen> {
   bool isCvvFocused = false;
   OutlineInputBorder? border;
   bool isLoading = false;
+
+  String isYearlyPkg = '0';
+  String isFourMonthPkg = '0';
+  String isCharmans = '0';
+
+  Future<void> Loadprefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
+      isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
+      isCharmans = prefs.getString('isChairman') ?? '0';
+    });
+  }
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
+    Loadprefs() ;
     border = OutlineInputBorder(
       borderSide: BorderSide(
         color: Colors.white,
@@ -270,31 +285,117 @@ class PaymenyScreenState extends State<PaymenyScreen> {
           "cvc": cvc
         });
     print(response.body);
-
-
+    print("PACKAGE ID: ${widget.packageId}");
+    print("YEarly active : $isYearlyPkg");
+    print("Quaterly Active: $isFourMonthPkg");
     if (response.body.contains("Subscription successfull")) {
       PaymentResponse paymentResponse =
-      PaymentResponse.fromJson(jsonDecode(response.body));
+          PaymentResponse.fromJson(jsonDecode(response.body));
       print('API STATUS SUCCESS');
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
-if(widget.packageId=='3')
-  {
-    prefs.setString('isChairman', widget.packageId == "3" ? '1' : '0');
-  }
-      prefs.setString('isYearlyPkg', widget.packageId == "1" ? '1' : '0');
-      prefs.setString('isFourMonthPkg', widget.packageId == "2" ? '1' : '0');
+      if (widget.packageId == '3') {
+        prefs.setString('isChairman', widget.packageId == "3" ? '1' : '0');
+        if (isYearlyPkg == '1') {
+          prefs.setString('isYearlyPkg', '1');
+        }
+        if (isFourMonthPkg == '1') {
+          prefs.setString('isFourMonthPkg', '1');
+        }
+        if (isYearlyPkg == '0') {
+          prefs.setString('isYearlyPkg', '0');
+        }
+        if (isFourMonthPkg == '0') {
+          prefs.setString('isFourMonthPkg', '0');
+        }
+      }
+      if(widget.packageId == '1')
+        {
+          prefs.setString('isYearlyPkg', widget.packageId == "1" ? '1' : '0');
+          if(isCharmans == '1')
+            {
+              prefs.setString('isChairman', '1');
+            }
+          if(isCharmans == '0')
+          {
+            prefs.setString('isChairman', '0');
+          }
+          if (isFourMonthPkg == '0') {
+            prefs.setString('isFourMonthPkg', '0');
+          }
 
+        }
+      if(widget.packageId == '2')
+      {
+        prefs.setString('isFourMonthPkg', widget.packageId == "2" ? '1' : '0');
+        if(isCharmans == '1')
+        {
+          prefs.setString('isChairman', '1');
+        }
+        if (isYearlyPkg == '0') {
+          prefs.setString('isYearlyPkg', '0');
+        }
+        if(isCharmans == '0')
+        {
+          prefs.setString('isChairman', '0');
+        }
+
+      }
+
+      // prefs.setString('isYearlyPkg', widget.packageId == "1" ? '1' : '0');
+      // prefs.setString('isFourMonthPkg', widget.packageId == "2" ? '1' : '0');
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => PaymentSuccessScreen(
                 ispremiumUser: true,
                 accesstoken: widget.accessToken,
               )));
-    } else if (response.body.contains("Already subscribed") ) {
+    } else if (response.body.contains("Already subscribed")) {
+      print('API STATUS SUCCESS , PACKAGE ALREADY SUBSCRIBED');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Fluttertoast.showToast(
+          msg: "Package is Already Active",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.white,
+          textColor: Color(0xFF009d60));
+    }
+    else if (response.body.contains("Your card was declined. Your request was in test mode, but used a non test (live) card.")) {
+      print('API STATUS SUCCESS , PACKAGE ALREADY SUBSCRIBED');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Fluttertoast.showToast(
+          msg: "Your Card was declined",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.white,
+          textColor: Color(0xFF009d60));
+    }
+    else if (response.body.contains("Your card number is incorrect.")) {
+      print('API STATUS SUCCESS , PACKAGE ALREADY SUBSCRIBED');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      Fluttertoast.showToast(
+          msg: "Your card number is incorrect.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.white,
+          textColor: Color(0xFF009d60));
+    }
+    else if (response.body.contains("Premium package already subscribed")) {
       print('API STATUS SUCCESS , PACKAGE ALREADY SUBSCRIBED');
       if (mounted) {
         setState(() {

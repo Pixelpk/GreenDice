@@ -99,6 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (!isValid) {
         return;
       } else {
+        setState(() {
+          isLoading2 = true;
+        });
         final prefs = await SharedPreferences.getInstance();
         final access_token = prefs.getString('access_token') ?? '';
 
@@ -123,6 +126,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         print(response);
         if (val == "0") {
+          if (mounted) {
+            setState(() {
+              isLoading2 = false;
+            });
+          }
           Fluttertoast.showToast(
             msg:
                 "Icorrect Old Password! Please enter a correct old password or use Forgot password from Signin Screen",
@@ -130,6 +138,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             gravity: ToastGravity.CENTER,
           );
         } else {
+          if (mounted) {
+            setState(() {
+              isLoading2 = false;
+              pass_ctrl.clear();
+              confirmpass_ctrl.clear();
+              old_pass_ctrl.clear();
+            });
+          }
           Fluttertoast.showToast(
             msg: "Password Updated Successfully",
             toastLength: Toast.LENGTH_SHORT,
@@ -149,13 +165,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future update() async {
     final isValid = _formkey.currentState!.validate();
 
-    setState(() {
-      isLoading2 = true;
-    });
-
     if (!isValid) {
       return;
     } else {
+      if (mounted) {
+        setState(() {
+          isLoading2 = true;
+        });
+      }
       final prefs = await SharedPreferences.getInstance();
       final access_token = prefs.getString('access_token') ?? '';
 
@@ -208,6 +225,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       prefs.setString('image', signinUser.data!.user!.photo!);
 
       print(response);
+      if (mounted) {
+        setState(() {
+          isLoading2 = false;
+        });
+      }
       if (val == "0") {
         Fluttertoast.showToast(
           msg: "Unable to update profile. Please try again later",
@@ -238,13 +260,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? Center(child: CircularProgressIndicator( color: Color(0xff009E61),
-        backgroundColor: Color(0xff0ECB82),)) :
-      SafeArea(
-        child: SingleChildScrollView(
-          child:
-               Stack(
+      body: isLoading2
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Color(0xff009E61),
+              backgroundColor: Color(0xff0ECB82),
+            ))
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
                     Column(
@@ -530,11 +554,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   side: BorderSide(
                                                     color: Color(0xff009E61),
                                                   )))),
-                                      onPressed: () => update().then((value) {
-                                            setState(() {
-                                              isLoading2 = false;
-                                            });
-                                          })),
+                                      onPressed:
+                                          isLoading2 ? null : () => update()),
                                 ),
                                 SizedBox(
                                   height:
@@ -564,7 +585,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   side: BorderSide(
                                                     color: Color(0xff009E61),
                                                   )))),
-                                      onPressed: () => changePassword()),
+                                      onPressed: isLoading2
+                                          ? null
+                                          : () => changePassword()),
                                 ),
                                 SizedBox(
                                   height:
@@ -578,13 +601,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Visibility(
                       visible: isLoading2,
-                      child: CircularProgressIndicator( color: Color(0xff009E61),
-                        backgroundColor: Color(0xff0ECB82),),
+                      child: CircularProgressIndicator(
+                        color: Color(0xff009E61),
+                        backgroundColor: Color(0xff0ECB82),
+                      ),
                     ),
                   ],
                 ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 

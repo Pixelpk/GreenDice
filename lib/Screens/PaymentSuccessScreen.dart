@@ -15,7 +15,7 @@ class PaymentSuccessScreen extends StatefulWidget {
 class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 3), () {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (_) => HomeScreen(

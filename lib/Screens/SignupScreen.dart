@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -31,53 +32,69 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future register() async {
 
-    setState(() {
-      isLoading = true;
-    });
-
     final isValid = _formkey.currentState!.validate();
 
     if (!isValid) {
       return;
     } else {
+      if(pass.text!=confirmpass.text)
+        {
+          Fluttertoast.showToast(
+              msg: "Password doesn't match",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Color(0xFF009d60),
+              textColor: Colors.white);
+        }
+      else {
+        if(mounted) {
+          setState(() {
+            isLoading = true;
+          });
+        }
 
+        var response = await http
+            .post(Uri.parse("http://syedu12.sg-host.com/api/register"), body: {
+          "first_name": user.text,
+          "last_name": user_lname.text,
+          "email": email.text,
+          "phone": phone.text,
+          "password": pass.text,
+          "password_confirmation": confirmpass.text,
+        });
 
-      var response = await http
-          .post(Uri.parse("http://syedu12.sg-host.com/api/register"), body: {
-        "first_name": user.text,
-        "last_name": user_lname.text,
-        "email": email.text,
-        "phone": phone.text,
-        "password": pass.text,
-        "password_confirmation": confirmpass.text,
-      });
+        var data = json.decode(response.body);
+        SignupUser signupScreen =
+            SignupUser.fromJson(jsonDecode(response.body));
+        print('${signupScreen.success}');
+        var val = '${signupScreen.success}';
 
-      var data = json.decode(response.body);
-      SignupUser signupScreen = SignupUser.fromJson(jsonDecode(response.body));
-      print('${signupScreen.success}');
-      var val = '${signupScreen.success}';
+        if (val == "0") {
+          if(mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          Fluttertoast.showToast(
+            msg: '${signupScreen.message}',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+          );
+        } else {
+         if(mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          Fluttertoast.showToast(
+            msg: '${signupScreen.message}',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+          );
 
-      if (val == "0") {
-        Fluttertoast.showToast(
-          msg: '${signupScreen.message}',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-      } else {
-        Fluttertoast.showToast(
-          msg: '${signupScreen.message}',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SigninScreen(title: "SigninScreen")),
-        );
-
-
-
+          Navigator.pushAndRemoveUntil(context,             MaterialPageRoute(
+              builder: (context) => SigninScreen(title: "SigninScreen")), (route) => false);
+        }
       }
     }
   }
@@ -87,6 +104,16 @@ class _SignupScreenState extends State<SignupScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+     user.dispose();
+     user_lname.dispose();
+     email.dispose();
+     phone.dispose();
+     pass.dispose();
+     confirmpass.dispose();
+     super.dispose();
+  }
   void signin() {
     Navigator.push(
       context,
@@ -94,7 +121,11 @@ class _SignupScreenState extends State<SignupScreen> {
           builder: (context) => SigninScreen(title: "SigninScreen")),
     );
   }
-
+Widget space(){
+    return  SizedBox(
+      height: MediaQuery.of(context).size.height * 0.015,
+    );
+}
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -104,230 +135,246 @@ class _SignupScreenState extends State<SignupScreen> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            alignment: AlignmentDirectional.center,
+        appBar: PreferredSize(
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.3),
+          child: SafeArea(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.23,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    right: MediaQuery.of(context).size.width*0.8,
+                    child: Image.asset(
+                      'assets/images/sign_logo.png',
+                      height: MediaQuery.of(context).size.height * 0.24,
+                      width: MediaQuery.of(context).size.height * 0.24,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 50,
+                    left: 0,
+                    child: Column(children: [
+                      Text(
+                        "Create",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Color(0xff005333),
+                        ),
+                      ),
+                      Text(
+                        "Account",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Color(0xff005333),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        body: isLoading ? Center(
+          child: CircularProgressIndicator(
+            color: Color(0xff009E61),
+            backgroundColor: Color(0xff0ECB82),
+          ),
+        ): SingleChildScrollView(
+          child: Column(
             children: [
-
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
+            //    height: MediaQuery.of(context).size.height * 0.62,
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Form(
                   key: _formkey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.35,
-                        ),
-                        TextFormField(
-                          controller: user,
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: 'First Name',
-                              hintStyle: TextStyle(
-                                color: Color(0xff9B9B9B),
-                              )),
-                          validator: (user) {
-                            if (user!.isEmpty) {
-                              return 'Please enter user name';
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ), TextFormField(
-                          controller: user_lname,
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: 'Last Name',
-                              hintStyle: TextStyle(
-                                color: Color(0xff9B9B9B),
-                              )),
-                          validator: (user) {
-                            if (user!.isEmpty) {
-                              return 'Please enter user name';
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        TextFormField(
-                          controller: email,
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: 'Email',
-                              hintStyle: TextStyle(
-                                color: Color(0xff9B9B9B),
-                              )),
-                          validator: (user) {
-                            if (user!.isEmpty) {
-                              return 'Please enter email';
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        TextFormField(
-                          controller: phone,
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: 'Phone Number',
-                              hintStyle: TextStyle(
-                                color: Color(0xff9B9B9B),
-                              )),
-                          validator: (user) {
-                            if (user!.isEmpty) {
-                              return 'Please enter Phone number';
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        TextFormField(
-                          controller: pass,
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: 'Password',
-                              hintStyle: TextStyle(
-                                color: Color(0xff9B9B9B),
-                              )),
-                          validator: (user) {
-                            if (user!.isEmpty) {
-                              return 'Please enter Password}';
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        TextFormField(
-                          controller: confirmpass,
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: 'Confirm Password',
-                              hintStyle: TextStyle(
-                                color: Color(0xff9B9B9B),
-                              )),
-                          validator: (user) {
-                            if (user!.isEmpty) {
-                              return 'Please enter Confirm Password}';
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.07,
-                          child: ElevatedButton(
-                              child: Text("Sign Up".toUpperCase(),
-                                  style: TextStyle(fontSize: 14)),
-                              style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Color(0xff009E61)),
-                                  alignment: Alignment.center,
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(25),
-                                          side: BorderSide(
-                                            color: Color(0xff009E61),
-                                          )))),
-                              onPressed: isLoading ? null : () {
+                  child: Column(
+                    children: [
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * 0.35,
+                      // ),
 
-                                register().then((value) {
+                      TextFormField(
+                        controller: user,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'First Name',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (user) {
+                          if (user!.isEmpty) {
+                            return 'Please enter first name';
+                          }
+                        },
+                      ),
+                      space(),
+                      TextFormField(
+                        controller: user_lname,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Last Name',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (user) {
+                          if (user!.isEmpty) {
+                            return 'Please enter last name';
+                          }
+                          if (user!.length < 3) {
+                            return 'Last name should be atleast 3 digit';
+                          }
+                        },
+                      ),
+                      space(),
+                      TextFormField(
+                        controller: email,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Email',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (text) {
+                          if (EmailValidator.validate(text!))
+                          {
+                            return null;
+                          }
+                          return "Please enter valid email";
+                        },
+                      ),
+                      space(),
+                      TextFormField(
+                        controller: phone,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
 
-                                  setState(() {
-                                    isLoading = false;
-                                  });
+                            border: UnderlineInputBorder(),
+                            hintText: 'Phone Number',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (user) {
+                          if (user!.isEmpty) {
+                            return 'Please enter Phone number';
+                          }
 
-                                });
+                        },
+                      ),
+                      space(),
+                      TextFormField(
+                        controller: pass,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Password',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (user) {
+                          if (user!.isEmpty) {
+                            return 'Please enter Password}';
+                          }
+                          if (user.length < 6) {
+                            return 'Password should be atleast 6-digit long';
+                          }
+                        },
+                      ),
+                      space(),
+                      TextFormField(
+                        controller: confirmpass,
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: 'Confirm Password',
+                            hintStyle: TextStyle(
+                              color: Color(0xff9B9B9B),
+                            )),
+                        validator: (user) {
+                          if (user!.isEmpty) {
+                            return 'Please enter Password}';
+                          }
+                          if (user.length < 6) {
+                            return 'Password should be atleast 6-digit long';
+                          }
+                        },
+                      ),
 
-                              }),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Already a user?",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  signin();
-                                },
-                                child: Text(
-                                  "  Login",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xff005333),
-                                  ),
-                                ),
-                              ),
-                            ])
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),
-              Positioned(
-                top: 0,
-                right: 290,
-                child: SizedBox(
-                  width: 240,
-                  height: 240,
-                  child: Image.asset('assets/images/sign_logo.png'),
-                ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
               ),
-              Positioned(
-                right: 0,
-                top: 100,
-                left: 0,
-                child: Column(children: [
-                  Text(
-                    "Create",
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Color(0xff005333),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: ElevatedButton(
+                    child: Text("Sign Up".toUpperCase(),
+                        style: TextStyle(fontSize: 14)),
+                    style: ButtonStyle(
+                        foregroundColor:
+                        MaterialStateProperty.all<Color>(
+                            Colors.white),
+                        backgroundColor:
+                        MaterialStateProperty.all<Color>(
+                            Color(0xff009E61)),
+                        alignment: Alignment.center,
+                        shape: MaterialStateProperty.all<
+                            RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.circular(25),
+                                side: BorderSide(
+                                  color: Color(0xff009E61),
+                                )))),
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                      register().then((value) {
+                        if(mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      });
+                    }),
+              ),
+              space(),
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already a user?",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Account",
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Color(0xff005333),
+                    GestureDetector(
+                      onTap: () {
+                        signin();
+                      },
+                      child: Text(
+                        "  Login",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xff005333),
+                        ),
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
               ),
-
-              Visibility(
-                visible: isLoading,
-                child: CircularProgressIndicator( color: Color(0xff009E61),
-                  backgroundColor: Color(0xff0ECB82),),
-              ),
-
             ],
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
