@@ -12,6 +12,25 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>greendice</string>
+
+	<key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+    </dict>
+
+    <key>NSCameraUsageDescription</key>
+    <string>GreenDice app needs camera to take pictures for profile</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>GreenDice app needs to access photos to display picture at profile</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>GreenDice app does not use microphone</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>GeenDice does not required music access</string>
+
+
+
+
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
