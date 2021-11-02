@@ -35,7 +35,7 @@ class _MembershipPageState extends State<MembershipPage> {
 
     Loadprefs().then((value) {
       getAllPackages().then((subscriptionPackages) {
-      if(mounted)  {
+        if (mounted) {
           setState(() {
             _subscriptionPackages = subscriptionPackages;
             classicprice = _subscriptionPackages!.data!.packages![0].price! ;
