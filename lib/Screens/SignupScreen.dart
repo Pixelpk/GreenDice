@@ -227,7 +227,7 @@ Widget space(){
                           if (user!.isEmpty) {
                             return 'Please enter last name';
                           }
-                          if (user!.length < 3) {
+                          if (user.length < 3) {
                             return 'Last name should be atleast 3 digit';
                           }
                         },

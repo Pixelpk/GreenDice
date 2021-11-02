@@ -1,4 +1,4 @@
-package com.example.greendice;
+package com.greendiceinvestments;
 
 import io.flutter.embedding.android.FlutterActivity;
 
