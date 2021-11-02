@@ -112,6 +112,7 @@ class _MembershipPageState extends State<MembershipPage> {
               : _subscriptionPackages != null
                   ? SingleChildScrollView(
                       child: Column(
+
                         children: [
                           Stack(
                             children: [
@@ -425,188 +426,189 @@ class _MembershipPageState extends State<MembershipPage> {
                               ]),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 20.0),
-                            child: Center(
-                              child: Column(children: [
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.00,
-                                ),
-                                Stack(
-                                  overflow: Overflow.visible,
-                                  children: [
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.3,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: new Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Center(
-                                          child: Text(
-                                            "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , as he has nice gate speed , settle behind leaders, look to be running on.",
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ),
-                                        decoration: new BoxDecoration(
-                                          image: new DecorationImage(
-                                            image: new AssetImage(
-                                                "assets/images/membership_bg2.png"),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.08,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Container(
-                                        color: Color(0xff009E61),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "     ${_subscriptionPackages!.data!.packages![2].name}`s Club",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Color(0xffffffff),
-                                              ),
-                                            ),
-                                            Expanded(child: Container()),
-                                            Stack(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Container(
-                                                    child: SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.1,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.3,
-                                                      child: Container(
-                                                        // decoration: new BoxDecoration(
-                                                        //   image: new DecorationImage(
-                                                        //     image: new AssetImage(
-                                                        //         "assets/images/silvercrownbg.png"),
-                                                        //     fit: BoxFit.cover,
-                                                        //   ),
-                                                        // ),
-                                                        child: SvgPicture.asset(
-                                                          "assets/images/silverMembership.svg",
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: 15,
-                                                  left: 30,
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        "\$ ${_subscriptionPackages!.data!.packages![2].price}",
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xffffffff),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 160,
-                                      right: 10,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.06,
-                                        child: ElevatedButton(
-                                            child: Text( "Subscribe",
-                                                style: TextStyle(fontSize: 14
-                                                ,
-                                                  color: ispremium ? Colors.white:Colors.grey
-                                                )),
-                                            style: ButtonStyle(
-                                                foregroundColor:
-                                                    MaterialStateProperty.all<
-                                                        Color>(Colors.white),
-                                                backgroundColor:ispremium ?
-                                                    MaterialStateProperty.all<
-                                                            Color>(
-                                                        Color(0xffA40303)):MaterialStateProperty.all<
-                                                    Color>(
-                                                    Color(0xffE8E8E8)),
-                                                alignment: Alignment.center,
-                                                shape: MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(25),
-                                                        side: BorderSide(
-                                                          color:ispremium ?
-                                                              Color(0xffA40303):Color(0xffE8E8E8)
-                                                        )))),
-                                            onPressed:ispremium ? () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          PaymenyScreen(
-                                                            accessToken:
-                                                                access_token,
-                                                            packageId:
-                                                                chairmansPackages!
-                                                                    .id!.toString(),
-                                                          )));
-                                            }:(){})
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                /* SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    Stack(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          width: MediaQuery.of(context).size.width,
-                          child: new Container(
-                            decoration: new BoxDecoration(
-                              image: new DecorationImage(
-                                image: new AssetImage(
-                                    "assets/images/membership_bg2.png"),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),*/
-                              ]),
-                            ),
-                          ),
+                          ///TODO temporary hiddden
+                    //       Padding(
+                    //         padding: EdgeInsets.symmetric(
+                    //             vertical: 5.0, horizontal: 20.0),
+                    //         child: Center(
+                    //           child: Column(children: [
+                    //             SizedBox(
+                    //               height:
+                    //                   MediaQuery.of(context).size.height * 0.00,
+                    //             ),
+                    //             Stack(
+                    //               overflow: Overflow.visible,
+                    //               children: [
+                    //                 SizedBox(
+                    //                   height:
+                    //                       MediaQuery.of(context).size.height *
+                    //                           0.3,
+                    //                   width: MediaQuery.of(context).size.width,
+                    //                   child: new Container(
+                    //                     padding: EdgeInsets.symmetric(
+                    //                         horizontal: 8.0),
+                    //                     child: Center(
+                    //                       child: Text(
+                    //                         "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , as he has nice gate speed , settle behind leaders, look to be running on.",
+                    //                         textAlign: TextAlign.left,
+                    //                       ),
+                    //                     ),
+                    //                     decoration: new BoxDecoration(
+                    //                       image: new DecorationImage(
+                    //                         image: new AssetImage(
+                    //                             "assets/images/membership_bg2.png"),
+                    //                         fit: BoxFit.cover,
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 SizedBox(
+                    //                   height:
+                    //                       MediaQuery.of(context).size.height *
+                    //                           0.08,
+                    //                   width: MediaQuery.of(context).size.width,
+                    //                   child: Container(
+                    //                     color: Color(0xff009E61),
+                    //                     child: Row(
+                    //                       children: [
+                    //                         Text(
+                    //                           "     ${_subscriptionPackages!.data!.packages![2].name}`s Club",
+                    //                           style: TextStyle(
+                    //                             fontSize: 16,
+                    //                             color: Color(0xffffffff),
+                    //                           ),
+                    //                         ),
+                    //                         Expanded(child: Container()),
+                    //                         Stack(
+                    //                           children: [
+                    //                             Padding(
+                    //                               padding:
+                    //                                   const EdgeInsets.all(8.0),
+                    //                               child: Container(
+                    //                                 child: SizedBox(
+                    //                                   height:
+                    //                                       MediaQuery.of(context)
+                    //                                               .size
+                    //                                               .height *
+                    //                                           0.1,
+                    //                                   width:
+                    //                                       MediaQuery.of(context)
+                    //                                               .size
+                    //                                               .width *
+                    //                                           0.3,
+                    //                                   child: Container(
+                    //                                     // decoration: new BoxDecoration(
+                    //                                     //   image: new DecorationImage(
+                    //                                     //     image: new AssetImage(
+                    //                                     //         "assets/images/silvercrownbg.png"),
+                    //                                     //     fit: BoxFit.cover,
+                    //                                     //   ),
+                    //                                     // ),
+                    //                                     child: SvgPicture.asset(
+                    //                                       "assets/images/silverMembership.svg",
+                    //                                     ),
+                    //                                   ),
+                    //                                 ),
+                    //                               ),
+                    //                             ),
+                    //                             Positioned(
+                    //                               top: 15,
+                    //                               left: 30,
+                    //                               child: Row(
+                    //                                 children: [
+                    //                                   Text(
+                    //                                     "\$ ${_subscriptionPackages!.data!.packages![2].price}",
+                    //                                     style: TextStyle(
+                    //                                       fontSize: 16,
+                    //                                       color:
+                    //                                           Color(0xffffffff),
+                    //                                     ),
+                    //                                   ),
+                    //                                 ],
+                    //                               ),
+                    //                             ),
+                    //                           ],
+                    //                         ),
+                    //                       ],
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 Positioned(
+                    //                   top: 160,
+                    //                   right: 10,
+                    //                   child: SizedBox(
+                    //                     width:
+                    //                         MediaQuery.of(context).size.width *
+                    //                             0.4,
+                    //                     height:
+                    //                         MediaQuery.of(context).size.height *
+                    //                             0.06,
+                    //                     child: ElevatedButton(
+                    //                         child: Text( "Subscribe",
+                    //                             style: TextStyle(fontSize: 14
+                    //                             ,
+                    //                               color: ispremium ? Colors.white:Colors.grey
+                    //                             )),
+                    //                         style: ButtonStyle(
+                    //                             foregroundColor:
+                    //                                 MaterialStateProperty.all<
+                    //                                     Color>(Colors.white),
+                    //                             backgroundColor:ispremium ?
+                    //                                 MaterialStateProperty.all<
+                    //                                         Color>(
+                    //                                     Color(0xffA40303)):MaterialStateProperty.all<
+                    //                                 Color>(
+                    //                                 Color(0xffE8E8E8)),
+                    //                             alignment: Alignment.center,
+                    //                             shape: MaterialStateProperty.all<
+                    //                                     RoundedRectangleBorder>(
+                    //                                 RoundedRectangleBorder(
+                    //                                     borderRadius:
+                    //                                         BorderRadius
+                    //                                             .circular(25),
+                    //                                     side: BorderSide(
+                    //                                       color:ispremium ?
+                    //                                           Color(0xffA40303):Color(0xffE8E8E8)
+                    //                                     )))),
+                    //                         onPressed:ispremium ? () {
+                    //                           Navigator.of(context).push(
+                    //                               MaterialPageRoute(
+                    //                                   builder: (_) =>
+                    //                                       PaymenyScreen(
+                    //                                         accessToken:
+                    //                                             access_token,
+                    //                                         packageId:
+                    //                                             chairmansPackages!
+                    //                                                 .id!.toString(),
+                    //                                       )));
+                    //                         }:(){})
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //             /* SizedBox(
+                    //   height: MediaQuery.of(context).size.height * 0.01,
+                    // ),
+                    // Stack(
+                    //   children: [
+                    //     SizedBox(
+                    //       height: MediaQuery.of(context).size.height * 0.2,
+                    //       width: MediaQuery.of(context).size.width,
+                    //       child: new Container(
+                    //         decoration: new BoxDecoration(
+                    //           image: new DecorationImage(
+                    //             image: new AssetImage(
+                    //                 "assets/images/membership_bg2.png"),
+                    //             fit: BoxFit.cover,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),*/
+                    //           ]),
+                    //         ),
+                    //       ),
                           /////TEMPORARAY//////////////////////
                           SizedBox(
                             height: 20,

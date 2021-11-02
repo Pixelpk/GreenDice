@@ -76,8 +76,8 @@ class _SplashScreenState extends State<SplashScreen> {
         announcement: false,
         badge: true,
         carPlay: false,
-        criticalAlert: false,
-        provisional: false,
+        criticalAlert: true,
+        provisional: true,
         sound: true,
       );
     }
@@ -99,6 +99,9 @@ notificationOnMessagehandler(){
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
+              enableVibration: true,
+              enableLights: true,
+
               channelDescription: channel.description,
               color: Colors.blue,
               playSound: true,
