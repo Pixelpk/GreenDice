@@ -1,10 +1,13 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greendice/Screens/WelcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
 import 'HomeScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,13 +20,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  late FirebaseMessaging messaging;
   Future<String> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token') ?? '';
   }
 
+
   @override
   void initState() {
+    messaging = FirebaseMessaging.instance;
+
+    messaging.getToken().then((value) {
+      print('firabase token: $value');
+      ///TODO
+    });
+    IoSNotifcationHandler();
+    notificationOnMessagehandler();
+    notificationOnMessageOpened();
     super.initState();
     Loadprefs().then((token) async {
       if (token == '' || token == null) {
@@ -54,7 +69,74 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
   }
+  Future IoSNotifcationHandler() async {
+    if (Platform.isIOS) {
+      messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+    }
+  }
+notificationOnMessagehandler(){
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    print("foreground handler${message.data}");
+    print(message);
+    if (notification != null && android != null) {
+      print('here !!!');
+      print('notification title: ${notification.title}');
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              color: Colors.blue,
+              playSound: true,
+              icon: '@mipmap/ic_launcher',
+            ),
+          ));
+    } else {
+      print('inside else');
+    }
+  });
 
+}
+notificationOnMessageOpened(){
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //AwesomeNotifications().cancelAll();
+    print("onmesage open handler${message.data}");
+    print(message);
+    print('A new onMessageOpenedApp event was published!');
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: Text(notification.title.toString()),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Text(notification.body.toString())],
+                ),
+              ),
+            );
+          });
+    }
+  });
+
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

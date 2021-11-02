@@ -342,56 +342,13 @@ String isYearlyPkg = '0' ;
                                                     0.09,
                                                 width: MediaQuery.of(context)
                                                     .size
-                                                    .height *
-                                                0.2,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                color: Color(0xffffffff),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 5, horizontal: 5),
-                                                child: Row(
-                                                  children: [
-                                                    /*SvgPicture.asset(
-                                                        _shirtImagesList[
-                                                            (index % 6)],
-                                                        width: 72,
-                                                        height: 72,
-                                                      ),*/
-
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16.0),
-                                                      child: Image.asset(
-                                                        'assets/images/horse.jpeg',
-                                                        width: 72,
-                                                        height: 72,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.03,
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                          "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, "
-                                                          "son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , "
-                                                          "as he has nice gate speed , settle behind leaders, look to be running on.",
-                                                          textAlign:
-                                                              TextAlign.left),
-                                                    ),
-                                                  ],
+                                                    .width,
+                                                child: Text(
+                                                  "Signal " +
+                                                      (index + 1).toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 30),
                                                 ),
                                               ),
                                             ),
