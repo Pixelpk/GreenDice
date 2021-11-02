@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>678069181325-4uqqiafuibn5ii0qbuvjn03oogerl8ce.apps.googleusercontent.com</string>
+	<string>821154855107-7ag2co3phdulem83ganfhr73sbmor5o6.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.678069181325-4uqqiafuibn5ii0qbuvjn03oogerl8ce</string>
+	<string>com.googleusercontent.apps.821154855107-7ag2co3phdulem83ganfhr73sbmor5o6</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBFqcWtj9-iIuyXOXPoe00gOIBzV-seKPQ</string>
+	<string>AIzaSyDY1ZaznZPIJMbe8RDN_DvfDaQgB7fI5lU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>678069181325</string>
+	<string>821154855107</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.wpcomstaging.greendiceinvestments</string>
+	<string>com.greendiceinvestments</string>
 	<key>PROJECT_ID</key>
-	<string>green-dice-88882</string>
+	<string>green-dice-e4cd0</string>
 	<key>STORAGE_BUCKET</key>
-	<string>green-dice-88882.appspot.com</string>
+	<string>green-dice-e4cd0.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:678069181325:ios:07025dfbfcf90e05bebbc4</string>
+	<string>1:821154855107:ios:1ed5fe70bda8260a1e0a76</string>
 </dict>
 </plist>
