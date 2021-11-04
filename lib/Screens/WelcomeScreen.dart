@@ -1,6 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
+import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatefulWidget {
   WelcomeScreen({Key? key, required this.title}) : super(key: key);
@@ -12,8 +15,25 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  String? fcmtoken ;
+  late FirebaseMessaging messaging;
+  String? device_id ;
+  _saveToken() async {
+
+    String? fcm = await messaging.getToken();
+    String? deviceId = await PlatformDeviceId.getDeviceId;
+    setState(() {
+      fcmtoken = fcm ;
+      device_id = deviceId ;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("fcmToken", fcm!);
+  }
+
   @override
   void initState() {
+    messaging = FirebaseMessaging.instance;
+    _saveToken();
     super.initState();
   }
 
@@ -21,7 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SigninScreen(title: "SigninScreen")),
+          builder: (context) => SigninScreen(title: "SigninScreen",devicerId: device_id,fcmTOken: fcmtoken,)),
     );
 
 
@@ -31,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen")),
+          builder: (context) => SignupScreen(title: "SignupScreen",deviceid: device_id,fcm: fcmtoken,)),
     );
   }
 

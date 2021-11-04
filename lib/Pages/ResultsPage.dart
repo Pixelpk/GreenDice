@@ -78,7 +78,7 @@ bool ispremium = true ;
     });
     //print("token = "+access_token);
     var response = await http.post(
-      Uri.parse("http://syedu12.sg-host.com/api/getgraphdata"),
+      Uri.parse("https://app.greendiceinvestments.com/api/getgraphdata"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + access_token,
       },

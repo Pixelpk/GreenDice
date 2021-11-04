@@ -45,7 +45,7 @@ class User {
   String? lastName;
   String? email;
   String? phone;
-  String? roleId;
+  int? roleId;
   String? updatedAt;
   String? createdAt;
   int? id;

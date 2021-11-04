@@ -66,7 +66,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
     final access_token = prefs.getString('access_token') ?? '';
     //  print("token = "+access_token);
     var response = await http
-        .post(Uri.parse("http://syedu12.sg-host.com/api/calendar"), headers: {
+        .post(Uri.parse("https://app.greendiceinvestments.com/api/calendar"), headers: {
       HttpHeaders.authorizationHeader: "Bearer " + access_token,
     }, body: {
       "signal_date": widget.title.toString(),

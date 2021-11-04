@@ -128,7 +128,7 @@ bool ispremium = true ;
     }
     //print("token = "+access_token);
     var response = await http.post(
-      Uri.parse("http://syedu12.sg-host.com/api/signalnotifications"),
+      Uri.parse("https://app.greendiceinvestments.com/api/signalnotifications"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + access_token,
       },

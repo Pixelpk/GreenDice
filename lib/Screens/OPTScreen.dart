@@ -13,7 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class OPTScreen extends StatefulWidget {
-  OPTScreen({Key? key, required this.title, required this.code}) : super(key: key);
+  String fcm ;
+  String deviceId ;
+  OPTScreen({Key? key, required this.title, required this.code ,required this.fcm,required this.deviceId}) : super(key: key);
 
   final String title;
   final String code;
@@ -24,7 +26,7 @@ class OPTScreen extends StatefulWidget {
 }
 
 class _OPTScreenState extends State<OPTScreen> {
-
+bool loading = false;
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
 
@@ -52,7 +54,7 @@ class _OPTScreenState extends State<OPTScreen> {
 
     final prefs = await SharedPreferences.getInstance();
 
-    var response = await http.post(Uri.parse("http://syedu12.sg-host.com/api/matchotp"),body: {
+    var response = await http.post(Uri.parse("https://app.greendiceinvestments.com/api/matchotp"),body: {
       "user_id" : widget.title,
       "token" : widget.code,
     },
@@ -80,14 +82,14 @@ class _OPTScreenState extends State<OPTScreen> {
     else
     {
       Fluttertoast.showToast(
-        msg: response.body,
+        msg: "Success",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
       Navigator.push(
       context,
       MaterialPageRoute(
-      builder: (context) => ForgotPasswordLogin(title: access_token)),
+      builder: (context) => ForgotPasswordLogin(title: access_token,fcm: widget.fcm,deviceid: widget.deviceId,)),
     );
 
   }
@@ -126,7 +128,7 @@ class _OPTScreenState extends State<OPTScreen> {
                       height: MediaQuery.of(context).size.height * 0.45,
                     ),
 
-                    Text("A 5-digit code has been sent to your email. Please enter the code below to proceed"),
+                    Text("A 6-digit code has been sent to your email. Please enter the code below to proceed"),
 
                    /* SizedBox(
                       height: MediaQuery.of(context).size.height * 0.15,
