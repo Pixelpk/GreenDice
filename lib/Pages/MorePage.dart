@@ -12,6 +12,7 @@ import 'package:greendice/Screens/LogoutLoading.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -41,19 +42,29 @@ class _MorePageState extends State<MorePage> {
   @override
   void initState() {
     super.initState();
+    getDeviceId().then((value) {  Loadprefs(value!);});
 
-    Loadprefs();
   }
+  String? fcm ;
+  String? deviceId;
   String isYearlyPkg = '0' ;
   String isFourMonthPkg = '0';
   String isCharmans = '0';
-  Future<void> Loadprefs() async {
+  Future<String?> getDeviceId()
+  {
+    return PlatformDeviceId.getDeviceId;
+  }
+  Future<void> Loadprefs(String _deviceId) async {
+
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
+
+    setState(()  {
       access_token = prefs.getString('access_token') ?? '';
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
+      fcm =  prefs.getString("fcmToken");
+     deviceId = _deviceId ;
       isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
       isCharmans =  prefs.getString('isChairman') ?? '0' ;
@@ -64,7 +75,7 @@ class _MorePageState extends State<MorePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SigninScreen(title: "SigninScreen")),
+          builder: (context) => SigninScreen(title: "SigninScreen",devicerId: deviceId,fcmTOken: fcm,)),
     );
   }
 
@@ -72,7 +83,7 @@ class _MorePageState extends State<MorePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen")),
+          builder: (context) => SignupScreen(title: "SignupScreen",deviceid:deviceId,fcm: fcm,)),
     );
   }
 

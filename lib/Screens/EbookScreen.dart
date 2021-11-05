@@ -61,7 +61,7 @@ class _EbookScreenState extends State<EbookScreen> {
     final access_token = prefs.getString('access_token') ?? '';
     //print("token = "+access_token);
     var response = await http.post(
-      Uri.parse("http://syedu12.sg-host.com/api/ebooks"),
+      Uri.parse("https://app.greendiceinvestments.com/api/ebooks"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + access_token,
       },

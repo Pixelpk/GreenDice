@@ -9,7 +9,9 @@ import '../ModelClasses/SigninUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  ForgotPasswordScreen({Key? key, required this.title}) : super(key: key);
+  String fcm ;
+  String deviceId ;
+  ForgotPasswordScreen({Key? key, required this.title,required this.fcm , required this.deviceId}) : super(key: key);
 
   final String title;
 
@@ -32,7 +34,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
 
       var response = await http.post(
-          Uri.parse("http://syedu12.sg-host.com/api/forgotpassword"),
+          Uri.parse("https://app.greendiceinvestments.com/api/forgotpassword"),
           body: {
             "email": email.text,
           });
@@ -75,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen")),
+          builder: (context) => SignupScreen(title: "SignupScreen",deviceid: widget.deviceId , fcm: widget.fcm,)),
     );
   }
 

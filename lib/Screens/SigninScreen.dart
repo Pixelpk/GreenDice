@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_credit_card/constants.dart';
 import 'package:greendice/Screens/EmailforOTP.dart';
 import 'package:http/http.dart' as http;
+import 'package:platform_device_id/platform_device_id.dart';
 import 'HomeScreen.dart';
 import 'SignupScreen.dart';
 import '../ModelClasses/SigninUser.dart';
@@ -12,7 +15,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninScreen extends StatefulWidget {
-  SigninScreen({Key? key, required this.title}) : super(key: key);
+  String? fcmTOken ;
+  String? devicerId ;
+  SigninScreen({Key? key, required this.title ,required this.fcmTOken ,required this.devicerId }) : super(key: key);
 
   final String title;
 
@@ -22,7 +27,9 @@ class SigninScreen extends StatefulWidget {
 
 class _SigninScreenState extends State<SigninScreen> {
   bool _isObscure = true;
+  late FirebaseMessaging messaging;
   var _formkey = GlobalKey<FormState>();
+
 
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
@@ -30,6 +37,8 @@ class _SigninScreenState extends State<SigninScreen> {
   bool isLoading = false;
 
   Future login() async {
+    print("FCM-TOKEN : ${widget.fcmTOken}");
+    print("DeviceID ${widget.devicerId}");
     if (mounted) {
       setState(() {
         isLoading = true;
@@ -43,10 +52,12 @@ class _SigninScreenState extends State<SigninScreen> {
       final prefs = await SharedPreferences.getInstance();
 
       var response = await http.post(
-        Uri.parse("http://syedu12.sg-host.com/api/login"),
+        Uri.parse("https://app.greendiceinvestments.com/api/login"),
         body: {
-          "email": email.text,
+          "email": email.text.trim(),
           "password": pass.text,
+          'fcm_token':widget.fcmTOken ,
+          "device_id":widget.devicerId,
         },
         headers: <String, String>{
           'Accept': 'application/json',
@@ -105,6 +116,8 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   void initState() {
+    messaging = FirebaseMessaging.instance;
+
     super.initState();
   }
 
@@ -112,7 +125,7 @@ class _SigninScreenState extends State<SigninScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen")),
+          builder: (context) => SignupScreen(title: "SignupScreen",deviceid: widget.devicerId,fcm: widget.fcmTOken,)),
     );
   }
 
@@ -144,7 +157,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               color: Color(0xff9B9B9B),
                             )),
                         validator: (text) {
-                         if (EmailValidator.validate(text!))
+                         if (EmailValidator.validate(text!.trim()))
                          {
                            return null;
                          }
@@ -197,7 +210,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      EmailforOTP(title: "EmailforOTP")),
+                                      EmailforOTP(title: "EmailforOTP",fcm: widget.fcmTOken!,deviceId: widget.devicerId!,)),
                             );
                           },
                           child: Text(

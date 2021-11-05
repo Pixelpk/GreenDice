@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/LogoutModelClass.dart';
 import 'package:http/http.dart' as http;
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'SigninScreen.dart';
@@ -17,6 +19,24 @@ class LogoutLoading extends StatefulWidget {
 }
 
 class _LogoutLoadingState extends State<LogoutLoading> {
+  String? fcmtoken ;
+  late FirebaseMessaging messaging;
+  String? device_id ;
+  Future<String?> getDeviceId()
+  {
+    return PlatformDeviceId.getDeviceId;
+  }
+  _saveToken(String deviceId) async {
+
+    String? fcm = await messaging.getToken();
+    setState(() {
+      fcmtoken = fcm ;
+      device_id = deviceId ;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("fcmToken", fcm!);
+  }
+
   Future<void> resetSharedPref() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('access_token', '');
@@ -24,6 +44,7 @@ class _LogoutLoadingState extends State<LogoutLoading> {
     prefs.setString('lname', '');
     prefs.setString('phone', '');
     prefs.setString('email', '');
+    prefs.setString("fcmToken", '');
     prefs.setString('image', '');
     prefs.setString('isYearlyPkg',
         '0');
@@ -36,7 +57,7 @@ class _LogoutLoadingState extends State<LogoutLoading> {
   Future Logout() async {
 
     var response = await http.get(
-      Uri.parse("http://syedu12.sg-host.com/api/logout"),
+      Uri.parse("https://app.greendiceinvestments.com/api/logout"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + widget.token,
       },
@@ -58,13 +79,16 @@ class _LogoutLoadingState extends State<LogoutLoading> {
       resetSharedPref().then((value) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-                builder: (context) => SigninScreen(title: "SigninScreen")),
+                builder: (context) => SigninScreen(title: "SigninScreen",devicerId: device_id,fcmTOken: fcmtoken,)),
                 (route) => false);
       });
     }
   }
   @override
   void initState() {
+    messaging = FirebaseMessaging.instance;
+    getDeviceId().then((value){  _saveToken(value!);} );
+
     Logout();
     super.initState();
   }

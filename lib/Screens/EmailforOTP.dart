@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:greendice/ModelClasses/UserDataFromEmail.dart';
 import 'package:greendice/Screens/OPTScreen.dart';
@@ -12,10 +13,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailforOTP extends StatefulWidget {
-  EmailforOTP({Key? key, required this.title}) : super(key: key);
-
+  EmailforOTP(
+      {Key? key,
+      required this.title,
+      required this.fcm,
+      required this.deviceId})
+      : super(key: key);
+  String fcm;
+  String deviceId;
   final String title;
-
 
   @override
   _EmailforOTPState createState() => _EmailforOTPState();
@@ -24,51 +30,64 @@ class EmailforOTP extends StatefulWidget {
 class _EmailforOTPState extends State<EmailforOTP> {
   bool _isObscure = true;
   var _formkey = GlobalKey<FormState>();
-
+  bool loading = false;
   TextEditingController email = TextEditingController();
 
-
-  Future login()async{
-
+  Future login() async {
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+    }
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
     } else {
       final prefs = await SharedPreferences.getInstance();
 
-
       var response = await http.post(
-        Uri.parse("http://syedu12.sg-host.com/api/forgotpassword"), body: {
-        "email": email.text,
-      },
-
+        Uri.parse("https://app.greendiceinvestments.com/api/forgotpassword"),
+        body: {
+          "email": email.text.trim(),
+        },
       );
 
       var data = json.decode(response.body);
-      UserDataFromEmail userDataFromEmail = UserDataFromEmail.fromJson(
-          jsonDecode(response.body));
+      UserDataFromEmail userDataFromEmail =
+          UserDataFromEmail.fromJson(jsonDecode(response.body));
       var val = '${userDataFromEmail.success}';
-
+      print(response.body);
 
       print(val);
       if (val == "0") {
-
+        if(mounted) {
+          setState(() {
+            loading = false;
+          });
+        }
         Fluttertoast.showToast(
           msg: "User does not exists",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
-
-      }
-      else {
+      } else {
+        if(mounted) {
+          setState(() {
+            loading = false;
+          });
+        }
         var access_token = '${userDataFromEmail.data!.token!.id}';
         var verification = '${userDataFromEmail.data!.token!.verificationCode}';
 
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  OPTScreen(title: access_token, code: verification)),
+              builder: (context) => OPTScreen(
+                    title: access_token,
+                    code: verification,
+                    fcm: widget.fcm,
+                    deviceId: widget.deviceId,
+                  )),
         );
       }
     }
@@ -83,10 +102,13 @@ class _EmailforOTPState extends State<EmailforOTP> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen")),
+          builder: (context) => SignupScreen(
+                title: "SignupScreen",
+                deviceid: widget.deviceId,
+                fcm: widget.fcm,
+              )),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +119,7 @@ class _EmailforOTPState extends State<EmailforOTP> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: SafeArea(
+      body: loading?Center(child: CircularProgressIndicator(),) :SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
@@ -110,9 +132,8 @@ class _EmailforOTPState extends State<EmailforOTP> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.45,
                     ),
-                    Text("Please enter the email address to reset the password."),
-
-
+                    Text(
+                        "Please enter the email address to reset the password."),
                     Form(
                       key: _formkey,
                       child: TextFormField(
@@ -123,13 +144,12 @@ class _EmailforOTPState extends State<EmailforOTP> {
                             hintStyle: TextStyle(
                               color: Color(0xff9B9B9B),
                             )),
-                        validator: (text){
-
-                          if(text!.isEmpty)
-                            {
-                              return "Please enter a valid email address";
-                            }
-
+                        validator: (text) {
+                          if (EmailValidator.validate(text!.trim()))
+                          {
+                            return null;
+                          }
+                          return "Please enter valid email";
                         },
                       ),
                     ),
@@ -146,7 +166,8 @@ class _EmailforOTPState extends State<EmailforOTP> {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.07,
                       child: ElevatedButton(
-                          child: Text("Continue", style: TextStyle(fontSize: 14)),
+                          child:
+                              Text("Continue", style: TextStyle(fontSize: 14)),
                           style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
@@ -154,7 +175,7 @@ class _EmailforOTPState extends State<EmailforOTP> {
                                   Color(0xff009E61)),
                               alignment: Alignment.center,
                               shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                                      RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(25),
                                       side: BorderSide(
@@ -162,7 +183,6 @@ class _EmailforOTPState extends State<EmailforOTP> {
                                       )))),
                           onPressed: () => login()),
                     ),
-
                   ],
                 ),
               ),

@@ -10,7 +10,9 @@ import '../ModelClasses/SignupUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({Key? key, required this.title}) : super(key: key);
+  String ? fcm ;
+  String? deviceid;
+  SignupScreen({Key? key, required this.title,required this.fcm,required this.deviceid}) : super(key: key);
 
   final String title;
 
@@ -54,10 +56,10 @@ class _SignupScreenState extends State<SignupScreen> {
         }
 
         var response = await http
-            .post(Uri.parse("http://syedu12.sg-host.com/api/register"), body: {
+            .post(Uri.parse("https://app.greendiceinvestments.com/api/register"), body: {
           "first_name": user.text,
           "last_name": user_lname.text,
-          "email": email.text,
+          "email": email.text.trim(),
           "phone": phone.text,
           "password": pass.text,
           "password_confirmation": confirmpass.text,
@@ -93,7 +95,7 @@ class _SignupScreenState extends State<SignupScreen> {
           );
 
           Navigator.pushAndRemoveUntil(context,             MaterialPageRoute(
-              builder: (context) => SigninScreen(title: "SigninScreen")), (route) => false);
+              builder: (context) => SigninScreen(title: "SigninScreen", devicerId: widget.deviceid,fcmTOken: widget.fcm,)), (route) => false);
         }
       }
     }
@@ -118,7 +120,7 @@ class _SignupScreenState extends State<SignupScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SigninScreen(title: "SigninScreen")),
+          builder: (context) => SigninScreen(title: "SigninScreen", devicerId: widget.deviceid,fcmTOken: widget.fcm,)),
     );
   }
 Widget space(){
@@ -242,7 +244,7 @@ Widget space(){
                               color: Color(0xff9B9B9B),
                             )),
                         validator: (text) {
-                          if (EmailValidator.validate(text!))
+                          if (EmailValidator.validate(text!.trim()))
                           {
                             return null;
                           }

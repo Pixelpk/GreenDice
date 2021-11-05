@@ -273,7 +273,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
     });
     print("token = " + widget.accessToken!);
     var response = await http.post(
-        Uri.parse("http://syedu12.sg-host.com/api/stripsubscription"),
+        Uri.parse("https://app.greendiceinvestments.com/api/stripsubscription"),
         headers: {
           HttpHeaders.authorizationHeader: "Bearer " + widget.accessToken!,
         },

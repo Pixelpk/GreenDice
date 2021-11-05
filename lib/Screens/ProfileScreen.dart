@@ -24,7 +24,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late String firstname, lastname, phone, email;
-  String? photo;
+  String? photo = '';
 
   var _formkey = GlobalKey<FormState>();
   var _formkey2 = GlobalKey<FormState>();
@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final access_token = prefs.getString('access_token') ?? '';
 
         var response = await http.post(
-          Uri.parse("http://syedu12.sg-host.com/api/changepassword"),
+          Uri.parse("https://app.greendiceinvestments.com/api/changepassword"),
           body: {
             "old_password": old_pass_ctrl.text,
             "password": pass_ctrl.text,
@@ -177,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final access_token = prefs.getString('access_token') ?? '';
 
       // var response = await http
-      //     .post(Uri.parse("http://syedu12.sg-host.com/api/updateuser"),
+      //     .post(Uri.parse("https://app.greendiceinvestments.com/api/updateuser"),
       //   body: {
       //   "first_name": user_ctrl.text,
       //   "last_name": user_lname.text,
@@ -195,7 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'Authorization': 'Bearer $access_token'
       };
       var request = http.MultipartRequest(
-          'POST', Uri.parse('http://syedu12.sg-host.com/api/updateuser'));
+          'POST', Uri.parse('https://app.greendiceinvestments.com/api/updateuser'));
       request.fields.addAll({
         "first_name": user_ctrl.text,
         "last_name": user_lname.text,

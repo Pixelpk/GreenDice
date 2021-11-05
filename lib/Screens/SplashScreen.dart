@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greendice/Screens/WelcomeScreen.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -32,10 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     messaging = FirebaseMessaging.instance;
 
-    messaging.getToken().then((value) {
-      print('firabase token: $value');
-      ///TODO
-    });
+    // messaging.getToken().then((value) {
+    //   print('firabase token: $value');
+    //   ///TODO
+    // });
     IoSNotifcationHandler();
     notificationOnMessagehandler();
     notificationOnMessageOpened();

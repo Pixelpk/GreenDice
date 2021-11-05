@@ -12,7 +12,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordLogin extends StatefulWidget {
-  ForgotPasswordLogin({Key? key, required this.title}) : super(key: key);
+  String ? fcm ;
+  String? deviceid;
+  ForgotPasswordLogin({Key? key, required this.title,required this.deviceid,required this.fcm}) : super(key: key);
 
   final String title;
 
@@ -24,21 +26,23 @@ class ForgotPasswordLogin extends StatefulWidget {
 class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
   bool _isObscure = true;
   bool _isObscure_confirm = true;
-
+  bool loading = false ;
   TextEditingController pass = TextEditingController();
   TextEditingController conf_pass = TextEditingController();
 
 
   Future login()async{
-
-
-
+ if(mounted)   {
+      setState(() {
+        loading = true;
+      });
+    }
     if(pass.text == conf_pass.text) {
       final prefs = await SharedPreferences.getInstance();
       final access_token = prefs.getString('access_token') ?? '';
 
       var response = await http.post(
-        Uri.parse("http://syedu12.sg-host.com/api/updatepassword"), body: {
+        Uri.parse("https://app.greendiceinvestments.com/api/updatepassword"), body: {
         "password": pass.text,
         "password_confirmation": conf_pass.text,
       },
@@ -56,6 +60,11 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
 
       print(val);
       if (val == "0") {
+        if(mounted)   {
+          setState(() {
+            loading = false;
+          });
+        }
         Fluttertoast.showToast(
           msg: mess,
           toastLength: Toast.LENGTH_SHORT,
@@ -63,6 +72,11 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
         );
       }
       else {
+        if(mounted)   {
+          setState(() {
+            loading = false;
+          });
+        }
         Fluttertoast.showToast(
           msg: "Password Updated Successfully",
           toastLength: Toast.LENGTH_SHORT,
@@ -71,12 +85,17 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SigninScreen(title: "SigninScreen")),
+              builder: (context) => SigninScreen(title: "SigninScreen",devicerId: widget.deviceid,fcmTOken: widget.fcm,)),
         );
       }
     }
     else
       {
+        if(mounted)   {
+          setState(() {
+            loading = false;
+          });
+        }
         Fluttertoast.showToast(
           msg: "Password fields does not match",
           toastLength: Toast.LENGTH_SHORT,
@@ -95,7 +114,7 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen")),
+          builder: (context) => SignupScreen(title: "SignupScreen",fcm: widget.fcm,deviceid: widget.deviceid,)),
     );
   }
 
@@ -109,7 +128,9 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: SafeArea(
+      body: loading ? Center(
+        child: CircularProgressIndicator(),
+      ):SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
