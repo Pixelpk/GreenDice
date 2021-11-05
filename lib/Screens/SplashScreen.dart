@@ -71,15 +71,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   Future IoSNotifcationHandler() async {
     if (Platform.isIOS) {
-      messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: true,
-        provisional: true,
-        sound: true,
-      );
+      FirebaseMessaging.instance.requestPermission();
+
     }
   }
 notificationOnMessagehandler(){
