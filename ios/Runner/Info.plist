@@ -28,7 +28,7 @@
 		<true/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>GeenDice does not required music access</string>
+	<string>GreenDice does not required music access</string>
 	<key>NSCameraUsageDescription</key>
 	<string>GreenDice app needs camera to take pictures for profile</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -57,6 +57,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
