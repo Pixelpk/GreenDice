@@ -12,6 +12,9 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>greendice</string>
+
+
+
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

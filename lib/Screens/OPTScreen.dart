@@ -143,8 +143,8 @@ bool loading = false;
                   children: <Widget>[
                     Container(
                     //  color: Colors.white,
-                      margin: const EdgeInsets.all(20.0),
-                      padding: const EdgeInsets.all(20.0),
+                      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
+                      padding: const EdgeInsets.all(10.0),
                       child: PinPut(
                         fieldsCount: 6,
                         onSubmit: (String pin) => OTP(pin)/*_showSnackBar(pin, context)*/,
