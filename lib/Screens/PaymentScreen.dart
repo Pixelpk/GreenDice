@@ -71,7 +71,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: isLoading
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -163,6 +163,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                   labelText: 'Expired Date',
                                   hintText: 'XX/XX',
                                 ),
+
                                 cvvCodeDecoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
@@ -177,6 +178,8 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                   labelText: 'CVV',
                                   hintText: 'XXX',
                                 ),
+
+
                                 cardHolderDecoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,

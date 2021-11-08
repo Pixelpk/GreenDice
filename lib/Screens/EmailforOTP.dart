@@ -13,23 +13,24 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailforOTP extends StatefulWidget {
-  EmailforOTP(
-      {Key? key,
-      required this.title,
-      required this.fcm,
-      required this.deviceId})
-      : super(key: key);
-  String fcm;
-  String deviceId;
+
+  EmailforOTP({required this.title, required this.fcm, required this.deviceId});
+
+  final String fcm;
+  final String deviceId;
   final String title;
 
   @override
   _EmailforOTPState createState() => _EmailforOTPState();
+
 }
 
 class _EmailforOTPState extends State<EmailforOTP> {
+
   bool _isObscure = true;
+
   var _formkey = GlobalKey<FormState>();
+
   bool loading = false;
   TextEditingController email = TextEditingController();
 
@@ -60,7 +61,7 @@ class _EmailforOTPState extends State<EmailforOTP> {
 
       print(val);
       if (val == "0") {
-        if(mounted) {
+        if (mounted) {
           setState(() {
             loading = false;
           });
@@ -71,7 +72,7 @@ class _EmailforOTPState extends State<EmailforOTP> {
           gravity: ToastGravity.CENTER,
         );
       } else {
-        if(mounted) {
+        if (mounted) {
           setState(() {
             loading = false;
           });
@@ -119,105 +120,123 @@ class _EmailforOTPState extends State<EmailforOTP> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: loading?Center(child: CircularProgressIndicator(),) :SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.45,
-                    ),
-                    Text(
-                        "Please enter the email address to reset the password."),
-                    Form(
-                      key: _formkey,
-                      child: TextFormField(
-                        controller: email,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Email',
-                            hintStyle: TextStyle(
-                              color: Color(0xff9B9B9B),
-                            )),
-                        validator: (text) {
-                          if (EmailValidator.validate(text!.trim()))
-                          {
-                            return null;
-                          }
-                          return "Please enter valid email";
-                        },
+      body: loading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formkey,
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.45,
+                            ),
+                            Text(
+                                "Please enter the email address to reset the password."),
+                            TextFormField(
+                              controller: email,
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  hintText: 'Email',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xff9B9B9B),
+                                  )),
+                              validator: (text) {
+                                if (EmailValidator.validate(text!.trim())) {
+                                  return null;
+                                }
+                                return "Please enter valid email";
+                              },
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.015,
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              child: ElevatedButton(
+                                child: Text("Continue",
+                                    style: TextStyle(fontSize: 14)),
+                                style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Color(0xff009E61)),
+                                    alignment: Alignment.center,
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            side: BorderSide(
+                                              color: Color(0xff009E61),
+                                            )))),
+                                onPressed: () {
+
+                                  if (_formkey.currentState!.validate()) {
+
+                                    print('form validation ok');
+                                    login();
+                                  }
+
+
+
+                                },
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.015,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.07,
-                      child: ElevatedButton(
-                          child:
-                              Text("Continue", style: TextStyle(fontSize: 14)),
-                          style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xff009E61)),
-                              alignment: Alignment.center,
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                        color: Color(0xff009E61),
-                                      )))),
-                          onPressed: () => login()),
-                    ),
-                  ],
+                      Positioned(
+                        right: 290,
+                        child: SizedBox(
+                          width: 240,
+                          height: 240,
+                          child: Image.asset('assets/images/sign_logo.png'),
+                        ),
+                      ),
+                      Positioned(
+                        right: 100,
+                        top: 100,
+                        child: Column(children: [
+                          Text(
+                            "Forgot",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff005333),
+                            ),
+                          ),
+                          Text(
+                            "Password",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff005333),
+                            ),
+                          ),
+                        ]),
+                      )
+                    ],
+                  ),
                 ),
               ),
-              Positioned(
-                right: 290,
-                child: SizedBox(
-                  width: 240,
-                  height: 240,
-                  child: Image.asset('assets/images/sign_logo.png'),
-                ),
-              ),
-              Positioned(
-                right: 100,
-                top: 100,
-                child: Column(children: [
-                  Text(
-                    "Forgot",
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Color(0xff005333),
-                    ),
-                  ),
-                  Text(
-                    "Password",
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Color(0xff005333),
-                    ),
-                  ),
-                ]),
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

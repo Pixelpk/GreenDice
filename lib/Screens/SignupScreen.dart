@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'HomeScreen.dart';
 import 'SigninScreen.dart';
@@ -41,12 +42,12 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       if(pass.text!=confirmpass.text)
         {
-          Fluttertoast.showToast(
+          /*Fluttertoast.showToast(
               msg: "Password doesn't match",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               backgroundColor: Color(0xFF009d60),
-              textColor: Colors.white);
+              textColor: Colors.white);*/
         }
       else {
         if(mounted) {
@@ -237,6 +238,7 @@ Widget space(){
                       space(),
                       TextFormField(
                         controller: email,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             border: UnderlineInputBorder(),
                             hintText: 'Email',
@@ -255,6 +257,10 @@ Widget space(){
                       TextFormField(
                         controller: phone,
                         keyboardType: TextInputType.phone,
+                        /*keyboardType: TextInputType.numberWithOptions(signed: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],*/
                         decoration: InputDecoration(
 
                             border: UnderlineInputBorder(),
@@ -280,10 +286,10 @@ Widget space(){
                             )),
                         validator: (user) {
                           if (user!.isEmpty) {
-                            return 'Please enter Password}';
+                            return 'Please enter Password';
                           }
                           if (user.length < 6) {
-                            return 'Password should be atleast 6-digit long';
+                            return 'Password should be at least 6-digits long';
                           }
                         },
                       ),
@@ -298,10 +304,13 @@ Widget space(){
                             )),
                         validator: (user) {
                           if (user!.isEmpty) {
-                            return 'Please enter Password}';
+                            return 'Please enter Password';
                           }
                           if (user.length < 6) {
-                            return 'Password should be atleast 6-digit long';
+                            return 'Password should be at least 6-digits long';
+                          }
+                          if (pass.text != confirmpass.text) {
+                            return 'Password didn\'t match';
                           }
                         },
                       ),

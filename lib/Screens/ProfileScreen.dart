@@ -41,6 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final _picker = ImagePicker();
   PickedFile? _imageFile;
+
   @override
   void dispose() {
     user_ctrl.dispose();
@@ -133,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
           Fluttertoast.showToast(
             msg:
-                "Icorrect Old Password! Please enter a correct old password or use Forgot password from Signin Screen",
+                "Incorrect Old Password! Please enter a correct old password or use Forgot password from Sign In Screen",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
           );
