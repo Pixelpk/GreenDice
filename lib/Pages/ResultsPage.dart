@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/ResultsModelClass.dart';
 import 'package:greendice/Screens/HomeScreen.dart';
+import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
 import 'package:greendice/UiComponents/NotificationListItem.dart';
@@ -204,43 +205,53 @@ bool ispremium = true ;
                                         MediaQuery.of(context).size.width * 0.1,
                                   ),
                                   photo == ''
-                                      ? Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.09,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.09,
-                                          decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: new DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: new AssetImage(
-                                                  "assets/images/profileimage.png"),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.09,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.09,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                photo,
+                                      ? InkWell(
+                                    onTap: (){
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
+                                    },
+                                        child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.09,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.09,
+                                            decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: new DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: new AssetImage(
+                                                    "assets/images/profileimage.png"),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                      )
+                                      : InkWell(
+                                    onTap: (){
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
+                                    },
+                                        child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.09,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.09,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  photo,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.03,

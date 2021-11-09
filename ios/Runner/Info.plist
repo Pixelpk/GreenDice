@@ -14,6 +14,13 @@
 	<string>greendice</string>
 
 
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>https</string>
+      <string>http</string>
+    </array>
+
+
 
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>

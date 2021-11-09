@@ -129,7 +129,8 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
     // than having to individually change instances of widgets.
     return Scaffold(
       body: loading ? Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(   color: Color(0xff009E61),
+          backgroundColor: Color(0xff0ECB82),),
       ):SafeArea(
         child: SingleChildScrollView(
           child: Stack(

@@ -2,11 +2,18 @@
     package="com.greendiceinvestments">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <queries>
+        <!-- If your app opens https URLs -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
    <application
         android:label="greendice"
         android:icon="@mipmap/ic_launcher">
-
+       android:showWhenLocked="true"
+       android:turnScreenOn="true">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -41,5 +48,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    </application>
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_icon"
+           android:resource="@drawable/ic_notification_icon" />
+       <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+           android:resource="@color/colorAccent" />
+
+   </application>
 </manifest>

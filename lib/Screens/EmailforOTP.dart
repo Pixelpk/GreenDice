@@ -122,7 +122,8 @@ class _EmailforOTPState extends State<EmailforOTP> {
     return Scaffold(
       body: loading
           ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(   color: Color(0xff009E61),
+                backgroundColor: Color(0xff0ECB82),),
             )
           : SafeArea(
               child: SingleChildScrollView(

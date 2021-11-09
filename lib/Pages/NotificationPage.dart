@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/Pages/MembershipPage.dart';
+import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
@@ -173,34 +174,44 @@ String isYearlyPkg = '0' ;
                               width: MediaQuery.of(context).size.width * 0.1,
                             ),
                             photo == ''
-                                ? Container(
-                                    width: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    decoration: new BoxDecoration(
+                                ? InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
+                              },
+                                  child: Container(
+                                      width: MediaQuery.of(context).size.height *
+                                          0.09,
+                                      height: MediaQuery.of(context).size.height *
+                                          0.09,
+                                      decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green,
+                                          image: new DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                                "assets/images/profileimage.png"),
+                                          ))),
+                                )
+                                : InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
+                              },
+                                  child: Container(
+                                      width: MediaQuery.of(context).size.height *
+                                          0.09,
+                                      height: MediaQuery.of(context).size.height *
+                                          0.09,
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.green,
-                                        image: new DecorationImage(
+                                        image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              "assets/images/profileimage.png"),
-                                        )))
-                                : Container(
-                                    width: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                          photo,
+                                          image: NetworkImage(
+                                            photo,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.03,
                             ),
