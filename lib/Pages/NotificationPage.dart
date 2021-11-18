@@ -588,9 +588,11 @@ String isYearlyPkg = '0' ;
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                                "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, "
-                                                                "son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , "
-                                                                "as he has nice gate speed , settle behind leaders, look to be running on.",
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .notificationSignal![
+                                                                index]
+                                                                    .comment!,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .left),

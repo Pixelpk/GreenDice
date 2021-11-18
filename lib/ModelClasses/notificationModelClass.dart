@@ -63,12 +63,13 @@ class NotificationSignal {
   String? balance;
   String? profit;
   String? createdAt;
-
+String? comment;
   NotificationSignal(
       {this.id,
       this.signalDate,
       this.location,
       this.raceId,
+        this.comment,
       this.horse,
       this.signalFloat,
       this.oods,
@@ -96,6 +97,7 @@ class NotificationSignal {
     roi = json['roi'];
     balance = json['balance'];
     profit = json['profit'];
+    comment = json['comment'] ?? '';
     createdAt = json['created_at'];
   }
 
