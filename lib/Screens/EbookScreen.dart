@@ -12,6 +12,7 @@ import 'package:greendice/UiComponents/NotificationListItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
+import 'pdf_Viewer.dart';
 
 class EbookScreen extends StatefulWidget {
   EbookScreen({Key? key, required this.title}) : super(key: key);
@@ -227,9 +228,7 @@ class _EbookScreenState extends State<EbookScreen> {
                                 return InkWell(
                                   onTap: () async {
                                    try {
-                                      PDFDocument doc = await PDFDocument.fromURL(
-                                          eBookModelClass!.data!.ebooks![index].fileName!);
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PDFViewer(document: doc)));
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PDFOPENER(url: eBookModelClass!.data!.ebooks![index].fileName!,)));
                                       print("on tab ebook");
                                     }catch(e){
                                      Fluttertoast.showToast(

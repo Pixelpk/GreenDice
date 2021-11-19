@@ -1,16 +1,18 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter/material.dart';
-class PDFVIEWER extends StatelessWidget {
-  PDFDocument pdfDocument ;
-   PDFVIEWER({Key? key , required this.pdfDocument}) : super(key: key);
+class PDFOPENER extends StatelessWidget {
 
+String url ;
+PDFOPENER({required this.url});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body:  PDFViewer(document: pdfDocument,
-      pickerButtonColor: Colors.green,
-      ));
-
+      body: SafeArea(
+        child: SfPdfViewer.network(
+            url),
+      )
+    );
   }
 }
