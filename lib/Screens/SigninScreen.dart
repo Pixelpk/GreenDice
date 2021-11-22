@@ -287,7 +287,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               Positioned(
                 top: 0,
-                right: 290,
+                right: MediaQuery.of(context).size.width*0.7,
                 child: SizedBox(
                   width: 240,
                   height: 240,

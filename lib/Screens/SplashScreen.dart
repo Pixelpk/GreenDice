@@ -40,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
     notificationOnMessageOpened();
     super.initState();
     Loadprefs().then((token) async {
+      print("TOKEN $token");
       if (token == '' || token == null) {
         Timer(
             Duration(seconds: 2),
@@ -174,8 +175,8 @@ class _SplashScreenState extends State<SplashScreen> {
               //   ),
               // ),
               child: SvgPicture.asset(
-                "assets/images/splashLogo.svg",
-                color: Colors.white,
+                "assets/images/welcomelogo.svg",
+              //  color: Colors.white,
               ))
         ],
       ),

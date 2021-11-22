@@ -9,9 +9,14 @@ import '../ModelClasses/SigninUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  String fcm ;
-  String deviceId ;
-  ForgotPasswordScreen({Key? key, required this.title,required this.fcm , required this.deviceId}) : super(key: key);
+  String fcm;
+  String deviceId;
+  ForgotPasswordScreen(
+      {Key? key,
+      required this.title,
+      required this.fcm,
+      required this.deviceId})
+      : super(key: key);
 
   final String title;
 
@@ -31,8 +36,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!isValid) {
       return;
     } else {
-
-
       var response = await http.post(
           Uri.parse("https://app.greendiceinvestments.com/api/forgotpassword"),
           body: {
@@ -77,22 +80,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen",deviceid: widget.deviceId , fcm: widget.fcm,)),
+          builder: (context) => SignupScreen(
+                title: "SignupScreen",
+                deviceid: widget.deviceId,
+                fcm: widget.fcm,
+              )),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
+
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -178,7 +181,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
               Positioned(
-                right: 290,
+                top: 0,
+                right: MediaQuery.of(context).size.width*0.7,
                 child: SizedBox(
                   width: 240,
                   height: 240,

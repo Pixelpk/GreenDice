@@ -51,9 +51,11 @@ class _LogoutLoadingState extends State<LogoutLoading> {
         '0');
     prefs.setString('isChairman',
         '0');
+    await prefs.clear();
     return Future.value();
   }
   Future Logout() async {
+
 
     var response = await http.get(
       Uri.parse("https://app.greendiceinvestments.com/api/logout"),
