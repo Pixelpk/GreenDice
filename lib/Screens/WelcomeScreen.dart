@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   "Welcome",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 24,
                     color: Color(0xffffffff),
                   ),
                 ),
@@ -104,14 +104,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       .height * 0.01,
                 ),
                 Text(
-                  "Happy to see you here",
+                  "to",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 24,                    color: Color(0xffffffff),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.01,
+                ),
+                Text(
+                  "GreenDice",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
                     color: Color(0xffffffff),
                   ),
                 ),
-
 
                 SizedBox(
                   height: MediaQuery

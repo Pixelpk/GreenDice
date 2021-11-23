@@ -11,11 +11,15 @@
     </queries>
    <application
         android:label="greendice"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+       android:allowBackup="false"
+       android:fullBackupContent="false"
+       >
 
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
+
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
