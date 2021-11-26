@@ -1,9 +1,7 @@
-import 'package:charts_flutter/flutter.dart';
+
 import 'package:flutter/material.dart' as textstyling;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:greendice/Screens/SigninScreen.dart';
-import 'package:greendice/Screens/SignupScreen.dart';
 
 class Ebookitem extends StatefulWidget {
   Ebookitem({Key? key, required this.title}) : super(key: key);
@@ -22,12 +20,6 @@ class _EbookitemState extends State<Ebookitem> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -35,8 +27,7 @@ class _EbookitemState extends State<Ebookitem> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Stack(
-              overflow: Overflow.visible,
-              children: [
+              clipBehavior: Clip.none, children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
                   width: MediaQuery.of(context).size.width,

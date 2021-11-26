@@ -24,34 +24,34 @@ class CalendarDataScreen extends StatefulWidget {
 
 class _CalendarDataScreenState extends State<CalendarDataScreen> {
   late List data = [];
-  late ScrollController _controller;
+
   CalDataModelClass? notificationmodel;
 
   bool isloading = true;
   bool noDataFound = false;
 
-  String? trophyImage;
-
-  _scrollListener() {
-    if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange) {
-      setState(() {
-        //you can do anything here
-      });
-    }
-    if (_controller.offset <= _controller.position.minScrollExtent &&
-        !_controller.position.outOfRange) {
-      setState(() {
-        //you can do anything here
-      });
-    }
-  }
+  String? trophyImage = 'assets/images/loss.svg';
+  //
+  // _scrollListener() {
+  //   if (_controller.offset >= _controller.position.maxScrollExtent &&
+  //       !_controller.position.outOfRange) {
+  //     setState(() {
+  //       //you can do anything here
+  //     });
+  //   }
+  //   if (_controller.offset <= _controller.position.minScrollExtent &&
+  //       !_controller.position.outOfRange) {
+  //     setState(() {
+  //       //you can do anything here
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
+    // _controller = ScrollController();
+    // _controller.addListener(_scrollListener);
 
     Signalapi().then((value) => {
           setState(() {
@@ -65,12 +65,14 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
     final prefs = await SharedPreferences.getInstance();
     final access_token = prefs.getString('access_token') ?? '';
     //  print("token = "+access_token);
-    var response = await http
-        .post(Uri.parse("https://app.greendiceinvestments.com/api/calendar"), headers: {
-      HttpHeaders.authorizationHeader: "Bearer " + access_token,
-    }, body: {
-      "signal_date": widget.title.toString(),
-    });
+    var response = await http.post(
+        Uri.parse("https://app.greendiceinvestments.com/api/calendar"),
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer " + access_token,
+        },
+        body: {
+          "signal_date": widget.title.toString(),
+        });
 
     //  var data = json.decode(response.body);
     CalDataModelClass notificationmodel =
@@ -78,7 +80,7 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
     //notifcationModelClass notification_success = notifcationModelClass.fromJson(jsonDecode(response.body));
     var val = '${notificationmodel.success}';
 
-    this.setState(() {});
+    // this.setState(() {});
 
     //data = jsonDecode('${notification_success.data!.notificationSignal}');
     print(jsonDecode(response.body));
@@ -92,17 +94,6 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
       setState(() {
         noDataFound = true;
       });
-
-      /*Fluttertoast.showToast(
-        msg: "Error! Please try again later",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );*/
-      /*Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomeScreen(title: "HomScreen")),
-      );*/
     }
 
     return notificationmodel;
@@ -110,94 +101,87 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      /*  appBar: new PreferredSize(
-          preferredSize: Size.fromHeight(100.0), // here the desired height
-          child: new AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Image(
-              image: AssetImage('assets/images/dashboardappbarimage.png'),
-              fit: BoxFit.cover,
-            ),
-            backgroundColor: Colors.transparent,
-            // ...
-          )),*/
-
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.21,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                                "assets/images/dashboardappbarimage.png"),
-                            fit: BoxFit.cover)),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                  IconButton(
-                    icon: Image.asset('assets/images/back.png'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Column(
+      body: SingleChildScrollView(
+        child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                SafeArea(
+                  child: Stack(
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.15,
-                      ),
                       Container(
-                        margin: EdgeInsets.only(
-                            left: 60, top: 0, right: 0, bottom: 0),
                         width: MediaQuery.of(context).size.width,
-                        child: Text(
-                          "Race Data",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff0ECB82)),
-                        ),
-                      )
+                        height: MediaQuery.of(context).size.height * 0.21,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/dashboardappbarimage.png"),
+                                fit: BoxFit.cover)),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1),
+                      IconButton(
+                        icon: Image.asset('assets/images/back.png'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.15,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 60, top: 0, right: 0, bottom: 0),
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(
+                              "Race Data",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff0ECB82)),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.03,
-                color: Color(0xff009E61),
-              ),
-              Center(
-                  child: isloading
-                      ? Container(
-                    height:MediaQuery.of(context).size.height * 0.65 ,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  color: Color(0xff009E61),
+                ),
+                isloading
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * 0.65,
                         child: Center(
                             child: CircularProgressIndicator(
-                            color: Color(0xff009E61),
-                            backgroundColor: Color(0xff0ECB82),
-                          )),
+                          color: Color(0xff009E61),
+                          backgroundColor: Color(0xff0ECB82),
+                        )),
                       )
-                      : noDataFound
-                          ? noDataWidget()
-                          : ListView.builder(
-                              controller: _controller,
+                    : noDataFound
+                        ? noDataWidget()
+                        : Expanded(
+                            child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: data == null
                                   ? 0
-                                  : notificationmodel!
-                                      .data!.calenderSignal!.length,
+                                  :
+
+                                  ///NULL CHECK
+                                  (notificationmodel!.data != null &&
+                                          notificationmodel!
+                                                  .data!.calenderSignal !=
+                                              null)
+                                      ? notificationmodel!
+                                          .data!.calenderSignal!.length
+                                      : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 if (notificationmodel!.data!
                                         .calenderSignal![index].placing! ==
@@ -510,10 +494,10 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                                   ),
                                 );
                               },
-                            )),
-            ],
-          ),
-        ),
+                            ),
+                          ),
+              ],
+            )),
       ),
     );
   }

@@ -1,12 +1,12 @@
-class notifcationModelClass {
+class NotificationModel {
 
   int? success;
   String? message;
   Data? data;
 
-  notifcationModelClass({this.success, this.message, this.data});
+  NotificationModel({this.success, this.message, this.data});
 
-  notifcationModelClass.fromJson(Map<String, dynamic> json) {
+  NotificationModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;

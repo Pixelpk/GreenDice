@@ -226,7 +226,7 @@ class _EbookScreenState extends State<EbookScreen> {
                                 return InkWell(
                                   onTap: () async {
                                    try {
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PDFOPENER(url: eBookModelClass!.data!.ebooks![index].fileName!,)));
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PdfViewer(url: eBookModelClass!.data!.ebooks![index].fileName!,)));
                                       print("on tab ebook");
                                     }catch(e){
                                      Fluttertoast.showToast(

@@ -1,28 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/Screens/CalendarDataScreen.dart';
-import 'package:greendice/Screens/HomeScreen.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
-import 'package:greendice/Screens/SigninScreen.dart';
-import 'package:greendice/Screens/SignupScreen.dart';
-import 'package:greendice/UiComponents/NotificationListItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import '../ModelClasses/notificationModelClass.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:intl/intl.dart' show DateFormat;
-
 import 'MembershipPage.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -35,7 +24,7 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   late String firstname = '', lastname = '', photo = '';
-  late final access_token;
+  late final accessToken;
   bool isLoading = false;
 
   DateTime _currentDate = DateTime.now();
@@ -46,16 +35,16 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _targetDateTime = DateTime.now();
   DateTime _maxDateTime = DateTime(2100, 2, 3);
 
-  static Widget _eventIcon = new Container(
-    decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(1000)),
-        border: Border.all(color: Colors.blue, width: 2.0)),
-    child: new Icon(
-      Icons.person,
-      color: Colors.amber,
-    ),
-  );
+  // static Widget _eventIcon = new Container(
+  //   decoration: new BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.all(Radius.circular(1000)),
+  //       border: Border.all(color: Colors.blue, width: 2.0)),
+  //   child: new Icon(
+  //     Icons.person,
+  //     color: Colors.amber,
+  //   ),
+  // );
 
   EventList<Event> _markedDateMap = new EventList<Event>(
     events: {
@@ -97,31 +86,31 @@ class _CalendarPageState extends State<CalendarPage> {
 
     });*/
   }
-  String isYearlyPkg = '0' ;
+
+  String isYearlyPkg = '0';
   String isFourMonthPkg = '0';
   String isCharmans = '0';
-bool ispremium = true ;
+  bool ispremium = true;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      access_token = prefs.getString('access_token') ?? '';
+      accessToken = prefs.getString('access_token') ?? '';
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
-      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
-      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      isCharmans = prefs.getString('isChairman') ?? '0';
       ispremium = prefs.getString('isYearlyPkg') == '1'
           ? true
           : prefs.getString('isFourMonthPkg') == '1'
-          ? true
-          : false;
-
+              ? true
+              : false;
     });
     return Future.value();
   }
 
-  Future<notifcationModelClass> Signalapi() async {
+  Future<NotificationModel> Signalapi() async {
     if (mounted) {
       setState(() {
         isLoading = true;
@@ -131,13 +120,13 @@ bool ispremium = true ;
     var response = await http.post(
       Uri.parse("https://app.greendiceinvestments.com/api/signalnotifications"),
       headers: {
-        HttpHeaders.authorizationHeader: "Bearer " + access_token,
+        HttpHeaders.authorizationHeader: "Bearer " + accessToken,
       },
     );
 
     //  var data = json.decode(response.body);
-    notifcationModelClass notificationmodel =
-        notifcationModelClass.fromJson(jsonDecode(response.body));
+    NotificationModel notificationmodel =
+        NotificationModel.fromJson(jsonDecode(response.body));
     //notifcationModelClass notification_success = notifcationModelClass.fromJson(jsonDecode(response.body));
     var val = '${notificationmodel.success}';
 
@@ -326,10 +315,15 @@ bool ispremium = true ;
                                   ),
                                   photo == ''
                                       ? InkWell(
-                                    onTap: (){
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
-                                    },
-                                        child: Container(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        ProfileScreen(
+                                                          title: "nulkl",
+                                                        )));
+                                          },
+                                          child: Container(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .height *
@@ -347,12 +341,17 @@ bool ispremium = true ;
                                               ),
                                             ),
                                           ),
-                                      )
+                                        )
                                       : InkWell(
-                                    onTap: (){
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
-                                    },
-                                        child: Container(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        ProfileScreen(
+                                                          title: "nulkl",
+                                                        )));
+                                          },
+                                          child: Container(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .height *
@@ -371,40 +370,52 @@ bool ispremium = true ;
                                               ),
                                             ),
                                           ),
-                                      ),
+                                        ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.03,
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Container(height: 8,),
+                                      Container(
+                                        height: 8,
+                                      ),
                                       Container(
                                         child: Text(
                                           firstname + " " + lastname,
                                           style: TextStyle(
-                                              fontSize: 14, color: Color(0xffffffff)),
+                                              fontSize: 14,
+                                              color: Color(0xffffffff)),
                                         ),
                                       ),
                                       SizedBox(
                                         height: 8,
                                       ),
-                                      Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
+                                      Text(
+                                        isYearlyPkg == '1'
+                                            ? "Yearly Package: Active"
+                                            : isFourMonthPkg == '1'
+                                                ? '4-Month Package: Active'
+                                                : "No Package Active",
                                         style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white
-                                        ),
+                                            fontSize: 12, color: Colors.white),
                                       ),
-                                      SizedBox(height: 4,),
-                                      isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white
-                                      ),):Container()
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      isCharmans == '1'
+                                          ? Text(
+                                              "Chairman's Package: Active",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            )
+                                          : Container()
                                     ],
                                   ),
-
                                 ],
                               ),
                             ),
@@ -437,244 +448,264 @@ bool ispremium = true ;
                       height: MediaQuery.of(context).size.height * 0.03,
                       color: Color(0xff009E61),
                     ),
-                    ispremium ?  Center(
-                        child: Column(
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              //custom icon
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                                // child: _calendarCarousel,
-                              ),
-                              // This trailing comma makes auto-formatting nicer for build methods.
-                              //custom icon without header
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: 30.0,
-                                  bottom: 16.0,
-                                  left: 16.0,
-                                  right: 16.0,
-                                ),
-                                child: new Row(
+                    ispremium
+                        ? Center(
+                            child: Column(
+                            children: [
+                              SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
-                                    Expanded(
-                                        child: Text(
-                                      _currentMonth,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24.0,
+                                    //custom icon
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      // child: _calendarCarousel,
+                                    ),
+                                    // This trailing comma makes auto-formatting nicer for build methods.
+                                    //custom icon without header
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        top: 30.0,
+                                        bottom: 16.0,
+                                        left: 16.0,
+                                        right: 16.0,
                                       ),
-                                    )),
-                                    FlatButton(
-                                      child: Text('PREV'),
-                                      onPressed: () {
-                                        if (mounted) {
-                                          setState(() {
-                                            /*_targetDateTime = DateTime(_targetDateTime.year, _targetDateTime.month - 1);
+                                      child: new Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                              child: Text(
+                                            _currentMonth,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24.0,
+                                            ),
+                                          )),
+                                          FlatButton(
+                                            child: Text('PREV'),
+                                            onPressed: () {
+                                              if (mounted) {
+                                                setState(() {
+                                                  /*_targetDateTime = DateTime(_targetDateTime.year, _targetDateTime.month - 1);
                                         _currentMonth = DateFormat.yMMM().format(_targetDateTime);
                                         */
 
-                                            _targetDateTime = DateTime(
-                                                _currentDate.year,
-                                                _currentDate.month - 1);
-                                            _currentMonth = DateFormat.yMMM()
-                                                .format(_targetDateTime);
-                                            _currentDate = _targetDateTime;
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('NEXT'),
-                                      onPressed: () {
-                                        if (mounted) {
-                                          setState(() {
-                                            /*_targetDateTime = DateTime(
+                                                  _targetDateTime = DateTime(
+                                                      _currentDate.year,
+                                                      _currentDate.month - 1);
+                                                  _currentMonth =
+                                                      DateFormat.yMMM().format(
+                                                          _targetDateTime);
+                                                  _currentDate =
+                                                      _targetDateTime;
+                                                });
+                                              }
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text('NEXT'),
+                                            onPressed: () {
+                                              if (mounted) {
+                                                setState(() {
+                                                  /*_targetDateTime = DateTime(
                                             _targetDateTime.year, _targetDateTime.month + 1);
                                         _currentMonth =
                                             DateFormat.yMMM().format(_targetDateTime);*/
 
-                                            _targetDateTime = DateTime(
-                                                _currentDate.year,
-                                                _currentDate.month + 1);
-                                            _currentMonth = DateFormat.yMMM()
-                                                .format(_targetDateTime);
-                                            _currentDate = _targetDateTime;
-                                          });
-                                        }
-                                      },
-                                    )
+                                                  _targetDateTime = DateTime(
+                                                      _currentDate.year,
+                                                      _currentDate.month + 1);
+                                                  _currentMonth =
+                                                      DateFormat.yMMM().format(
+                                                          _targetDateTime);
+                                                  _currentDate =
+                                                      _targetDateTime;
+                                                });
+                                              }
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      //child: _calendarCarouselNoHeader,
+                                      child: CalendarCarousel<Event>(
+                                        dayButtonColor: Color(0xffdbf1e9),
+
+                                        todayBorderColor: Colors.green,
+                                        onDayPressed: (date, events) {
+                                          if (mounted) {
+                                            this.setState(
+                                                () => _currentDate = date);
+                                          }
+                                          String formateddate =
+                                              DateFormat.yMd().format(date);
+                                          //print(formateddate);
+                                          List<String> splitteddate =
+                                              formateddate.split('/');
+                                          // print(splitteddate);
+                                          String month = splitteddate[0];
+                                          if (month.length == 1) {
+                                            month = "0$month";
+                                          }
+                                          String selecteddate = splitteddate[1];
+                                          if (selecteddate.length == 1) {
+                                            selecteddate = "0$selecteddate";
+                                          }
+                                          String year = splitteddate[2];
+                                          List<String> requiredFormatList = [
+                                            year,
+                                            month,
+                                            selecteddate
+                                          ];
+                                          String finaldate =
+                                              requiredFormatList.join('-');
+                                          // print(finaldate);
+                                          // var val = "0";
+                                          // if (date.month < 10 && date.day < 10) {
+                                          //   val = date.year.toString() +
+                                          //       "-0" +
+                                          //       date.month.toString() +
+                                          //       "-0" +
+                                          //       date.day.toString();
+                                          // } else if (date.month > 10 &&
+                                          //     date.day < 10) {
+                                          //   val = date.year.toString() +
+                                          //       "-" +
+                                          //       date.month.toString() +
+                                          //       "-0" +
+                                          //       date.day.toString();
+                                          // } else if (date.month < 10 &&
+                                          //     date.day > 10) {
+                                          //   val = date.year.toString() +
+                                          //       "-0" +
+                                          //       date.month.toString() +
+                                          //       "-" +
+                                          //       date.day.toString();
+                                          // } else if (date.month > 10 &&
+                                          //     date.day > 10) {
+                                          //   val = date.year.toString() +
+                                          //       "-" +
+                                          //       date.month.toString() +
+                                          //       "-" +
+                                          //       date.day.toString();
+                                          // }
+
+                                          print('date: $finaldate');
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CalendarDataScreen(
+                                                title: finaldate,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        onCalendarChanged: (DateTime date) {
+                                          if (mounted) {
+                                            setState(() {
+                                              _targetDateTime = date;
+                                              _currentMonth = DateFormat.yMMM()
+                                                  .format(_targetDateTime);
+                                            });
+                                          }
+                                        },
+                                        daysHaveCircularBorder: true,
+                                        showOnlyCurrentMonthDate: false,
+                                        weekendTextStyle: TextStyle(
+                                          color: Colors.red,
+                                        ),
+
+                                        thisMonthDayBorderColor: Colors.green,
+                                        weekFormat: false,
+                                        markedDatesMap: _markedDateMap,
+                                        height: 420.0,
+                                        selectedDateTime: _currentDate,
+                                        targetDateTime: _targetDateTime,
+                                        //targetDateTime: _curr,
+                                        customGridViewPhysics:
+                                            NeverScrollableScrollPhysics(),
+                                        markedDateCustomShapeBorder:
+                                            CircleBorder(
+                                          side:
+                                              BorderSide(color: Colors.yellow),
+                                        ),
+                                        markedDateCustomTextStyle: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.blue,
+                                        ),
+                                        showHeader: false,
+                                        todayTextStyle: TextStyle(
+                                          color: Colors.green,
+                                        ),
+                                        // markedDateShowIcon: true,
+                                        // markedDateIconMaxShown: 2,
+                                        // markedDateIconBuilder: (event) {
+                                        //   return event.icon;
+                                        // },
+                                        // markedDateMoreShowTotal:
+                                        //     true,
+                                        todayButtonColor: Colors.yellow,
+                                        selectedDayTextStyle: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                        minSelectedDate: _currentDate
+                                            .subtract(Duration(days: 10000)),
+                                        maxSelectedDate: _maxDateTime,
+                                        prevDaysTextStyle: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.pinkAccent,
+                                        ),
+                                        inactiveDaysTextStyle: TextStyle(
+                                          color: Colors.tealAccent,
+                                          fontSize: 16,
+                                        ),
+                                        onDayLongPressed: (DateTime date) {
+                                          print('long pressed date $date');
+                                        },
+                                      ),
+                                    ),
+                                    //
                                   ],
                                 ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                                //child: _calendarCarouselNoHeader,
-                                child: CalendarCarousel<Event>(
-                                  todayBorderColor: Colors.green,
-                                  onDayPressed: (date, events) {
-                                    if (mounted) {
-                                      this.setState(() => _currentDate = date);
-                                    }
-                                    String formateddate = DateFormat.yMd().format(date);
-                                    //print(formateddate);
-                                    List<String>splitteddate = formateddate.split('/') ;
-                                   // print(splitteddate);
-                                    String month = splitteddate[0];
-                                    if(month.length == 1)
-                                      {
-                                        month = "0$month" ;
-                                      }
-                                    String selecteddate = splitteddate[1];
-                                    if(selecteddate.length == 1)
-                                    {
-                                      selecteddate = "0$selecteddate" ;
-                                    }
-                                    String year = splitteddate[2];
-                                    List<String> requiredFormatList = [year,month,selecteddate];
-                                    String finaldate =requiredFormatList.join('-');
-                                   // print(finaldate);
-                                    // var val = "0";
-                                    // if (date.month < 10 && date.day < 10) {
-                                    //   val = date.year.toString() +
-                                    //       "-0" +
-                                    //       date.month.toString() +
-                                    //       "-0" +
-                                    //       date.day.toString();
-                                    // } else if (date.month > 10 &&
-                                    //     date.day < 10) {
-                                    //   val = date.year.toString() +
-                                    //       "-" +
-                                    //       date.month.toString() +
-                                    //       "-0" +
-                                    //       date.day.toString();
-                                    // } else if (date.month < 10 &&
-                                    //     date.day > 10) {
-                                    //   val = date.year.toString() +
-                                    //       "-0" +
-                                    //       date.month.toString() +
-                                    //       "-" +
-                                    //       date.day.toString();
-                                    // } else if (date.month > 10 &&
-                                    //     date.day > 10) {
-                                    //   val = date.year.toString() +
-                                    //       "-" +
-                                    //       date.month.toString() +
-                                    //       "-" +
-                                    //       date.day.toString();
-                                    // }
-
-                                    print('date: $finaldate');
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CalendarDataScreen(
-                                          title: finaldate,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  onCalendarChanged: (DateTime date) {
-                                    if (mounted) {
-                                      setState(() {
-                                        _targetDateTime = date;
-                                        _currentMonth = DateFormat.yMMM()
-                                            .format(_targetDateTime);
-                                      });
-                                    }
-                                  },
-                                  daysHaveCircularBorder: true,
-                                  showOnlyCurrentMonthDate: false,
-                                  weekendTextStyle: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                  thisMonthDayBorderColor: Colors.grey,
-                                  weekFormat: false,
-                                  markedDatesMap: _markedDateMap,
-                                  height: 420.0,
-                                  selectedDateTime: _currentDate,
-                                  targetDateTime: _targetDateTime,
-                                  //targetDateTime: _curr,
-                                  customGridViewPhysics:
-                                      NeverScrollableScrollPhysics(),
-                                  markedDateCustomShapeBorder: CircleBorder(
-                                    side: BorderSide(color: Colors.yellow),
-                                  ),
-                                  markedDateCustomTextStyle: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.blue,
-                                  ),
-                                  showHeader: false,
-                                  todayTextStyle: TextStyle(
-                                    color: Colors.blue,
-                                  ),
-                                  // markedDateShowIcon: true,
-                                  // markedDateIconMaxShown: 2,
-                                  // markedDateIconBuilder: (event) {
-                                  //   return event.icon;
-                                  // },
-                                  // markedDateMoreShowTotal:
-                                  //     true,
-                                  todayButtonColor: Colors.yellow,
-                                  selectedDayTextStyle: TextStyle(
-                                    color: Colors.yellow,
-                                  ),
-                                  minSelectedDate: _currentDate
-                                      .subtract(Duration(days: 10000)),
-                                  maxSelectedDate: _maxDateTime,
-                                  prevDaysTextStyle: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.pinkAccent,
-                                  ),
-                                  inactiveDaysTextStyle: TextStyle(
-                                    color: Colors.tealAccent,
-                                    fontSize: 16,
-                                  ),
-                                  onDayLongPressed: (DateTime date) {
-                                    print('long pressed date $date');
-                                  },
-                                ),
-                              ),
-                              //
-                            ],
-                          ),
-                        )
-                      ],
-                    )): Center(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height*0.65,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Buy Package to see All Events'),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (_) => MembershipPage(
-                                          )));
-                                },
-                                minWidth:
-                                MediaQuery.of(context).size.width *
-                                    0.1,
-                                height:
-                                MediaQuery.of(context).size.height *
-                                    0.06,
-                                child: Text("Buy Now"),
-                                color: Colors.green,
                               )
                             ],
-                          )),
-                    )
+                          ))
+                        : Center(
+                            child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Buy Package to see All Events'),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    MaterialButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    MembershipPage()));
+                                      },
+                                      minWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.1,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.06,
+                                      child: Text("Buy Now"),
+                                      color: Colors.green,
+                                    )
+                                  ],
+                                )),
+                          )
                   ],
                 ),
               ),

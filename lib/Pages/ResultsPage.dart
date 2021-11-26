@@ -45,16 +45,16 @@ class _ResultsPageState extends State<ResultsPage> {
     super.initState();
 
     Loadprefs().then((value) {
-      if(ispremium)
-        {
-          Signalapi();
-        }
-     });
+      if (ispremium) {
+        Signalapi();
+      }
+    });
   }
-  String isYearlyPkg = '0' ;
+
+  String isYearlyPkg = '0';
   String isFourMonthPkg = '0';
   String isCharmans = '0';
-bool ispremium = true ;
+  bool ispremium = true;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -62,14 +62,14 @@ bool ispremium = true ;
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
-      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
-      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      isCharmans = prefs.getString('isChairman') ?? '0';
       ispremium = prefs.getString('isYearlyPkg') == '1'
           ? true
           : prefs.getString('isFourMonthPkg') == '1'
-          ? true
-          : false;
+              ? true
+              : false;
     });
   }
 
@@ -163,306 +163,306 @@ bool ispremium = true ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*  appBar: new PreferredSize(
-          preferredSize: Size.fromHeight(100.0), // here the desired height
-          child: new AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Image(
-              image: AssetImage('assets/images/dashboardappbarimage.png'),
-              fit: BoxFit.cover,
-            ),
-            backgroundColor: Colors.transparent,
-            // ...
-          )),*/
-
       body: SafeArea(
-        child:
-             SingleChildScrollView(
-                child: Column(
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.21,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/calendarimage.png"),
+                          fit: BoxFit.cover)),
+                ),
+                Column(
                   children: [
-                    Stack(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.21,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/calendarimage.png"),
-                                  fit: BoxFit.cover)),
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              child: Row(
-                                children: [
-                                  SizedBox(
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.18,
+                            width: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                          photo == ''
+                              ? InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (_) => ProfileScreen(
+                                                  title: "nulkl",
+                                                )));
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.height *
+                                        0.09,
                                     height: MediaQuery.of(context).size.height *
-                                        0.18,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.1,
-                                  ),
-                                  photo == ''
-                                      ? InkWell(
-                                    onTap: (){
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
-                                    },
-                                        child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.09,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.09,
-                                            decoration: new BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: new DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: new AssetImage(
-                                                    "assets/images/profileimage.png"),
-                                              ),
-                                            ),
-                                          ),
-                                      )
-                                      : InkWell(
-                                    onTap: (){
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
-                                    },
-                                        child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.09,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.09,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                  photo,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                        0.09,
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: new DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: new AssetImage(
+                                            "assets/images/profileimage.png"),
                                       ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.03,
+                                    ),
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(height: 8,),
-                                      Container(
-                                        child: Text(
-                                          firstname + " " + lastname,
-                                          style: TextStyle(
-                                              fontSize: 14, color: Color(0xffffffff)),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (_) => ProfileScreen(
+                                                  title: "nulkl",
+                                                )));
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                          photo,
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white
-                                        ),
-                                      ),
-                                      SizedBox(height: 4,),
-                                      isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white
-                                      ),):Container()
-                                    ],
+                                    ),
                                   ),
-
-                                ],
+                                ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.03,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 8,
                               ),
-                            ),
+                              Container(
+                                child: Text(
+                                  firstname + " " + lastname,
+                                  style: TextStyle(
+                                      fontSize: 14, color: Color(0xffffffff)),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                isYearlyPkg == '1'
+                                    ? "Yearly Package: Active"
+                                    : isFourMonthPkg == '1'
+                                        ? '4-Month Package: Active'
+                                        : "No Package Active",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              isCharmans == '1'
+                                  ? Text(
+                                      "Chairman's Package: Active",
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white),
+                                    )
+                                  : Container()
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
 
-                            /*   SizedBox(
+                    /*   SizedBox(
 
                         width: MediaQuery.of(context).size.width * 1,
 
                       ),*/
 
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 60, top: 0, right: 0, bottom: 0),
-                              width: MediaQuery.of(context).size.width,
-                              child: Text(
-                                "Results",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff0ECB82)),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
                     Container(
+                      margin: EdgeInsets.only(
+                          left: 60, top: 0, right: 0, bottom: 0),
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.03,
-                      color: Color(0xff009E61),
-                    ),
-                    ispremium ?   isLoading
-                        ? SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.65,
-                          child: Center(
-                      child: CircularProgressIndicator(
-                          color: Color(0xff009E61),
-                          backgroundColor: Color(0xff0ECB82),
+                      child: Text(
+                        "Results",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff0ECB82)),
                       ),
-                    ),
-                        ) :Center(
-                        child: Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        Container(
-                          child: SfCartesianChart(
-                              primaryXAxis: CategoryAxis(),
-                              // Chart title
-                              title: ChartTitle(text: 'Yearly Profit'),
-                              // Enable legend
-                              legend: Legend(isVisible: false),
-                              // Enable tooltip
-                              tooltipBehavior: TooltipBehavior(enable: true),
-                              series: <ChartSeries<SalesData, String>>[
-                                LineSeries<SalesData, String>(
-                                    dataSource: data,
-                                    xValueMapper: (SalesData sales, _) =>
-                                        sales.year,
-                                    yValueMapper: (SalesData sales, _) =>
-                                        double.parse(sales.sales),
-                                    //        name: 'Sales',
-                                    // Enable data label
-                                    dataLabelSettings:
-                                        DataLabelSettings(isVisible: true))
-                              ]),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        Container(
-                          child: SfCartesianChart(
-                              primaryXAxis: CategoryAxis(),
-                              // Chart title
-                              title: ChartTitle(text: 'Yearly ROI'),
-                              // Enable legend
-                              legend: Legend(isVisible: false),
-                              // Enable tooltip
-                              tooltipBehavior: TooltipBehavior(enable: true),
-                              series: <ChartSeries<SalesData, String>>[
-                                LineSeries<SalesData, String>(
-                                    dataSource: data2,
-                                    xValueMapper: (SalesData sales, _) =>
-                                        sales.year,
-                                    yValueMapper: (SalesData sales, _) =>
-                                        double.parse(sales.sales),
-                                    //        name: 'Sales',
-                                    // Enable data label
-                                    dataLabelSettings:
-                                        DataLabelSettings(isVisible: true))
-                              ]),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        Container(
-                          child: SfCartesianChart(
-                              primaryXAxis: CategoryAxis(),
-                              // Chart title
-                              title: ChartTitle(text: 'Previous Year ROI'),
-                              // Enable legend
-                              legend: Legend(isVisible: false),
-                              // Enable tooltip
-                              tooltipBehavior: TooltipBehavior(enable: true),
-                              series: <ChartSeries<SalesData, String>>[
-                                LineSeries<SalesData, String>(
-                                    dataSource: data3,
-                                    xValueMapper: (SalesData sales, _) =>
-                                        sales.year,
-                                    yValueMapper: (SalesData sales, _) =>
-                                        double.parse(sales.sales),
-                                    //        name: 'Sales', sales.sales,
-                                    // Enable data label
-                                    dataLabelSettings:
-                                        DataLabelSettings(isVisible: true))
-                              ]),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        Container(
-                          child: SfCartesianChart(
-                              primaryXAxis: CategoryAxis(),
-                              // Chart title
-                              title: ChartTitle(text: 'Last Week Profit'),
-                              // Enable legend
-                              legend: Legend(isVisible: false),
-                              // Enable tooltip
-                              tooltipBehavior: TooltipBehavior(enable: true),
-                              series: <ChartSeries<SalesData, String>>[
-                                LineSeries<SalesData, String>(
-                                    dataSource: data4,
-                                    xValueMapper: (SalesData sales, _) =>
-                                        sales.year,
-                                    yValueMapper: (SalesData sales, _) =>
-                                        double.parse(sales.sales),
-                                    //        name: 'Sales', sales.sales,
-                                    // Enable data label
-                                    dataLabelSettings:
-                                        DataLabelSettings(isVisible: true))
-                              ]),
-                        ),
-                      ],
-                    )): Center(
-                      child: Container(
-                          height: MediaQuery.of(context).size.height*0.65,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Buy Packages to see Results'),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (_) => MembershipPage(
-                                          )));
-                                },
-                                minWidth:
-                                MediaQuery.of(context).size.width *
-                                    0.1,
-                                height:
-                                MediaQuery.of(context).size.height *
-                                    0.06,
-                                child: Text("Buy Now"),
-                                color: Colors.green,
-                              )
-                            ],
-                          )),
                     )
                   ],
                 ),
-              )
-      ),
+              ],
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.03,
+              color: Color(0xff009E61),
+            ),
+            ispremium
+                ? isLoading
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.65,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xff009E61),
+                            backgroundColor: Color(0xff0ECB82),
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          Container(
+                            child: SfCartesianChart(
+                                backgroundColor: Color(0xffdbf1e9),
+                                primaryXAxis: CategoryAxis(),
+                                enableAxisAnimation: true,
+                                // Chart title
+                                title: ChartTitle(text: 'Yearly Profit'),
+                                // Enable legend
+                                legend: Legend(
+                                  isVisible: false,
+                                ),
+                                // Enable tooltip
+                                tooltipBehavior: TooltipBehavior(enable: true),
+                                series: <ChartSeries<SalesData, String>>[
+                                  LineSeries<SalesData, String>(
+                                      color: Colors.green,
+                                      dataSource: data,
+                                      xValueMapper: (SalesData sales, _) =>
+                                          sales.year,
+                                      yValueMapper: (SalesData sales, _) =>
+                                          double.parse(sales.sales),
+                                      //        name: 'Sales',
+                                      // Enable data label
+                                      dataLabelSettings: DataLabelSettings(
+                                        isVisible: true,
+                                      ))
+                                ]),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          Container(
+                            child: SfCartesianChart(
+                                backgroundColor: Color(0xffdbf1e9),
+                                primaryXAxis: CategoryAxis(),
+                                // Chart title
+                                title: ChartTitle(text: 'Yearly ROI'),
+                                // Enable legend
+                                legend: Legend(isVisible: false),
+                                // Enable tooltip
+                                tooltipBehavior: TooltipBehavior(enable: true),
+                                series: <ChartSeries<SalesData, String>>[
+                                  LineSeries<SalesData, String>(
+                                      color: Colors.green,
+                                      dataSource: data2,
+                                      xValueMapper: (SalesData sales, _) =>
+                                          sales.year,
+                                      yValueMapper: (SalesData sales, _) =>
+                                          double.parse(sales.sales),
+                                      //        name: 'Sales',
+                                      // Enable data label
+                                      dataLabelSettings:
+                                          DataLabelSettings(isVisible: true))
+                                ]),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          Container(
+                            child: SfCartesianChart(
+                                backgroundColor: Color(0xffdbf1e9),
+                                primaryXAxis: CategoryAxis(),
+                                // Chart title
+                                title: ChartTitle(text: 'Previous Year ROI'),
+                                // Enable legend
+                                legend: Legend(isVisible: false),
+                                // Enable tooltip
+                                tooltipBehavior: TooltipBehavior(enable: true),
+                                series: <ChartSeries<SalesData, String>>[
+                                  LineSeries<SalesData, String>(
+                                      color: Colors.green,
+                                      dataSource: data3,
+                                      xValueMapper: (SalesData sales, _) =>
+                                          sales.year,
+                                      yValueMapper: (SalesData sales, _) =>
+                                          double.parse(sales.sales),
+                                      //        name: 'Sales', sales.sales,
+                                      // Enable data label
+                                      dataLabelSettings:
+                                          DataLabelSettings(isVisible: true))
+                                ]),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          Container(
+                            child: SfCartesianChart(
+                                backgroundColor: Color(0xffdbf1e9),
+                                primaryXAxis: CategoryAxis(),
+                                // Chart title
+                                title: ChartTitle(text: 'Last Week Profit'),
+                                // Enable legend
+                                legend: Legend(isVisible: false),
+                                // Enable tooltip
+                                tooltipBehavior: TooltipBehavior(enable: true),
+                                series: <ChartSeries<SalesData, String>>[
+                                  LineSeries<SalesData, String>(
+                                      color: Colors.green,
+                                      dataSource: data4,
+                                      xValueMapper: (SalesData sales, _) =>
+                                          sales.year,
+                                      yValueMapper: (SalesData sales, _) =>
+                                          double.parse(sales.sales),
+                                      //        name: 'Sales', sales.sales,
+                                      // Enable data label
+                                      dataLabelSettings:
+                                          DataLabelSettings(isVisible: true))
+                                ]),
+                          ),
+                        ],
+                      ))
+                : Center(
+                    child: Container(
+                        height: MediaQuery.of(context).size.height * 0.65,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Buy Packages to see Results'),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => MembershipPage()));
+                              },
+                              minWidth: MediaQuery.of(context).size.width * 0.1,
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              child: Text("Buy Now"),
+                              color: Colors.green,
+                            )
+                          ],
+                        )),
+                  )
+          ],
+        ),
+      )),
     );
   }
 }

@@ -19,7 +19,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   late List data = [];
-  notifcationModelClass? notificationmodel;
+  NotificationModel? notificationmodel;
   late String firstname = '', lastname = '', photo = '';
   late String access_token = '';
   bool isLoading = false;
@@ -44,22 +44,22 @@ class _NotificationPageState extends State<NotificationPage> {
     // _controller.addListener(_scrollListener);
     super.initState();
 
-    Loadprefs().then((value)  {
+    Loadprefs().then((value) {
       print("IS PREMIUMS IN SIGNAL SCREEN $ispremium");
-          if (ispremium)
-            {
-              Signalapi().then((value) => {
-                    if (mounted)
-                      {
-                        setState(() {
-                          this.notificationmodel = value;
-                        }),
-                      }
-                  });
-            }
-        });
+      if (ispremium) {
+        Signalapi().then((value) => {
+              if (mounted)
+                {
+                  setState(() {
+                    this.notificationmodel = value;
+                  }),
+                }
+            });
+      }
+    });
   }
-String isYearlyPkg = '0' ;
+
+  String isYearlyPkg = '0';
   String isFourMonthPkg = '0';
   String isCharmans = '0';
   bool ispremium = true;
@@ -71,9 +71,9 @@ String isYearlyPkg = '0' ;
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
-      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
-      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      isCharmans = prefs.getString('isChairman') ?? '0';
       ispremium = prefs.getString('isYearlyPkg') == '1'
           ? true
           : prefs.getString('isFourMonthPkg') == '1'
@@ -82,7 +82,7 @@ String isYearlyPkg = '0' ;
     });
   }
 
-  Future<notifcationModelClass> Signalapi() async {
+  Future<NotificationModel> Signalapi() async {
     setState(() {
       isLoading = true;
     });
@@ -95,8 +95,8 @@ String isYearlyPkg = '0' ;
     );
 
     //  var data = json.decode(response.body);
-    notifcationModelClass notificationmodel =
-        notifcationModelClass.fromJson(jsonDecode(response.body));
+    NotificationModel notificationmodel =
+        NotificationModel.fromJson(jsonDecode(response.body));
     //notifcationModelClass notification_success = notifcationModelClass.fromJson(jsonDecode(response.body));
     var val = '${notificationmodel.success}';
 
@@ -127,7 +127,7 @@ String isYearlyPkg = '0' ;
           isLoading = false;
         });
       }
-      return notifcationModelClass();
+      return NotificationModel();
       /*Navigator.push(
         context,
         MaterialPageRoute(
@@ -139,8 +139,6 @@ String isYearlyPkg = '0' ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -175,32 +173,44 @@ String isYearlyPkg = '0' ;
                             ),
                             photo == ''
                                 ? InkWell(
-                              onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
-                              },
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.height *
-                                          0.09,
-                                      height: MediaQuery.of(context).size.height *
-                                          0.09,
-                                      decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.green,
-                                          image: new DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                                "assets/images/profileimage.png"),
-                                          ))),
-                                )
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (_) => ProfileScreen(
+                                                    title: "nulkl",
+                                                  )));
+                                    },
+                                    child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.green,
+                                            image: new DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: AssetImage(
+                                                  "assets/images/profileimage.png"),
+                                            ))),
+                                  )
                                 : InkWell(
-                              onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ProfileScreen(title: "nulkl",)));
-                              },
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.height *
-                                          0.09,
-                                      height: MediaQuery.of(context).size.height *
-                                          0.09,
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (_) => ProfileScreen(
+                                                    title: "nulkl",
+                                                  )));
+                                    },
+                                    child: Container(
+                                      width:
+                                          MediaQuery.of(context).size.height *
+                                              0.09,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.09,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
@@ -211,7 +221,7 @@ String isYearlyPkg = '0' ;
                                         ),
                                       ),
                                     ),
-                                ),
+                                  ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.03,
                             ),
@@ -219,7 +229,9 @@ String isYearlyPkg = '0' ;
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(height: 8,),
+                                Container(
+                                  height: 8,
+                                ),
                                 Container(
                                   child: Text(
                                     firstname + " " + lastname,
@@ -230,17 +242,25 @@ String isYearlyPkg = '0' ;
                                 SizedBox(
                                   height: 8,
                                 ),
-                                Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                  color: Colors.white
+                                Text(
+                                  isYearlyPkg == '1'
+                                      ? "Yearly Package: Active"
+                                      : isFourMonthPkg == '1'
+                                          ? '4-Month Package: Active'
+                                          : "No Package Active",
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.white),
                                 ),
+                                SizedBox(
+                                  height: 4,
                                 ),
-                             SizedBox(height: 4,),
-                             isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
-                               fontSize: 12,
-                                 color: Colors.white
-                             ),):Container()
+                                isCharmans == '1'
+                                    ? Text(
+                                        "Chairman's Package: Active",
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.white),
+                                      )
+                                    : Container()
                               ],
                             ),
 
@@ -251,9 +271,7 @@ String isYearlyPkg = '0' ;
                       ),*/
                           ],
                         ),
-
                       ),
-
                       Container(
                         margin: EdgeInsets.only(
                             left: 60, top: 0, right: 0, bottom: 0),
@@ -587,15 +605,22 @@ String isYearlyPkg = '0' ;
                                                                 0.03,
                                                           ),
                                                           Expanded(
-                                                            child: Text(
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              child: Text(
                                                                 notificationmodel!
                                                                     .data!
                                                                     .notificationSignal![
-                                                                index]
+                                                                        index]
                                                                     .comment!,
                                                                 textAlign:
                                                                     TextAlign
-                                                                        .left),
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
@@ -666,6 +691,9 @@ String isYearlyPkg = '0' ;
                                                                             10),
                                                                     child:
                                                                         Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              4),
                                                                       decoration:
                                                                           BoxDecoration(
                                                                         borderRadius:
@@ -674,15 +702,17 @@ String isYearlyPkg = '0' ;
                                                                             0xff485469),
                                                                       ),
                                                                       width: 50,
-                                                                      height:
-                                                                          25,
+                                                                      // height:
+                                                                      //     25,
                                                                       child: Center(
                                                                           child: Text(
-                                                                        notificationmodel!
-                                                                            .data!
-                                                                            .notificationSignal![index]
-                                                                            .profit!,
+                                                                        notificationmodel!.data!.notificationSignal![index].profit != null &&
+                                                                                notificationmodel!.data!.notificationSignal![index].profit != ''
+                                                                            ? double.parse(notificationmodel!.data!.notificationSignal![index].profit!).toStringAsFixed(2)
+                                                                            : '0.0',
                                                                         style: TextStyle(
+                                                                            fontSize:
+                                                                                12,
                                                                             color:
                                                                                 Colors.white),
                                                                       )),
@@ -718,8 +748,8 @@ String isYearlyPkg = '0' ;
                                       onPressed: () {
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
-                                                builder: (_) => MembershipPage(
-                                                    )));
+                                                builder: (_) =>
+                                                    MembershipPage()));
                                       },
                                       minWidth:
                                           MediaQuery.of(context).size.width *
