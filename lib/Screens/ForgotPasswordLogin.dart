@@ -12,14 +12,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordLogin extends StatefulWidget {
-  String? fcm;
-  String? deviceid;
-  ForgotPasswordLogin(
-      {Key? key,
-      required this.title,
-      required this.deviceid,
-      required this.fcm})
-      : super(key: key);
+  ForgotPasswordLogin({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
   final String title;
 
@@ -84,15 +80,12 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SigninScreen(
-                    title: "SigninScreen",
-                    devicerId: widget.deviceid,
-                    fcmTOken: widget.fcm,
-                  )),
-        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => SigninScreen(
+
+                    )),
+            (route) => false);
       }
     } else {
       if (mounted) {
@@ -106,23 +99,6 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
         gravity: ToastGravity.CENTER,
       );
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void signup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SignupScreen(
-                title: "SignupScreen",
-                fcm: widget.fcm,
-                deviceid: widget.deviceid,
-              )),
-    );
   }
 
   @override
@@ -140,7 +116,8 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Stack(   alignment: AlignmentDirectional.center,
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width,
@@ -222,7 +199,24 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
                                               side: BorderSide(
                                                 color: Color(0xff009E61),
                                               )))),
-                                  onPressed: () => login()),
+                                  onPressed: () {
+                                    if (pass.text.length < 6) {
+                                      Fluttertoast.showToast(
+                                        msg:
+                                            "Password must be atleast 6-digit long",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                      );
+                                    } else if (pass.text != conf_pass.text) {
+                                      Fluttertoast.showToast(
+                                        msg: "Password must match",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                      );
+                                    } else if (pass.text == conf_pass.text) {
+                                      login();
+                                    }
+                                  }),
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.01,
@@ -232,7 +226,7 @@ class _ForgotPasswordLoginState extends State<ForgotPasswordLogin> {
                       ),
                       Positioned(
                         top: 0,
-                        right: MediaQuery.of(context).size.width*0.7,
+                        right: MediaQuery.of(context).size.width * 0.7,
                         child: SizedBox(
                           width: 240,
                           height: 240,

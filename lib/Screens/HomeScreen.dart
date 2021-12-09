@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
   bool ispremiumUser ;
   HomeScreen({Key? key, required this.title ,required this.ispremiumUser }) : super(key: key);
 
-  final String title;
+   final String title;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

@@ -128,7 +128,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                 obscureNumber: true,
                                 cardNumber: cardNumber,
                                 cvvCode: cvvCode,
-                                isHolderNameVisible: true,
+                                isHolderNameVisible: false,
                                 isCardNumberVisible: true,
                                 isExpiryDateVisible: true,
                                 cardHolderName: cardHolderName,
@@ -197,7 +197,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                     onCreditCardModelChange,
                               ),
                               const SizedBox(
-                                height: 20,
+                                height: 40,
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -302,6 +302,9 @@ class PaymenyScreenState extends State<PaymenyScreen> {
       }
       if (widget.packageId == '3') {
         prefs.setString('isChairman', widget.packageId == "3" ? '1' : '0');
+
+        prefs.setString('chairman_pkg_sub_id', paymentResponse.data!.subscription!.subcriptionId!);
+
         if (isYearlyPkg == '1') {
           prefs.setString('isYearlyPkg', '1');
         }
@@ -317,6 +320,8 @@ class PaymenyScreenState extends State<PaymenyScreen> {
       }
       if(widget.packageId == '1')
         {
+           prefs.setString('yearly_pkg_sub_id',  paymentResponse.data!.subscription!.subcriptionId!);
+
           prefs.setString('isYearlyPkg', widget.packageId == "1" ? '1' : '0');
           if(isCharmans == '1')
             {
@@ -334,6 +339,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
       if(widget.packageId == '2')
       {
         prefs.setString('isFourMonthPkg', widget.packageId == "2" ? '1' : '0');
+         prefs.setString('four_month_pkg_sub_id', paymentResponse.data!.subscription!.subcriptionId!);
         if(isCharmans == '1')
         {
           prefs.setString('isChairman', '1');

@@ -14,7 +14,7 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
-  String calendlyLink = "https://calendly.com/";
+  String calendlyLink = "https://calendly.com/greendiceinvestments/15min";
   void _launchURL(String _url) async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
@@ -37,7 +37,6 @@ class _SupportScreenState extends State<SupportScreen> {
                                 AssetImage("assets/images/membershipimage.png"),
                             fit: BoxFit.cover)),
                   ),
-
                   IconButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -99,14 +98,40 @@ class _SupportScreenState extends State<SupportScreen> {
                               height: 30,
                               child: Center(
                                 child: Text(
-                                  "www.calendly.com",
+                                  "https://calendly.com/\ngreendiceinvestments/15min",
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Calendly Link: ",
+                            style: TextStyle(
+                                color: Colors.transparent,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              _launchURL(calendlyLink);
+                            },
+                            color: Colors.green,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text("visit us",style: TextStyle(
+                                color: Colors.white
+                              ),),
+                            ),
+                          )
                         ],
                       ),
                     ],

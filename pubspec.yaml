@@ -39,6 +39,7 @@ dependencies:
   url_launcher: ^6.0.12
   flutter_local_notifications: ^9.0.2
   syncfusion_flutter_pdfviewer: ^19.3.54-beta
+  intl: ^0.17.0
   flutter:
     sdk: flutter
 

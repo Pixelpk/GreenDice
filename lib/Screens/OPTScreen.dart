@@ -13,20 +13,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class OPTScreen extends StatefulWidget {
-  String fcm ;
-  String deviceId ;
-  OPTScreen({Key? key, required this.title, required this.code ,required this.fcm,required this.deviceId}) : super(key: key);
+  OPTScreen({
+    Key? key,
+    required this.title,
+    required this.code,
+  }) : super(key: key);
 
   final String title;
   final String code;
-
 
   @override
   _OPTScreenState createState() => _OPTScreenState();
 }
 
 class _OPTScreenState extends State<OPTScreen> {
-bool loading = false;
+  bool loading = false;
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
 
@@ -37,82 +38,59 @@ bool loading = false;
     );
   }
 
+  Future OTP(String token) async {
+    if (token == widget.code) {
+      final prefs = await SharedPreferences.getInstance();
 
-  @override
-  void initState() {
-    super.initState();
-  }
+      var response = await http.post(
+        Uri.parse("https://app.greendiceinvestments.com/api/matchotp"),
+        body: {
+          "user_id": widget.title,
+          "token": widget.code,
+        },
+        headers: <String, String>{
+          'Accept': 'application/json',
+        },
+      );
 
+      var data = json.decode(response.body);
+      SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
+      var val = '${signinUser.success}';
+      var access_token = '${signinUser.data!.accessToken}';
+      prefs.setString('access_token', access_token);
 
-  Future OTP(String token)async{
-
-
-    if(token==widget.code)
-      {
-
-
-
-    final prefs = await SharedPreferences.getInstance();
-
-    var response = await http.post(Uri.parse("https://app.greendiceinvestments.com/api/matchotp"),body: {
-      "user_id" : widget.title,
-      "token" : widget.code,
-    },
-      headers: <String, String>{
-        'Accept': 'application/json',
-      },
-    );
-
-    var data = json.decode(response.body);
-    SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
-    var val = '${signinUser.success}';
-    var access_token = '${signinUser.data!.accessToken}';
-    prefs.setString('access_token', access_token);
-
-
-    print(val);
-    if(val == "0")
-    {
+      print(val);
+      if (val == "0") {
+        Fluttertoast.showToast(
+          msg: response.body,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "Success",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ForgotPasswordLogin(
+                    title: access_token,
+                  )),
+        );
+      }
+    } else {
       Fluttertoast.showToast(
-        msg: response.body,
+        msg: "You have entered incorrect code",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
     }
-    else
-    {
-      Fluttertoast.showToast(
-        msg: "Success",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-      Navigator.push(
-      context,
-      MaterialPageRoute(
-      builder: (context) => ForgotPasswordLogin(title: access_token,fcm: widget.fcm,deviceid: widget.deviceId,)),
-    );
-
-  }
-      }
-    else
-      {
-        Fluttertoast.showToast(
-          msg: "You have entered incorrect code",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-      }
-
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -127,44 +105,49 @@ bool loading = false;
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.45,
                     ),
+                    Text(
+                        "A 6-digit code has been sent to your email. Please enter the code below to proceed"),
 
-                    Text("A 6-digit code has been sent to your email. Please enter the code below to proceed"),
-
-                   /* SizedBox(
+                    /* SizedBox(
                       height: MediaQuery.of(context).size.height * 0.15,
                     ),*/
 
-        Builder(
-          builder: (context) {
-            return Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                    //  color: Colors.white,
-                      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
-                      padding: const EdgeInsets.all(10.0),
-                      child: PinPut(
-                        fieldsCount: 6,
-                        onSubmit: (String pin) => OTP(pin)/*_showSnackBar(pin, context)*/,
-                        focusNode: _pinPutFocusNode,
-                        controller: _pinPutController,
-                        submittedFieldDecoration: _pinPutDecoration.copyWith(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        selectedFieldDecoration: _pinPutDecoration,
-                        followingFieldDecoration: _pinPutDecoration.copyWith(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(
-                            color: Colors.deepPurpleAccent.withOpacity(.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30.0),
-                    const Divider(),
-               /*     Row(
+                    Builder(
+                      builder: (context) {
+                        return Center(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Container(
+                                  //  color: Colors.white,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 16.0, horizontal: 8),
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: PinPut(
+                                    fieldsCount: 6,
+                                    onSubmit: (String pin) => OTP(
+                                        pin) /*_showSnackBar(pin, context)*/,
+                                    focusNode: _pinPutFocusNode,
+                                    controller: _pinPutController,
+                                    submittedFieldDecoration:
+                                        _pinPutDecoration.copyWith(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    selectedFieldDecoration: _pinPutDecoration,
+                                    followingFieldDecoration:
+                                        _pinPutDecoration.copyWith(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      border: Border.all(
+                                        color: Colors.deepPurpleAccent
+                                            .withOpacity(.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 30.0),
+                                const Divider(),
+                                /*     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         FlatButton(
@@ -181,17 +164,18 @@ bool loading = false;
                         ),
                       ],
                     ),*/
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.07,
                       child: ElevatedButton(
-                          child: Text("Continue", style: TextStyle(fontSize: 14)),
+                          child:
+                              Text("Continue", style: TextStyle(fontSize: 14)),
                           style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
@@ -199,7 +183,7 @@ bool loading = false;
                                   Color(0xff009E61)),
                               alignment: Alignment.center,
                               shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                                      RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(25),
                                       side: BorderSide(
@@ -207,7 +191,6 @@ bool loading = false;
                                       )))),
                           onPressed: () => null),
                     ),
-
                   ],
                 ),
               ),
@@ -246,5 +229,3 @@ bool loading = false;
     );
   }
 }
-
-

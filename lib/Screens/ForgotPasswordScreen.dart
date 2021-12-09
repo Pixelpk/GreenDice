@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:greendice/ModelClasses/ForgotPassword.dart';
+import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:http/http.dart' as http;
 import 'HomeScreen.dart';
 import 'SignupScreen.dart';
@@ -77,25 +78,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void signup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SignupScreen(
-                title: "SignupScreen",
-                deviceid: widget.deviceId,
-                fcm: widget.fcm,
-              )),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SigninScreen()),
+        (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
-
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -182,7 +176,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               Positioned(
                 top: 0,
-                right: MediaQuery.of(context).size.width*0.7,
+                right: MediaQuery.of(context).size.width * 0.7,
                 child: SizedBox(
                   width: 240,
                   height: 240,

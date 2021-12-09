@@ -14,10 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailforOTP extends StatefulWidget {
 
-  EmailforOTP({required this.title, required this.fcm, required this.deviceId});
+  EmailforOTP({required this.title,});
 
-  final String fcm;
-  final String deviceId;
   final String title;
 
   @override
@@ -86,39 +84,18 @@ class _EmailforOTPState extends State<EmailforOTP> {
               builder: (context) => OPTScreen(
                     title: access_token,
                     code: verification,
-                    fcm: widget.fcm,
-                    deviceId: widget.deviceId,
                   )),
         );
       }
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
-  void signup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SignupScreen(
-                title: "SignupScreen",
-                deviceid: widget.deviceId,
-                fcm: widget.fcm,
-              )),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       body: loading
           ? Center(

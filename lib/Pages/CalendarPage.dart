@@ -87,10 +87,14 @@ class _CalendarPageState extends State<CalendarPage> {
     });*/
   }
 
+  String YearlyPkgepirydate = '';
+  String fourMonthlyPkgepirydate = '';
+  String chairmanPkgepirydate = '';
   String isYearlyPkg = '0';
   String isFourMonthPkg = '0';
   String isCharmans = '0';
   bool ispremium = true;
+
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -98,6 +102,11 @@ class _CalendarPageState extends State<CalendarPage> {
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
+
+      YearlyPkgepirydate = prefs.getString('yearly_pkg_cancel_at') ?? '';
+      fourMonthlyPkgepirydate =
+          prefs.getString('four_month_pkg_cancel_at') ?? '';
+      chairmanPkgepirydate = prefs.getString('chairman_pkg_cancel_at') ?? '';
       isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
       isCharmans = prefs.getString('isChairman') ?? '0';
@@ -413,6 +422,34 @@ class _CalendarPageState extends State<CalendarPage> {
                                                   fontSize: 12,
                                                   color: Colors.white),
                                             )
+                                          : Container(),
+                                      YearlyPkgepirydate != '' &&
+                                              YearlyPkgepirydate != null
+                                          ? Text(
+                                              "Subscription end at: ${DateFormat.yMd().format(DateTime.parse(YearlyPkgepirydate))}",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            )
+                                          : fourMonthlyPkgepirydate != null &&
+                                                  fourMonthlyPkgepirydate != ''
+                                              ? Text(
+                                                  "Subscription end at: ${DateFormat.yMd().format(DateTime.parse(fourMonthlyPkgepirydate))}",
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white),
+                                                )
+                                              : Container(),
+
+                                      ///TODO CHAIRMANS PACKAGES HANDLING
+                                      chairmanPkgepirydate != null &&
+                                              chairmanPkgepirydate != ''
+                                          ? Text(
+                                              "Chairman's Subscription Expiry: ${DateFormat.yMd().format(DateTime.parse(fourMonthlyPkgepirydate))}",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            )
                                           : Container()
                                     ],
                                   ),
@@ -563,37 +600,6 @@ class _CalendarPageState extends State<CalendarPage> {
                                           ];
                                           String finaldate =
                                               requiredFormatList.join('-');
-                                          // print(finaldate);
-                                          // var val = "0";
-                                          // if (date.month < 10 && date.day < 10) {
-                                          //   val = date.year.toString() +
-                                          //       "-0" +
-                                          //       date.month.toString() +
-                                          //       "-0" +
-                                          //       date.day.toString();
-                                          // } else if (date.month > 10 &&
-                                          //     date.day < 10) {
-                                          //   val = date.year.toString() +
-                                          //       "-" +
-                                          //       date.month.toString() +
-                                          //       "-0" +
-                                          //       date.day.toString();
-                                          // } else if (date.month < 10 &&
-                                          //     date.day > 10) {
-                                          //   val = date.year.toString() +
-                                          //       "-0" +
-                                          //       date.month.toString() +
-                                          //       "-" +
-                                          //       date.day.toString();
-                                          // } else if (date.month > 10 &&
-                                          //     date.day > 10) {
-                                          //   val = date.year.toString() +
-                                          //       "-" +
-                                          //       date.month.toString() +
-                                          //       "-" +
-                                          //       date.day.toString();
-                                          // }
-
                                           print('date: $finaldate');
 
                                           Navigator.push(
@@ -602,6 +608,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                               builder: (context) =>
                                                   CalendarDataScreen(
                                                 title: finaldate,
+                                                    selectedDate: DateFormat.yMMMd().format(date),
                                               ),
                                             ),
                                           );

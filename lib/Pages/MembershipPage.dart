@@ -162,7 +162,7 @@ class _MembershipPageState extends State<MembershipPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    "4-Months",
+                                    "3 x Payment Plan",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),

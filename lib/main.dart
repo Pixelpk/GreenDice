@@ -5,6 +5,9 @@ import 'package:greendice/Screens/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'Screens/HomeScreen.dart';
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
@@ -20,6 +23,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+
   print("background handler${message.data}");
   print(message);
 }
@@ -53,6 +57,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Green Dice',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

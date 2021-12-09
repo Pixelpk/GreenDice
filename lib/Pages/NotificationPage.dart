@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/Pages/MembershipPage.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
 
@@ -62,6 +63,9 @@ class _NotificationPageState extends State<NotificationPage> {
   String isYearlyPkg = '0';
   String isFourMonthPkg = '0';
   String isCharmans = '0';
+  String YearlyPkgepirydate = '';
+  String fourMonthlyPkgepirydate = '';
+  String chairmanPkgepirydate = '';
   bool ispremium = true;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
@@ -74,6 +78,10 @@ class _NotificationPageState extends State<NotificationPage> {
       isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
       isCharmans = prefs.getString('isChairman') ?? '0';
+      YearlyPkgepirydate = prefs.getString('yearly_pkg_cancel_at') ?? '';
+      fourMonthlyPkgepirydate =
+          prefs.getString('four_month_pkg_cancel_at') ?? '';
+      chairmanPkgepirydate = prefs.getString('chairman_pkg_cancel_at') ?? '';
       ispremium = prefs.getString('isYearlyPkg') == '1'
           ? true
           : prefs.getString('isFourMonthPkg') == '1'
@@ -260,7 +268,33 @@ class _NotificationPageState extends State<NotificationPage> {
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.white),
                                       )
+                                    : Container(),
+                                YearlyPkgepirydate != '' &&
+                                        YearlyPkgepirydate != null
+                                    ? Text(
+                                        "Subscription end at: ${DateFormat.yMd().format(DateTime.parse(YearlyPkgepirydate))}",
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.white),
+                                      )
+                                    : fourMonthlyPkgepirydate != null &&
+                                            fourMonthlyPkgepirydate != ''
+                                        ? Text(
+                                            "Subscription end at: ${DateFormat.yMd().format(DateTime.parse(fourMonthlyPkgepirydate))}",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white),
+                                          )
+                                        : Container(),
+                                chairmanPkgepirydate != null &&
+                                        chairmanPkgepirydate != ''
+                                    ? Text(
+                                        "Chairman's Subscription Expiry: ${DateFormat.yMd().format(DateTime.parse(fourMonthlyPkgepirydate))}",
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.white),
+                                      )
                                     : Container()
+
+                                ///TODO CHAIRMANS PACKAGES HANDLING
                               ],
                             ),
 
