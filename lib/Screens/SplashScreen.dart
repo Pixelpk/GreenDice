@@ -36,9 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Timer(
             Duration(seconds: 2),
             () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => WelcomeScreen(
-
-                    ))));
+                builder: (BuildContext context) => WelcomeScreen())));
       } else {
         final prefs = await SharedPreferences.getInstance();
         String yearlyExpiryDatestr =

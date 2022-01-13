@@ -7,10 +7,7 @@ import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'MembershipPage.dart';
 
@@ -130,6 +127,7 @@ class _CalendarPageState extends State<CalendarPage> {
       Uri.parse("https://app.greendiceinvestments.com/api/signalnotifications"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + accessToken,
+        "Accept":"application/json"
       },
     );
 
@@ -275,17 +273,6 @@ class _CalendarPageState extends State<CalendarPage> {
 //     );
 
     return Scaffold(
-      /*  appBar: new PreferredSize(
-          preferredSize: Size.fromHeight(100.0), // here the desired height
-          child: new AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Image(
-              image: AssetImage('assets/images/dashboardappbarimage.png'),
-              fit: BoxFit.cover,
-            ),
-            backgroundColor: Colors.transparent,
-            // ...
-          )),*/
 
       body: SafeArea(
         child: isLoading
@@ -485,8 +472,8 @@ class _CalendarPageState extends State<CalendarPage> {
                       height: MediaQuery.of(context).size.height * 0.03,
                       color: Color(0xff009E61),
                     ),
-                    ispremium
-                        ? Center(
+                    // ispremium?
+                        Center(
                             child: Column(
                             children: [
                               SingleChildScrollView(
@@ -683,36 +670,36 @@ class _CalendarPageState extends State<CalendarPage> {
                               )
                             ],
                           ))
-                        : Center(
-                            child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.65,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Buy Package to see All Events'),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    MembershipPage()));
-                                      },
-                                      minWidth:
-                                          MediaQuery.of(context).size.width *
-                                              0.1,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.06,
-                                      child: Text("Buy Now"),
-                                      color: Colors.green,
-                                    )
-                                  ],
-                                )),
-                          )
+                        // : Center(
+                        //     child: Container(
+                        //         height:
+                        //             MediaQuery.of(context).size.height * 0.65,
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           children: [
+                        //             Text('Buy Package to see All Events'),
+                        //             SizedBox(
+                        //               height: 20,
+                        //             ),
+                        //             MaterialButton(
+                        //               onPressed: () {
+                        //                 Navigator.of(context).push(
+                        //                     MaterialPageRoute(
+                        //                         builder: (_) =>
+                        //                             MembershipPage()));
+                        //               },
+                        //               minWidth:
+                        //                   MediaQuery.of(context).size.width *
+                        //                       0.1,
+                        //               height:
+                        //                   MediaQuery.of(context).size.height *
+                        //                       0.06,
+                        //               child: Text("Buy Now"),
+                        //               color: Colors.green,
+                        //             )
+                        //           ],
+                        //         )),
+                        //   )
                   ],
                 ),
               ),

@@ -10,6 +10,7 @@ import 'package:greendice/UiComponents/NotificationListItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
+import 'LogoutLoading.dart';
 import 'pdf_Viewer.dart';
 
 class EbookScreen extends StatefulWidget {
@@ -46,9 +47,11 @@ class _EbookScreenState extends State<EbookScreen> {
     // _controller.addListener(_scrollListener);
     super.initState();
     Signalapi().then((value) => {
-          setState(() {
-            this.eBookModelClass = value;
-          }),
+   if(mounted)   {
+            setState(() {
+              this.eBookModelClass = value;
+            }),
+          }
         });
   }
 
@@ -83,6 +86,17 @@ class _EbookScreenState extends State<EbookScreen> {
     print(val);
     if (val == "1") {
     } else {
+      if(response.body.contains("Unauthenticated."))
+      {
+        Navigator.of(context)
+            .pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) =>
+                    LogoutLoading(
+                        token:
+                        access_token)),
+                (route) => false);
+      }
       Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,

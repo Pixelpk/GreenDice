@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import 'HomeScreen.dart';
+import 'LogoutLoading.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key, required this.title}) : super(key: key);
@@ -127,6 +128,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         print(response);
         if (val == "0") {
+          if(response.body.contains("Unauthenticated."))
+          {
+            Navigator.of(context)
+                .pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (_) =>
+                        LogoutLoading(
+                            token:
+                            access_token)),
+                    (route) => false);
+          }
           if (mounted) {
             setState(() {
               isLoading2 = false;
@@ -195,8 +207,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'X-Requested-With': 'XMLHttpRequest',
         'Authorization': 'Bearer $access_token'
       };
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('https://app.greendiceinvestments.com/api/updateuser'));
+      var request = http.MultipartRequest('POST',
+          Uri.parse('https://app.greendiceinvestments.com/api/updateuser'));
       request.fields.addAll({
         "first_name": user_ctrl.text,
         "last_name": user_lname.text,
@@ -232,6 +244,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
       if (val == "0") {
+        if(v.contains("Unauthenticated."))
+        {
+          Navigator.of(context)
+              .pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (_) =>
+                      LogoutLoading(
+                          token:
+                          access_token)),
+                  (route) => false);
+        }
         Fluttertoast.showToast(
           msg: "Unable to update profile. Please try again later",
           toastLength: Toast.LENGTH_SHORT,
@@ -369,7 +392,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.45,
+                          // height: MediaQuery.of(context).size.height * 0.45,
                           padding: EdgeInsets.symmetric(horizontal: 40),
                           child: Form(
                             key: _formkey,
@@ -390,6 +413,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   validator: (text) {
                                     if (text!.isEmpty) {
                                       return "Please enter First Name";
+                                    } else if (text.length < 3) {
+                                      return "Name must be 3 character long";
                                     }
                                     return null;
                                   },
@@ -409,6 +434,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   validator: (text) {
                                     if (text!.isEmpty) {
                                       return "Please enter Last Name";
+                                    } else if (text.length < 3) {
+                                      return "Name must be 3 character long";
                                     }
                                     return null;
                                   },

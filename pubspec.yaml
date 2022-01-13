@@ -30,7 +30,10 @@ dependencies:
   email_validator: ^2.0.1
   expand_tap_area: ^1.1.0
   table_calendar: ^3.0.2
-  charts_flutter: ^0.11.0
+  charts_flutter:
+    git:
+      url: git://github.com/google/charts.git
+      path: charts_flutter
   shared_preferences: ^2.0.7
   syncfusion_flutter_charts: ^19.2.59
   firebase_core: ^1.10.0
@@ -38,6 +41,7 @@ dependencies:
   platform_device_id: ^1.0.1
   url_launcher: ^6.0.12
   flutter_local_notifications: ^9.0.2
+  configurable_expansion_tile_null_safety: ^2.0.0
   syncfusion_flutter_pdfviewer: ^19.3.54-beta
   intl: ^0.17.0
   flutter:

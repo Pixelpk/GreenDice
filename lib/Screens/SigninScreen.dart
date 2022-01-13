@@ -64,13 +64,21 @@ class _SigninScreenState extends State<SigninScreen> {
         },
       );
 
-      var data = json.decode(response.body);
+print(response.body);
       SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
       var val = '${signinUser.success}';
 
       print(response);
       if (val == "0") {
-        if ('${signinUser.message}' == "AccessDenied") {
+        if(response.body.contains('User account is deactivated'))
+          {
+            Fluttertoast.showToast(
+              msg: "Your account is deactivated",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+            );
+          }
+        else if (response.body.contains("Wrong credentials")) {
           Fluttertoast.showToast(
             msg: "Incorrect email or password",
             toastLength: Toast.LENGTH_SHORT,

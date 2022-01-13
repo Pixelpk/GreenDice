@@ -5,9 +5,7 @@ import 'package:greendice/Pages/MembershipPage.dart';
 import 'package:greendice/Pages/MorePage.dart';
 import 'package:greendice/Pages/NotificationPage.dart';
 import 'package:greendice/Pages/ResultsPage.dart';
-import 'package:greendice/Screens/CalendarDataScreen.dart';
 
-import 'SignupScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   bool ispremiumUser ;

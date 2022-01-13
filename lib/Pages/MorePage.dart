@@ -487,6 +487,17 @@ class _MorePageState extends State<MorePage> {
         gravity: ToastGravity.CENTER,
       );
     } else {
+      if(response.body.contains("Unauthenticated."))
+      {
+        Navigator.of(context)
+            .pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) =>
+                    LogoutLoading(
+                        token:
+                        access_token)),
+                (route) => false);
+      }
       Navigator.pop(context);
       setState(() {
         // noDataFound = true;

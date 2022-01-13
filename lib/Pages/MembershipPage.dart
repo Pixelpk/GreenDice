@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/Packages.dart';
+import 'package:greendice/Screens/LogoutLoading.dart';
 import 'package:greendice/Screens/PaymentScreen.dart';
 import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:greendice/Screens/SignupScreen.dart';
@@ -282,6 +283,7 @@ class _MembershipPageState extends State<MembershipPage> {
       Uri.parse("https://app.greendiceinvestments.com/api/allpackages"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + access_token,
+        "Accept":"application/json"
       },
     );
 
@@ -301,6 +303,17 @@ class _MembershipPageState extends State<MembershipPage> {
       }
       return subscriptionPackages;
     } else {
+      if(response.body.contains("Unauthenticated."))
+      {
+        Navigator.of(context)
+            .pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) =>
+                    LogoutLoading(
+                        token:
+                        access_token)),
+                (route) => false);
+      }
       Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,

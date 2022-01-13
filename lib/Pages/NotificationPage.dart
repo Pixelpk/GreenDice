@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/Pages/MembershipPage.dart';
+import 'package:greendice/Screens/LogoutLoading.dart';
 import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -33,6 +34,7 @@ class _NotificationPageState extends State<NotificationPage> {
     'assets/images/shirt5.svg',
     'assets/images/shirt6.svg',
   ];
+  ImageProvider? headerBackGroundImage;
   @override
   void dispose() {
     // _controller.dispose();
@@ -43,6 +45,8 @@ class _NotificationPageState extends State<NotificationPage> {
   void initState() {
     // _controller = ScrollController();
     // _controller.addListener(_scrollListener);
+    headerBackGroundImage =
+        AssetImage("assets/images/dashboardappbarimage.png");
     super.initState();
 
     Loadprefs().then((value) {
@@ -58,6 +62,12 @@ class _NotificationPageState extends State<NotificationPage> {
             });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(headerBackGroundImage!, context);
   }
 
   String isYearlyPkg = '0';
@@ -99,9 +109,10 @@ class _NotificationPageState extends State<NotificationPage> {
       Uri.parse("https://app.greendiceinvestments.com/api/signalnotifications"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + access_token,
+        'Accept': 'application/json',
       },
     );
-
+    // print(response.body);
     //  var data = json.decode(response.body);
     NotificationModel notificationmodel =
         NotificationModel.fromJson(jsonDecode(response.body));
@@ -109,7 +120,7 @@ class _NotificationPageState extends State<NotificationPage> {
     var val = '${notificationmodel.success}';
 
     //data = jsonDecode('${notification_success.data!.notificationSignal}');
-    print(jsonDecode(response.body));
+    // print(jsonDecode(response.body));
 
     print(val);
     if (val == "1") {
@@ -121,15 +132,21 @@ class _NotificationPageState extends State<NotificationPage> {
       }
       return notificationmodel;
     } else {
+      if (response.body.contains("Unauthenticated.")) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) => LogoutLoading(token: access_token)),
+            (route) => false);
+      }
       Map<String, dynamic> errorModel = jsonDecode(response.body);
 
       print('message: ${errorModel["message"]}');
 
-      Fluttertoast.showToast(
-        msg: errorModel["message"],
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+      // Fluttertoast.showToast(
+      //   msg: errorModel["message"],
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      // );
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -163,9 +180,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     height: MediaQuery.of(context).size.height * 0.21,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(
-                                "assets/images/dashboardappbarimage.png"),
-                            fit: BoxFit.cover)),
+                            image: headerBackGroundImage!, fit: BoxFit.cover)),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,7 +353,11 @@ class _NotificationPageState extends State<NotificationPage> {
                             backgroundColor: Color(0xff0ECB82),
                           ))
                         : ispremium
-                            ? notificationmodel != null
+                            ? notificationmodel != null &&
+                                    notificationmodel!.data != null &&
+                                    notificationmodel!
+                                            .data!.notificationSignal !=
+                                        null
                                 ? ListView.builder(
                                     shrinkWrap: true,
                                     primary: true,
@@ -429,155 +448,187 @@ class _NotificationPageState extends State<NotificationPage> {
                                                     .width,
                                                 child: Row(
                                                   children: [
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/images/flags.svg",
-                                                              color: Color(
-                                                                  0xff009E61),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.03,
-                                                            ),
-                                                            Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .location!,
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.02,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/images/playbutton.svg",
-                                                              color: Color(
-                                                                  0xff009E61),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.03,
-                                                            ),
-                                                            Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .raceId
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .white),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.02,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/images/peoples.svg",
-                                                              color: Color(
-                                                                  0xff009E61),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.03,
-                                                            ),
-                                                            Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .horse!,
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
+                                                    Expanded(
+                                                      flex: 40,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/images/flags.svg",
+                                                                color: Color(
+                                                                    0xff009E61),
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  notificationmodel!
+                                                                      .data!
+                                                                      .notificationSignal![
+                                                                          index]
+                                                                      .location!,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  maxLines: 3,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          // SizedBox(
+                                                          //   height: MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .height *
+                                                          //       0.02,
+                                                          // ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/images/playbutton.svg",
+                                                                color: Color(
+                                                                    0xff009E61),
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  notificationmodel!
+                                                                      .data!
+                                                                      .notificationSignal![
+                                                                          index]
+                                                                      .raceId
+                                                                      .toString(),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .white),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          // SizedBox(
+                                                          //   height: MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .height *
+                                                          //       0.02,
+                                                          // ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/images/peoples.svg",
+                                                                color: Color(
+                                                                    0xff009E61),
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          2),
+                                                                  child: Text(
+                                                                    notificationmodel!
+                                                                        .data!
+                                                                        .notificationSignal![
+                                                                            index]
+                                                                        .horse!,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 3,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.30,
-                                                    ),
-                                                    Column(
-                                                      children: [
-                                                        Text(
-                                                          notificationmodel!
-                                                              .data!
-                                                              .notificationSignal![
-                                                                  index]
-                                                              .signalDate!
-                                                              .split('-')[2],
-                                                          style: TextStyle(
-                                                              fontSize: 30,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                        Text(
-                                                          monthselector(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .signalDate!
-                                                                  .split(
-                                                                      '-')[1]),
-                                                          style: TextStyle(
-                                                              fontSize: 10,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                        /* Text(
+                                                    // SizedBox(
+                                                    //   width:
+                                                    //       MediaQuery.of(context)
+                                                    //               .size
+                                                    //               .width *
+                                                    //           0.30,
+                                                    // ),
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            notificationmodel!
+                                                                .data!
+                                                                .notificationSignal![
+                                                                    index]
+                                                                .signalDate!
+                                                                .split('-')[2],
+                                                            style: TextStyle(
+                                                                fontSize: 30,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          Text(
+                                                            monthselector(
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .notificationSignal![
+                                                                        index]
+                                                                    .signalDate!
+                                                                    .split(
+                                                                        '-')[1]),
+                                                            style: TextStyle(
+                                                                fontSize: 10,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          /* Text(
                                                 "August",s
                                                 style: TextStyle(fontSize: 15, color: Colors.white),
                                               )*/
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -586,7 +637,10 @@ class _NotificationPageState extends State<NotificationPage> {
                                             Positioned(
                                               left: 0,
                                               right: 0,
-                                              top: 260,
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.42,
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 16),
@@ -612,13 +666,6 @@ class _NotificationPageState extends State<NotificationPage> {
                                                               horizontal: 5),
                                                       child: Row(
                                                         children: [
-                                                          /*SvgPicture.asset(
-                                                        _shirtImagesList[
-                                                            (index % 6)],
-                                                        width: 72,
-                                                        height: 72,
-                                                      ),*/
-
                                                           ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius

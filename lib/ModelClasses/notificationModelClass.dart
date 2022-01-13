@@ -24,7 +24,7 @@ class NotificationModel {
 }
 
 class Data {
-  List<NotificationSignal>? notificationSignal;
+  List<NotificationSignal>? notificationSignal  = [];
 
   Data({required this.notificationSignal});
 

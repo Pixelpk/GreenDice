@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:configurable_expansion_tile_null_safety/configurable_expansion_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,6 +14,7 @@ import 'package:greendice/UiComponents/NotificationListItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
+import 'LogoutLoading.dart';
 
 class CalendarDataScreen extends StatefulWidget {
   CalendarDataScreen({Key? key, required this.title, this.selectedDate})
@@ -33,22 +35,6 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
   bool noDataFound = false;
 
   String? trophyImage = 'assets/images/loss.svg';
-  //
-  // _scrollListener() {
-  //   if (_controller.offset >= _controller.position.maxScrollExtent &&
-  //       !_controller.position.outOfRange) {
-  //     setState(() {
-  //       //you can do anything here
-  //     });
-  //   }
-  //   if (_controller.offset <= _controller.position.minScrollExtent &&
-  //       !_controller.position.outOfRange) {
-  //     setState(() {
-  //       //you can do anything here
-  //     });
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -61,6 +47,25 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
             isloading = false;
           }),
         });
+  }
+
+  String profitCalculator({String? odds, var raceStatus}) {
+    try {
+      if (raceStatus == 1) {
+        if (odds != null) {
+          double oddsvalue = (double.parse(odds) - 1) * 100;
+
+          print("ODDS VALUE $oddsvalue");
+          return oddsvalue.toStringAsFixed(0);
+        } else {
+          return '0';
+        }
+      } else {
+        return '100';
+      }
+    } catch (e) {
+      return '0';
+    }
   }
 
   Future<CalDataModelClass> Signalapi() async {
@@ -93,6 +98,12 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
         noDataFound = false;
       });
     } else {
+      if (response.body.contains("Unauthenticated.")) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) => LogoutLoading(token: access_token)),
+            (route) => false);
+      }
       setState(() {
         noDataFound = true;
       });
@@ -155,12 +166,15 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.03,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   color: Color(0xff009E61),
                   child: Center(
                     child: Text(
                       "Result of ${widget.selectedDate!}",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -212,344 +226,518 @@ class _CalendarDataScreenState extends State<CalendarDataScreen> {
                                   trophyImage = 'assets/images/loss.svg';
                                 }
 
-                                return Container(
-                                  // height:
-                                  //     MediaQuery.of(context).size.height * 0.3,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 8),
-                                    child: Stack(
-                                      overflow: Overflow.visible,
-                                      alignment: Alignment.topCenter,
-                                      children: [
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.3,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Container(
-                                            decoration: new BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                              image: new DecorationImage(
-                                                image: notificationmodel!
-                                                            .data!
-                                                            .calenderSignal![
-                                                                index]
-                                                            .status ==
-                                                        1
-                                                    ? AssetImage(
-                                                        "assets/images/winbg.png")
-                                                    : AssetImage(
-                                                        "assets/images/losebg.png"),
-                                                fit: BoxFit.cover,
+                                return ConfigurableExpansionTile(
+                                  onExpansionChanged: (e) {
+                                    print(e);
+                                    if (notificationmodel!.data!
+                                            .calenderSignal![index].status ==
+                                        0) {
+                                      setState(() {
+                                        notificationmodel!
+                                            .data!
+                                            .calenderSignal![index]
+                                            .isexpanded = e;
+                                      });
+                                    }
+                                  },
+                                  // expandedBackgroundColor: Colors.green[100],
+                                  // headerExpanded: Flexible(child: Center(child: Text("A Header Changed"))),
+                                  header: Container(
+                                    // height:
+                                    //     MediaQuery.of(context).size.height * 0.3,
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.only(
+                                        bottom: notificationmodel!
+                                                    .data!
+                                                    .calenderSignal![index]
+                                                    .status ==
+                                                0
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.042
+                                            : 5),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      child: Stack(
+                                        overflow: Overflow.visible,
+                                        alignment: Alignment.topCenter,
+                                        children: [
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.3,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Container(
+                                              decoration: new BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                image: new DecorationImage(
+                                                  image: notificationmodel!
+                                                              .data!
+                                                              .calenderSignal![
+                                                                  index]
+                                                              .status ==
+                                                          1
+                                                      ? AssetImage(
+                                                          "assets/images/winbg.png")
+                                                      : notificationmodel!
+                                                                  .data!
+                                                                  .calenderSignal![
+                                                                      index]
+                                                                  .status ==
+                                                              0
+                                                          ? AssetImage(
+                                                              "assets/images/losebg.png")
+                                                          : AssetImage(
+                                                              "assets/images/scratchbg.png"),
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                                flex: 4, child: SizedBox()),
-                                            Expanded(
-                                              flex: 18,
-                                              child: Container(
-                                                child: Image.asset(
-                                                    "assets/images/horseimage.png"),
-                                              ),
-                                            ),
-                                            Expanded(
-                                                flex: 4, child: SizedBox()),
-                                            Expanded(
-                                              flex: 45,
-                                              child: Container(
-                                                //  color:Colors.amber,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.3,
-
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 10,
-                                                      child: Container(),
-                                                    ),
-                                                    Container(
-                                                      child: Text(
-                                                          notificationmodel!
-                                                              .data!
-                                                              .calenderSignal![
-                                                                  index]
-                                                              .location!,
-                                                          style: TextStyle(
-                                                              fontSize: 18,
-                                                              color: Colors
-                                                                  .white)),
-                                                    ),
-                                                    // SizedBox(
-                                                    //   height: MediaQuery.of(context)
-                                                    //           .size
-                                                    //           .height *
-                                                    //       0.02,
-                                                    // ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Container(),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 10,
-                                                      child: Row(
-                                                        children: [
-                                                          Image.asset(
-                                                              "assets/images/flagwhite.png"),
-                                                          Expanded(
-                                                            flex: 1,
-                                                            child: Container(),
-                                                          ),
-                                                          Expanded(
-                                                            flex: 19,
-                                                            child: Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .calenderSignal![
-                                                                      index]
-                                                                  .location!,
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Container(),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 10,
-                                                      child: Row(
-                                                        children: [
-                                                          Image.asset(
-                                                              "assets/images/playwhite.png"),
-                                                          SizedBox(width: 8.0),
-                                                          Text(
-                                                              "Race " +
-                                                                  notificationmodel!
-                                                                      .data!
-                                                                      .calenderSignal![
-                                                                          index]
-                                                                      .raceId
-                                                                      .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .white))
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Container(),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 10,
-                                                      child: Row(
-                                                        children: [
-                                                          Image.asset(
-                                                              "assets/images/personw.png"),
-                                                          SizedBox(width: 8.0),
-                                                          Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .calenderSignal![
-                                                                      index]
-                                                                  .horse!,
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .white))
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 10,
-                                                      child: Container(),
-                                                    ),
-                                                  ],
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                  flex: 4, child: SizedBox()),
+                                              Expanded(
+                                                flex: 18,
+                                                child: Container(
+                                                  child: Image.asset(
+                                                      "assets/images/horseimage.png"),
                                                 ),
                                               ),
-                                            ),
-                                            Expanded(
-                                                flex: 1, child: SizedBox()),
-                                            Expanded(
-                                              flex: 30,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        0, 0, 10, 0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.03,
-                                                    ),
-                                                    Text(
-                                                      "Current market odds",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white),
-                                                    ),
-                                                    Text(
-                                                      '' +
-                                                          notificationmodel!
-                                                              .data!
-                                                              .calenderSignal![
-                                                                  index]
-                                                              .oods!,
-                                                      style: TextStyle(
-                                                          fontSize: 40,
-                                                          color: Colors.white),
-                                                    ),
-                                                    Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.05,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.25,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(4.0),
-                                                        ),
+                                              Expanded(
+                                                  flex: 4, child: SizedBox()),
+                                              Expanded(
+                                                flex: 45,
+                                                child: Container(
+                                                  //  color:Colors.amber,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.3,
+
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 10,
+                                                        child: Container(),
                                                       ),
-                                                      child: Center(
-                                                          child: Text(
-                                                        notificationmodel!
+                                                      Container(
+                                                        child: Text(
+                                                            notificationmodel!
                                                                 .data!
                                                                 .calenderSignal![
                                                                     index]
-                                                                .roi! +
-                                                            '%',
+                                                                .location!,
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .white)),
+                                                      ),
+                                                      // SizedBox(
+                                                      //   height: MediaQuery.of(context)
+                                                      //           .size
+                                                      //           .height *
+                                                      //       0.02,
+                                                      // ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 10,
+                                                        child: Row(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              "assets/images/white_flag.svg",
+                                                              color:
+                                                                  Colors.white,
+                                                              height: 14,
+                                                              width: 14,
+                                                            ),
+                                                            // Image.asset(
+                                                            //     "assets/images/flagwhite.png"),
+                                                            Expanded(
+                                                              flex: 1,
+                                                              child:
+                                                                  Container(),
+                                                            ),
+                                                            Expanded(
+                                                              flex: 19,
+                                                              child: Text(
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .calenderSignal![
+                                                                        index]
+                                                                    .location!,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 10,
+                                                        child: Row(
+                                                          children: [
+                                                            // Image.asset(
+                                                            //     "assets/images/playwhite.png"),
+                                                            SvgPicture.asset(
+                                                              "assets/images/white_play.svg",
+                                                              color:
+                                                                  Colors.white,
+                                                              height: 14,
+                                                              width: 14,
+                                                            ),
+                                                            SizedBox(
+                                                                width: 8.0),
+                                                            Text(
+                                                                "Race " +
+                                                                    notificationmodel!
+                                                                        .data!
+                                                                        .calenderSignal![
+                                                                            index]
+                                                                        .raceId
+                                                                        .toString(),
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 10,
+                                                        child: Row(
+                                                          children: [
+                                                            // Image.asset(
+                                                            //     "assets/images/personw.png"),
+                                                            SvgPicture.asset(
+                                                              "assets/images/white_person.svg",
+                                                              color:
+                                                                  Colors.white,
+                                                              height: 14,
+                                                              width: 14,
+                                                            ),
+                                                            SizedBox(
+                                                                width: 8.0),
+                                                            Text(
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .calenderSignal![
+                                                                        index]
+                                                                    .horse!,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .white))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 10,
+                                                        child: Container(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                  flex: 1, child: SizedBox()),
+                                              Expanded(
+                                                flex: 30,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 0, 10, 0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.03,
+                                                      ),
+                                                      Text(
+                                                        "Current market odds",
                                                         style: TextStyle(
-                                                            fontSize: 18),
-                                                      )),
-                                                    ),
-                                                    SizedBox(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      Text(
+                                                        '' +
+                                                            notificationmodel!
+                                                                .data!
+                                                                .calenderSignal![
+                                                                    index]
+                                                                .oods!,
+                                                        style: TextStyle(
+                                                            fontSize: 40,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      Container(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.05,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.25,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(
+                                                                4.0),
+                                                          ),
+                                                        ),
+                                                        child: Center(
+                                                            child: Text(
+                                                          "${profitCalculator(odds: notificationmodel!.data!.calenderSignal![index].oods, raceStatus: notificationmodel!.data!.calenderSignal![index].status)}%",
+                                                          // notificationmodel!
+                                                          //         .data!
+                                                          //         .calenderSignal![
+                                                          //             index]
+                                                          //         .roi! +
+                                                          //     '%',
+                                                          style: TextStyle(
+                                                              fontSize: 18),
+                                                        )),
+                                                      ),
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.01,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.05,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    4.0),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                              child: Text(
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .calenderSignal![
+                                                                        index]
+                                                                    .placing!,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.05,
+                                                          ),
+                                                          Container(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.05,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    4.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    4.0),
+                                                              ),
+                                                            ),
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              trophyImage!,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                  flex: 1, child: SizedBox()),
+                                            ],
+                                          ),
+                                          notificationmodel!
+                                                      .data!
+                                                      .calenderSignal![index]
+                                                      .status ==
+                                                  0
+                                              ? Positioned(
+                                                  bottom: -MediaQuery.of(
+                                                              context)
+                                                          .size
+                                                          .height *
+                                                      0.055, //MediaQuery.of(context)
+                                                  //     .size
+                                                  //     .height *
+                                                  // 0.221 +
+                                                  // 50,
+                                                  child: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.88,
+                                                    color: notificationmodel!
+                                                            .data!
+                                                            .calenderSignal![
+                                                                index]
+                                                            .isexpanded!
+                                                        ? Colors.green[100]
+                                                        : Colors.transparent,
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.15),
+                                                    child: Container(
                                                       height:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .height *
-                                                              0.01,
+                                                              0.055,
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Color(0xff344455),
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          22),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          22))),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Race Comment",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.05,
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  4.0),
-                                                            ),
-                                                          ),
-                                                          child: Center(
-                                                            child: Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .calenderSignal![
-                                                                      index]
-                                                                  .placing!,
-                                                              style: TextStyle(
-                                                                  fontSize: 18),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.05,
-                                                        ),
-                                                        Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.05,
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1,
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  4.0),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  4.0),
-                                                            ),
-                                                          ),
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            trophyImage!,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                                flex: 1, child: SizedBox()),
-                                          ],
-                                        ),
-                                      ],
+                                                  ))
+                                              : Container(
+                                                  height: 0,
+                                                  width: 0,
+                                                )
+                                        ],
+                                      ),
                                     ),
                                   ),
+
+                                  children: [
+                                    notificationmodel!
+                                                .data!
+                                                .calenderSignal![index]
+                                                .status ==
+                                            0
+                                        ? Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(10),
+                                                  bottomRight:
+                                                      Radius.circular(10)),
+                                              color: Colors.green[100],
+                                            ),
+                                            margin: EdgeInsets.zero,
+                                            padding: EdgeInsets.all(
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.01),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.88,
+                                            child: Text(
+                                                "${notificationmodel!.data!.calenderSignal![index].comment}"))
+                                        : Container(
+                                            height: 0,
+                                            width: 0,
+                                          )
+                                    // + more params, see example !!
+                                  ],
                                 );
                               },
                             ),

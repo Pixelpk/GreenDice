@@ -80,6 +80,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
                 SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.007,
+                ),
+                Text(
+                  "The Alternative to Investing",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xffffffff),
+                  ),
+                ),
+                SizedBox(
                   height: MediaQuery.of(context).size.height * .6,
                 ),
                 Center(

@@ -13,6 +13,7 @@ import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'LogoutLoading.dart';
 import 'PaymentSuccessScreen.dart';
 
 class PaymenyScreen extends StatefulWidget {
@@ -418,6 +419,17 @@ class PaymenyScreenState extends State<PaymenyScreen> {
           backgroundColor: Colors.white,
           textColor: Color(0xFF009d60));
     } else {
+      if(response.body.contains("Unauthenticated."))
+      {
+        Navigator.of(context)
+            .pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) =>
+                    LogoutLoading(
+                        token:
+                        widget.accessToken!)),
+                (route) => false);
+      }
       Fluttertoast.showToast(
           msg: "Error! Please try again later",
           toastLength: Toast.LENGTH_SHORT,
