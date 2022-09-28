@@ -5,15 +5,13 @@ import 'package:greendice/Pages/MembershipPage.dart';
 import 'package:greendice/Pages/MorePage.dart';
 import 'package:greendice/Pages/NotificationPage.dart';
 import 'package:greendice/Pages/ResultsPage.dart';
-import 'package:greendice/Screens/CalendarDataScreen.dart';
 
-import 'SignupScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   bool ispremiumUser ;
   HomeScreen({Key? key, required this.title ,required this.ispremiumUser }) : super(key: key);
 
-  final String title;
+   final String title;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -24,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen>
   int _currentindex = 0;
   List<Widget> _tabList = [
     new NotificationPage(title: "Notification"),
-    new MembershipPage(),
+    // new MembershipPage(),
     new ResultsPage(title: "Results"),
     new CalendarPage(title: "Calendar"),
     new MorePage(title: "Notification")
@@ -35,10 +33,11 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    if(!widget.ispremiumUser)
-      {
-        _currentindex = 1 ;
-      }
+    ///PAYMENT
+    // if(!widget.ispremiumUser)
+    //   {
+    //     _currentindex = 1 ;
+    //   }
     _tabController = TabController(vsync: this, length: _tabList.length);
   }
 
@@ -88,26 +87,23 @@ class _HomeScreenState extends State<HomeScreen>
               labelString: 'Notification',
             ),
 
-            // ImageIcon(
-            //   AssetImage("assets/images/bell.png"),
-            //   color: Color(0xFF009d60),
-            // ),
             label: 'Notification',
           ),
-          BottomNavigationBarItem(
-            icon: customNavBARitem(
-              currentindex: _currentindex,
-              assetsPath: "assets/images/credit-card-2-back.svg",
-              defaultIndex: 1,
-              labelString: 'Pricing',
-            ),
-            label: 'Pricing',
-          ),
+          ///PAYMENT REMOVED
+          // BottomNavigationBarItem(
+          //   icon: customNavBARitem(
+          //     currentindex: _currentindex,
+          //     assetsPath: "assets/images/credit-card-2-back.svg",
+          //     defaultIndex: 1,
+          //     labelString: 'Pricing',
+          //   ),
+          //   label: 'Pricing',
+          // ),
           BottomNavigationBarItem(
             icon: customNavBARitem(
               currentindex: _currentindex,
               assetsPath: "assets/images/analytics.svg",
-              defaultIndex: 2,
+              defaultIndex: 1,
               labelString: 'Results',
             ),
             label: 'Results',
@@ -116,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
             icon: customNavBARitem(
               currentindex: _currentindex,
               assetsPath: "assets/images/calender.svg",
-              defaultIndex: 3,
+              defaultIndex: 2,
               labelString: 'Calendar',
             ),
             label: 'Calendar',
@@ -125,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen>
             icon: customNavBARitem(
               currentindex: _currentindex,
               assetsPath: "assets/images/more.svg",
-              defaultIndex: 4,
+              defaultIndex: 3,
               labelString: 'More',
             ),
             label: 'More',
@@ -146,15 +142,15 @@ class _HomeScreenState extends State<HomeScreen>
           : MainAxisAlignment.spaceEvenly,
       children: [
         SizedBox(
-          height: defaultIndex == 4 ? 7 : 0,
+          height: defaultIndex == 3 ? 7 : 0,
         ),
         SvgPicture.asset(assetsPath,
-            height: defaultIndex == 4 ? 5 : 20,
+            height: defaultIndex == 3 ? 5 : 20,
             color: _currentindex == defaultIndex
                 ? Color(0xFF009d60)
                 : Colors.grey),
         SizedBox(
-          height: defaultIndex == 4 ? 10 : 4,
+          height: defaultIndex == 3 ? 10 : 4,
         ),
         Text(
           labelString!,

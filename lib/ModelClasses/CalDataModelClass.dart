@@ -58,26 +58,28 @@ class CalenderSignal {
   String? roi;
   String? balance;
   String? profit;
+  String? comment ;
   String? createdAt;
-
-  CalenderSignal({this.id, this.signalDate, this.location, this.raceId, this.horse, this.signalFloat, this.oods, this.stake, this.placing, this.status, this.returns, this.roi, this.balance, this.profit, this.createdAt});
+  bool? isexpanded = false ;
+  CalenderSignal({this.id,this.isexpanded ,this.comment, this.signalDate, this.location, this.raceId, this.horse, this.signalFloat, this.oods, this.stake, this.placing, this.status, this.returns, this.roi, this.balance, this.profit, this.createdAt});
 
 CalenderSignal.fromJson(Map<String, dynamic> json) {
-id = json['id'];
-signalDate = json['signal_date'];
-location = json['location'];
-raceId = json['race_id'];
-horse = json['horse'];
-signalFloat = json['signal_float'];
-oods = json['oods'];
-stake = json['stake'];
-placing = json['placing'];
-status = json['status'];
-returns = json['return'];
-roi = json['roi'];
-balance = json['balance'];
-profit = json['profit'];
-createdAt = json['created_at'];
+id = json['id']?? 0 ;
+signalDate = json['signal_date']??'';
+location = json['location']??'';
+raceId = json['race_id']?? 0 ;
+horse = json['horse'] ?? '';
+signalFloat = json['signal_float']?? '';
+oods = json['oods']?? '';
+stake = json['stake']?? '';
+placing = json['placing']?? '';
+status = json['status']?? 0;
+returns = json['return']?? '';
+roi = json['roi']?? '';
+balance = json['balance']?? '';
+comment = json['comment'] ??'';
+profit = json['profit']?? '';
+createdAt = json['created_at']?? '';
 }
 
 Map<String, dynamic> toJson() {

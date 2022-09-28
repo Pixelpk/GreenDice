@@ -1,12 +1,12 @@
-class notifcationModelClass {
+class NotificationModel {
 
   int? success;
   String? message;
   Data? data;
 
-  notifcationModelClass({this.success, this.message, this.data});
+  NotificationModel({this.success, this.message, this.data});
 
-  notifcationModelClass.fromJson(Map<String, dynamic> json) {
+  NotificationModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
@@ -24,7 +24,7 @@ class notifcationModelClass {
 }
 
 class Data {
-  List<NotificationSignal>? notificationSignal;
+  List<NotificationSignal>? notificationSignal  = [];
 
   Data({required this.notificationSignal});
 
@@ -63,12 +63,13 @@ class NotificationSignal {
   String? balance;
   String? profit;
   String? createdAt;
-
+String? comment;
   NotificationSignal(
       {this.id,
       this.signalDate,
       this.location,
       this.raceId,
+        this.comment,
       this.horse,
       this.signalFloat,
       this.oods,
@@ -96,6 +97,7 @@ class NotificationSignal {
     roi = json['roi'];
     balance = json['balance'];
     profit = json['profit'];
+    comment = json['comment'] ?? '';
     createdAt = json['created_at'];
   }
 

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/Pages/MembershipPage.dart';
+import 'package:greendice/Screens/LogoutLoading.dart';
+import 'package:greendice/Screens/ProfileScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
 
@@ -18,7 +21,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   late List data = [];
-  notifcationModelClass? notificationmodel;
+  NotificationModel? notificationmodel;
   late String firstname = '', lastname = '', photo = '';
   late String access_token = '';
   bool isLoading = false;
@@ -31,6 +34,7 @@ class _NotificationPageState extends State<NotificationPage> {
     'assets/images/shirt5.svg',
     'assets/images/shirt6.svg',
   ];
+  ImageProvider? headerBackGroundImage;
   @override
   void dispose() {
     // _controller.dispose();
@@ -41,27 +45,39 @@ class _NotificationPageState extends State<NotificationPage> {
   void initState() {
     // _controller = ScrollController();
     // _controller.addListener(_scrollListener);
+    headerBackGroundImage =
+        AssetImage("assets/images/dashboardappbarimage.png");
     super.initState();
 
-    Loadprefs().then((value)  {
+    Loadprefs().then((value) {
       print("IS PREMIUMS IN SIGNAL SCREEN $ispremium");
-          if (ispremium)
-            {
-              Signalapi().then((value) => {
-                    if (mounted)
-                      {
-                        setState(() {
-                          this.notificationmodel = value;
-                        }),
-                      }
-                  });
-            }
-        });
+      if (ispremium) {
+        Signalapi().then((value) => {
+              if (mounted)
+                {
+                  setState(() {
+                    this.notificationmodel = value;
+                  }),
+                }
+            });
+      }
+    });
   }
-String isYearlyPkg = '0' ;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(headerBackGroundImage!, context);
+  }
+
+  String isYearlyPkg = '0';
   String isFourMonthPkg = '0';
   String isCharmans = '0';
-  bool ispremium = true;
+  String YearlyPkgepirydate = '';
+  String fourMonthlyPkgepirydate = '';
+  String chairmanPkgepirydate = '';
+  ///PAYMENT
+   bool ispremium = true;
   Future<void> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -70,9 +86,13 @@ String isYearlyPkg = '0' ;
       firstname = (prefs.getString('fname') ?? '');
       lastname = (prefs.getString('lname') ?? '');
       photo = (prefs.getString('image') ?? '');
-      isYearlyPkg = prefs.getString('isYearlyPkg')??'0' ;
+      isYearlyPkg = prefs.getString('isYearlyPkg') ?? '0';
       isFourMonthPkg = prefs.getString('isFourMonthPkg') ?? '0';
-      isCharmans =  prefs.getString('isChairman') ?? '0' ;
+      isCharmans = prefs.getString('isChairman') ?? '0';
+      YearlyPkgepirydate = prefs.getString('yearly_pkg_cancel_at') ?? '';
+      fourMonthlyPkgepirydate =
+          prefs.getString('four_month_pkg_cancel_at') ?? '';
+      chairmanPkgepirydate = prefs.getString('chairman_pkg_cancel_at') ?? '';
       ispremium = prefs.getString('isYearlyPkg') == '1'
           ? true
           : prefs.getString('isFourMonthPkg') == '1'
@@ -81,7 +101,7 @@ String isYearlyPkg = '0' ;
     });
   }
 
-  Future<notifcationModelClass> Signalapi() async {
+  Future<NotificationModel> Signalapi() async {
     setState(() {
       isLoading = true;
     });
@@ -90,17 +110,18 @@ String isYearlyPkg = '0' ;
       Uri.parse("https://app.greendiceinvestments.com/api/signalnotifications"),
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + access_token,
+        'Accept': 'application/json',
       },
     );
-
+    // print(response.body);
     //  var data = json.decode(response.body);
-    notifcationModelClass notificationmodel =
-        notifcationModelClass.fromJson(jsonDecode(response.body));
+    NotificationModel notificationmodel =
+        NotificationModel.fromJson(jsonDecode(response.body));
     //notifcationModelClass notification_success = notifcationModelClass.fromJson(jsonDecode(response.body));
     var val = '${notificationmodel.success}';
 
     //data = jsonDecode('${notification_success.data!.notificationSignal}');
-    print(jsonDecode(response.body));
+    // print(jsonDecode(response.body));
 
     print(val);
     if (val == "1") {
@@ -112,21 +133,27 @@ String isYearlyPkg = '0' ;
       }
       return notificationmodel;
     } else {
+      if (response.body.contains("Unauthenticated.")) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) => LogoutLoading(token: access_token)),
+            (route) => false);
+      }
       Map<String, dynamic> errorModel = jsonDecode(response.body);
 
       print('message: ${errorModel["message"]}');
 
-      Fluttertoast.showToast(
-        msg: errorModel["message"],
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+      // Fluttertoast.showToast(
+      //   msg: errorModel["message"],
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      // );
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
-      return notifcationModelClass();
+      return NotificationModel();
       /*Navigator.push(
         context,
         MaterialPageRoute(
@@ -138,8 +165,6 @@ String isYearlyPkg = '0' ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -156,9 +181,7 @@ String isYearlyPkg = '0' ;
                     height: MediaQuery.of(context).size.height * 0.21,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(
-                                "assets/images/dashboardappbarimage.png"),
-                            fit: BoxFit.cover)),
+                            image: headerBackGroundImage!, fit: BoxFit.cover)),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,30 +196,52 @@ String isYearlyPkg = '0' ;
                               width: MediaQuery.of(context).size.width * 0.1,
                             ),
                             photo == ''
-                                ? Container(
-                                    width: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    decoration: new BoxDecoration(
+                                ? InkWell(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (_) => ProfileScreen(
+                                                    title: "nulkl",
+                                                  )));
+                                    },
+                                    child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        decoration: new BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.green,
+                                            image: new DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: AssetImage(
+                                                  "assets/images/profileimage.png"),
+                                            ))),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (_) => ProfileScreen(
+                                                    title: "nulkl",
+                                                  )));
+                                    },
+                                    child: Container(
+                                      width:
+                                          MediaQuery.of(context).size.height *
+                                              0.09,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.09,
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.green,
-                                        image: new DecorationImage(
+                                        image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              "assets/images/profileimage.png"),
-                                        )))
-                                : Container(
-                                    width: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.09,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                          photo,
+                                          image: NetworkImage(
+                                            photo,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -208,7 +253,9 @@ String isYearlyPkg = '0' ;
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(height: 8,),
+                                Container(
+                                  height: 8,
+                                ),
                                 Container(
                                   child: Text(
                                     firstname + " " + lastname,
@@ -219,17 +266,53 @@ String isYearlyPkg = '0' ;
                                 SizedBox(
                                   height: 8,
                                 ),
-                                Text(isYearlyPkg == '1' ? "Yearly Package: Active": isFourMonthPkg == '1' ? '4-Month Package: Active' : "No Package Active",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                  color: Colors.white
-                                ),
-                                ),
-                             SizedBox(height: 4,),
-                             isCharmans == '1'?Text("Chairman's Package: Active",style: TextStyle(
-                               fontSize: 12,
-                                 color: Colors.white
-                             ),):Container()
+                                ///PAYMENT
+
+                                // Text(
+                                //   isYearlyPkg == '1'
+                                //       ? "Yearly Package: Active"
+                                //       : isFourMonthPkg == '1'
+                                //           ? '4-Month Package: Active'
+                                //           : "No Package Active",
+                                //   style: TextStyle(
+                                //       fontSize: 12, color: Colors.white),
+                                // ),
+                                // SizedBox(
+                                //   height: 4,
+                                // ),
+                                // isCharmans == '1'
+                                //     ? Text(
+                                //         "Chairman's Package: Active",
+                                //         style: TextStyle(
+                                //             fontSize: 12, color: Colors.white),
+                                //       )
+                                //     : Container(),
+                                // YearlyPkgepirydate != '' &&
+                                //         YearlyPkgepirydate != null
+                                //     ? Text(
+                                //         "Subscription end at: ${DateFormat.yMd().format(DateTime.parse(YearlyPkgepirydate))}",
+                                //         style: TextStyle(
+                                //             fontSize: 12, color: Colors.white),
+                                //       )
+                                //     : fourMonthlyPkgepirydate != null &&
+                                //             fourMonthlyPkgepirydate != ''
+                                //         ? Text(
+                                //             "Subscription end at: ${DateFormat.yMd().format(DateTime.parse(fourMonthlyPkgepirydate))}",
+                                //             style: TextStyle(
+                                //                 fontSize: 12,
+                                //                 color: Colors.white),
+                                //           )
+                                //         : Container(),
+                                // chairmanPkgepirydate != null &&
+                                //         chairmanPkgepirydate != ''
+                                //     ? Text(
+                                //         "Chairman's Subscription Expiry: ${DateFormat.yMd().format(DateTime.parse(fourMonthlyPkgepirydate))}",
+                                //         style: TextStyle(
+                                //             fontSize: 12, color: Colors.white),
+                                //       )
+                                //     : Container()
+
+                                ///TODO CHAIRMANS PACKAGES HANDLING
                               ],
                             ),
 
@@ -240,9 +323,7 @@ String isYearlyPkg = '0' ;
                       ),*/
                           ],
                         ),
-
                       ),
-
                       Container(
                         margin: EdgeInsets.only(
                             left: 60, top: 0, right: 0, bottom: 0),
@@ -275,7 +356,11 @@ String isYearlyPkg = '0' ;
                             backgroundColor: Color(0xff0ECB82),
                           ))
                         : ispremium
-                            ? notificationmodel != null
+                            ? notificationmodel != null &&
+                                    notificationmodel!.data != null &&
+                                    notificationmodel!
+                                            .data!.notificationSignal !=
+                                        null
                                 ? ListView.builder(
                                     shrinkWrap: true,
                                     primary: true,
@@ -366,155 +451,187 @@ String isYearlyPkg = '0' ;
                                                     .width,
                                                 child: Row(
                                                   children: [
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/images/flags.svg",
-                                                              color: Color(
-                                                                  0xff009E61),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.03,
-                                                            ),
-                                                            Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .location!,
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.02,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/images/playbutton.svg",
-                                                              color: Color(
-                                                                  0xff009E61),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.03,
-                                                            ),
-                                                            Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .raceId
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .white),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.02,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              "assets/images/peoples.svg",
-                                                              color: Color(
-                                                                  0xff009E61),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.03,
-                                                            ),
-                                                            Text(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .horse!,
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
+                                                    Expanded(
+                                                      flex: 40,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/images/flags.svg",
+                                                                color: Color(
+                                                                    0xff009E61),
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  notificationmodel!
+                                                                      .data!
+                                                                      .notificationSignal![
+                                                                          index]
+                                                                      .location!,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  maxLines: 3,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          // SizedBox(
+                                                          //   height: MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .height *
+                                                          //       0.02,
+                                                          // ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/images/playbutton.svg",
+                                                                color: Color(
+                                                                    0xff009E61),
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(
+                                                                  notificationmodel!
+                                                                      .data!
+                                                                      .notificationSignal![
+                                                                          index]
+                                                                      .raceId
+                                                                      .toString(),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .white),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          // SizedBox(
+                                                          //   height: MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .height *
+                                                          //       0.02,
+                                                          // ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                "assets/images/peoples.svg",
+                                                                color: Color(
+                                                                    0xff009E61),
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.03,
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          2),
+                                                                  child: Text(
+                                                                    notificationmodel!
+                                                                        .data!
+                                                                        .notificationSignal![
+                                                                            index]
+                                                                        .horse!,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 3,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.30,
-                                                    ),
-                                                    Column(
-                                                      children: [
-                                                        Text(
-                                                          notificationmodel!
-                                                              .data!
-                                                              .notificationSignal![
-                                                                  index]
-                                                              .signalDate!
-                                                              .split('-')[2],
-                                                          style: TextStyle(
-                                                              fontSize: 30,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                        Text(
-                                                          monthselector(
-                                                              notificationmodel!
-                                                                  .data!
-                                                                  .notificationSignal![
-                                                                      index]
-                                                                  .signalDate!
-                                                                  .split(
-                                                                      '-')[1]),
-                                                          style: TextStyle(
-                                                              fontSize: 10,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                        /* Text(
+                                                    // SizedBox(
+                                                    //   width:
+                                                    //       MediaQuery.of(context)
+                                                    //               .size
+                                                    //               .width *
+                                                    //           0.30,
+                                                    // ),
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            notificationmodel!
+                                                                .data!
+                                                                .notificationSignal![
+                                                                    index]
+                                                                .signalDate!
+                                                                .split('-')[2],
+                                                            style: TextStyle(
+                                                                fontSize: 30,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          Text(
+                                                            monthselector(
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .notificationSignal![
+                                                                        index]
+                                                                    .signalDate!
+                                                                    .split(
+                                                                        '-')[1]),
+                                                            style: TextStyle(
+                                                                fontSize: 10,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          /* Text(
                                                 "August",s
                                                 style: TextStyle(fontSize: 15, color: Colors.white),
                                               )*/
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -523,7 +640,10 @@ String isYearlyPkg = '0' ;
                                             Positioned(
                                               left: 0,
                                               right: 0,
-                                              top: 260,
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.42,
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 16),
@@ -549,13 +669,6 @@ String isYearlyPkg = '0' ;
                                                               horizontal: 5),
                                                       child: Row(
                                                         children: [
-                                                          /*SvgPicture.asset(
-                                                        _shirtImagesList[
-                                                            (index % 6)],
-                                                        width: 72,
-                                                        height: 72,
-                                                      ),*/
-
                                                           ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
@@ -576,13 +689,22 @@ String isYearlyPkg = '0' ;
                                                                 0.03,
                                                           ),
                                                           Expanded(
-                                                            child: Text(
-                                                                "Was sound in a recent jumpout, then running nice time on debut this 2yo Gelding, "
-                                                                "son of ( Fastnet Rock ), all being on a Heavy track, he can use the inside gate , "
-                                                                "as he has nice gate speed , settle behind leaders, look to be running on.",
+                                                            child:
+                                                                SingleChildScrollView(
+                                                              child: Text(
+                                                                notificationmodel!
+                                                                    .data!
+                                                                    .notificationSignal![
+                                                                        index]
+                                                                    .comment!,
                                                                 textAlign:
                                                                     TextAlign
-                                                                        .left),
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
@@ -653,6 +775,9 @@ String isYearlyPkg = '0' ;
                                                                             10),
                                                                     child:
                                                                         Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              4),
                                                                       decoration:
                                                                           BoxDecoration(
                                                                         borderRadius:
@@ -661,15 +786,17 @@ String isYearlyPkg = '0' ;
                                                                             0xff485469),
                                                                       ),
                                                                       width: 50,
-                                                                      height:
-                                                                          25,
+                                                                      // height:
+                                                                      //     25,
                                                                       child: Center(
                                                                           child: Text(
-                                                                        notificationmodel!
-                                                                            .data!
-                                                                            .notificationSignal![index]
-                                                                            .profit!,
+                                                                        notificationmodel!.data!.notificationSignal![index].profit != null &&
+                                                                                notificationmodel!.data!.notificationSignal![index].profit != ''
+                                                                            ? double.parse(notificationmodel!.data!.notificationSignal![index].profit!).toStringAsFixed(2)
+                                                                            : '0.0',
                                                                         style: TextStyle(
+                                                                            fontSize:
+                                                                                12,
                                                                             color:
                                                                                 Colors.white),
                                                                       )),
@@ -697,16 +824,20 @@ String isYearlyPkg = '0' ;
                                     child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('Buy Packages to see Signals'),
+                                    ///PAYMENT
+
+                                    Text('No Data Found'),
                                     SizedBox(
                                       height: 20,
                                     ),
                                     MaterialButton(
                                       onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (_) => MembershipPage(
-                                                    )));
+                                        ///PAYMENT
+
+                                        // Navigator.of(context).push(
+                                        //     MaterialPageRoute(
+                                        //         builder: (_) =>
+                                        //             MembershipPage()));
                                       },
                                       minWidth:
                                           MediaQuery.of(context).size.width *
@@ -714,7 +845,7 @@ String isYearlyPkg = '0' ;
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.06,
-                                      child: Text("Buy Now"),
+                                      child: Text("No Data Available"),
                                       color: Colors.green,
                                     )
                                   ],

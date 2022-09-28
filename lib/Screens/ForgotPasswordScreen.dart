@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:greendice/ModelClasses/ForgotPassword.dart';
+import 'package:greendice/Screens/SigninScreen.dart';
 import 'package:http/http.dart' as http;
 import 'HomeScreen.dart';
 import 'SignupScreen.dart';
@@ -9,9 +10,14 @@ import '../ModelClasses/SigninUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  String fcm ;
-  String deviceId ;
-  ForgotPasswordScreen({Key? key, required this.title,required this.fcm , required this.deviceId}) : super(key: key);
+  String fcm;
+  String deviceId;
+  ForgotPasswordScreen(
+      {Key? key,
+      required this.title,
+      required this.fcm,
+      required this.deviceId})
+      : super(key: key);
 
   final String title;
 
@@ -31,8 +37,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!isValid) {
       return;
     } else {
-
-
       var response = await http.post(
           Uri.parse("https://app.greendiceinvestments.com/api/forgotpassword"),
           body: {
@@ -74,21 +78,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void signup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen",deviceid: widget.deviceId , fcm: widget.fcm,)),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SigninScreen()),
+        (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -178,7 +175,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
               Positioned(
-                right: 290,
+                top: 0,
+                right: MediaQuery.of(context).size.width * 0.7,
                 child: SizedBox(
                   width: 240,
                   height: 240,

@@ -13,6 +13,7 @@ import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'LogoutLoading.dart';
 import 'PaymentSuccessScreen.dart';
 
 class PaymenyScreen extends StatefulWidget {
@@ -128,7 +129,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                 obscureNumber: true,
                                 cardNumber: cardNumber,
                                 cvvCode: cvvCode,
-                                isHolderNameVisible: true,
+                                isHolderNameVisible: false,
                                 isCardNumberVisible: true,
                                 isExpiryDateVisible: true,
                                 cardHolderName: cardHolderName,
@@ -197,7 +198,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
                                     onCreditCardModelChange,
                               ),
                               const SizedBox(
-                                height: 20,
+                                height: 40,
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -302,6 +303,9 @@ class PaymenyScreenState extends State<PaymenyScreen> {
       }
       if (widget.packageId == '3') {
         prefs.setString('isChairman', widget.packageId == "3" ? '1' : '0');
+
+        prefs.setString('chairman_pkg_sub_id', paymentResponse.data!.subscription!.subcriptionId!);
+
         if (isYearlyPkg == '1') {
           prefs.setString('isYearlyPkg', '1');
         }
@@ -317,6 +321,8 @@ class PaymenyScreenState extends State<PaymenyScreen> {
       }
       if(widget.packageId == '1')
         {
+           prefs.setString('yearly_pkg_sub_id',  paymentResponse.data!.subscription!.subcriptionId!);
+
           prefs.setString('isYearlyPkg', widget.packageId == "1" ? '1' : '0');
           if(isCharmans == '1')
             {
@@ -334,6 +340,7 @@ class PaymenyScreenState extends State<PaymenyScreen> {
       if(widget.packageId == '2')
       {
         prefs.setString('isFourMonthPkg', widget.packageId == "2" ? '1' : '0');
+         prefs.setString('four_month_pkg_sub_id', paymentResponse.data!.subscription!.subcriptionId!);
         if(isCharmans == '1')
         {
           prefs.setString('isChairman', '1');
@@ -412,6 +419,17 @@ class PaymenyScreenState extends State<PaymenyScreen> {
           backgroundColor: Colors.white,
           textColor: Color(0xFF009d60));
     } else {
+      if(response.body.contains("Unauthenticated."))
+      {
+        Navigator.of(context)
+            .pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) =>
+                    LogoutLoading(
+                        token:
+                        widget.accessToken!)),
+                (route) => false);
+      }
       Fluttertoast.showToast(
           msg: "Error! Please try again later",
           toastLength: Toast.LENGTH_SHORT,

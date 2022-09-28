@@ -5,21 +5,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/constants.dart';
+import 'package:greendice/ModelClasses/SigninUser.dart';
 import 'package:greendice/Screens/EmailforOTP.dart';
 import 'package:http/http.dart' as http;
 import 'package:platform_device_id/platform_device_id.dart';
 import 'HomeScreen.dart';
 import 'SignupScreen.dart';
-import '../ModelClasses/SigninUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninScreen extends StatefulWidget {
-  String? fcmTOken ;
-  String? devicerId ;
-  SigninScreen({Key? key, required this.title ,required this.fcmTOken ,required this.devicerId }) : super(key: key);
+  SigninScreen({Key? key}) : super(key: key);
 
-  final String title;
+
 
   @override
   _SigninScreenState createState() => _SigninScreenState();
@@ -30,15 +28,19 @@ class _SigninScreenState extends State<SigninScreen> {
   late FirebaseMessaging messaging;
   var _formkey = GlobalKey<FormState>();
 
-
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
 
   bool isLoading = false;
 
   Future login() async {
-    print("FCM-TOKEN : ${widget.fcmTOken}");
-    print("DeviceID ${widget.devicerId}");
+    final prefs = await SharedPreferences.getInstance();
+    String? fcm = await messaging.getToken();
+    String? deviceId = await PlatformDeviceId.getDeviceId;
+
+    print("FCM-TOKEN : $fcm}");
+    print("DeviceID $deviceId");
+
     if (mounted) {
       setState(() {
         isLoading = true;
@@ -49,28 +51,34 @@ class _SigninScreenState extends State<SigninScreen> {
     if (!isValid) {
       return;
     } else {
-      final prefs = await SharedPreferences.getInstance();
-
       var response = await http.post(
         Uri.parse("https://app.greendiceinvestments.com/api/login"),
         body: {
           "email": email.text.trim(),
           "password": pass.text,
-          'fcm_token':widget.fcmTOken ,
-          "device_id":widget.devicerId,
+          'fcm_token': fcm,
+          "device_id": deviceId,
         },
         headers: <String, String>{
           'Accept': 'application/json',
         },
       );
 
-      var data = json.decode(response.body);
+print(response.body);
       SigninUser signinUser = SigninUser.fromJson(jsonDecode(response.body));
       var val = '${signinUser.success}';
 
       print(response);
       if (val == "0") {
-        if ('${signinUser.message}' == "AccessDenied") {
+        if(response.body.contains('User account is deactivated'))
+          {
+            Fluttertoast.showToast(
+              msg: "Your account is deactivated",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+            );
+          }
+        else if (response.body.contains("Wrong credentials")) {
           Fluttertoast.showToast(
             msg: "Incorrect email or password",
             toastLength: Toast.LENGTH_SHORT,
@@ -92,19 +100,39 @@ class _SigninScreenState extends State<SigninScreen> {
         prefs.setString('phone', signinUser.data!.user!.phone!);
         prefs.setString('email', signinUser.data!.user!.email!);
         prefs.setString('image', signinUser.data!.user!.photo!);
-        prefs.setString('isYearlyPkg',
-            signinUser.data!.user!.isYearlyPkg.toString());
-        prefs.setString('isFourMonthPkg',
-            signinUser.data!.user!.isFourMonthPkg.toString());
-        prefs.setString('isChairman',
-            signinUser.data!.user!.isChairman.toString());
-        bool ispremiumUser = signinUser.data!.user!.isYearlyPkg == 1 ? true :signinUser.data!.user!.isFourMonthPkg ==1 ? true :false ;
-        print("////////////////////////////////////${signinUser.data!.user!.isYearlyPkg.toString()}  $ispremiumUser");
+        prefs.setString('device_id', deviceId ?? '');
+        prefs.setString("fcmToken", fcm!);
+        prefs.setString(
+            'yearly_pkg_sub_id', signinUser.data!.user!.yearlyPkgSubId!);
+        prefs.setString(
+            'four_month_pkg_sub_id', signinUser.data!.user!.fourMonthPkgSubId!);
+        prefs.setString(
+            'chairman_pkg_sub_id', signinUser.data!.user!.chairmanPkgSubId!);
+        prefs.setString(
+            'yearly_pkg_cancel_at', signinUser.data!.user!.yearlyPkgCancelAt!);
+        prefs.setString('four_month_pkg_cancel_at',
+            signinUser.data!.user!.fourMonthPkgCancelAt!);
+        prefs.setString('chairman_pkg_cancel_at',
+            signinUser.data!.user!.chairmanPkgCancelAt!);
+        prefs.setString(
+            'isYearlyPkg', signinUser.data!.user!.isYearlyPkg.toString());
+        prefs.setString(
+            'isFourMonthPkg', signinUser.data!.user!.isFourMonthPkg.toString());
+        prefs.setString(
+            'isChairman', signinUser.data!.user!.isChairman.toString());
+        bool ispremiumUser = signinUser.data!.user!.isYearlyPkg == 1
+            ? true
+            : signinUser.data!.user!.isFourMonthPkg == 1
+                ? true
+                : false;
+        print(
+            "${signinUser.data!.user!.isYearlyPkg.toString()}  $ispremiumUser");
         Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
           CupertinoPageRoute(
             builder: (BuildContext context) {
-              return HomeScreen(title: access_token,
-              ispremiumUser: ispremiumUser,
+              return HomeScreen(
+                title: access_token,
+                ispremiumUser: ispremiumUser,
               );
             },
           ),
@@ -125,7 +153,9 @@ class _SigninScreenState extends State<SigninScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SignupScreen(title: "SignupScreen",deviceid: widget.devicerId,fcm: widget.fcmTOken,)),
+          builder: (context) => SignupScreen(
+                title: "SignupScreen",
+              )),
     );
   }
 
@@ -157,11 +187,10 @@ class _SigninScreenState extends State<SigninScreen> {
                               color: Color(0xff9B9B9B),
                             )),
                         validator: (text) {
-                         if (EmailValidator.validate(text!.trim()))
-                         {
-                           return null;
-                         }
-                        return "Please enter valid email";
+                          if (EmailValidator.validate(text!.trim())) {
+                            return null;
+                          }
+                          return "Please enter valid email";
                         },
                         onChanged: (value) {
                           if (value.length > 0) {
@@ -209,8 +238,9 @@ class _SigninScreenState extends State<SigninScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      EmailforOTP(title: "EmailforOTP",fcm: widget.fcmTOken!,deviceId: widget.devicerId!,)),
+                                  builder: (context) => EmailforOTP(
+                                        title: "EmailforOTP",
+                                      )),
                             );
                           },
                           child: Text(
@@ -287,7 +317,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               Positioned(
                 top: 0,
-                right: 290,
+                right: MediaQuery.of(context).size.width * 0.7,
                 child: SizedBox(
                   width: 240,
                   height: 240,

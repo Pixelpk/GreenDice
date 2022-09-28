@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greendice/ModelClasses/EBookModelClass.dart';
@@ -12,6 +10,8 @@ import 'package:greendice/UiComponents/NotificationListItem.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ModelClasses/notificationModelClass.dart';
+import 'LogoutLoading.dart';
+import 'pdf_Viewer.dart';
 
 class EbookScreen extends StatefulWidget {
   EbookScreen({Key? key, required this.title}) : super(key: key);
@@ -47,9 +47,11 @@ class _EbookScreenState extends State<EbookScreen> {
     // _controller.addListener(_scrollListener);
     super.initState();
     Signalapi().then((value) => {
-          setState(() {
-            this.eBookModelClass = value;
-          }),
+   if(mounted)   {
+            setState(() {
+              this.eBookModelClass = value;
+            }),
+          }
         });
   }
 
@@ -84,6 +86,17 @@ class _EbookScreenState extends State<EbookScreen> {
     print(val);
     if (val == "1") {
     } else {
+      if(response.body.contains("Unauthenticated."))
+      {
+        Navigator.of(context)
+            .pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (_) =>
+                    LogoutLoading(
+                        token:
+                        access_token)),
+                (route) => false);
+      }
       Fluttertoast.showToast(
         msg: "Error! Please try again later",
         toastLength: Toast.LENGTH_SHORT,
@@ -227,9 +240,7 @@ class _EbookScreenState extends State<EbookScreen> {
                                 return InkWell(
                                   onTap: () async {
                                    try {
-                                      PDFDocument doc = await PDFDocument.fromURL(
-                                          eBookModelClass!.data!.ebooks![index].fileName!);
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PDFViewer(document: doc)));
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PdfViewer(url: eBookModelClass!.data!.ebooks![index].fileName!,)));
                                       print("on tab ebook");
                                     }catch(e){
                                      Fluttertoast.showToast(

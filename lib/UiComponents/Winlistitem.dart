@@ -1,9 +1,7 @@
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart' as textstyling;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:greendice/Screens/SigninScreen.dart';
-import 'package:greendice/Screens/SignupScreen.dart';
+
 
 class Winlistitem extends StatefulWidget {
   Winlistitem({Key? key, required this.title}) : super(key: key);
@@ -35,8 +33,7 @@ class _WinlistitemState extends State<Winlistitem> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Stack(
-              overflow: Overflow.visible,
-              children: [
+              clipBehavior: Clip.none, children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
                   width: MediaQuery.of(context).size.width,

@@ -5,9 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greendice/Screens/WelcomeScreen.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../main.dart';
 import 'HomeScreen.dart';
 
@@ -21,42 +19,52 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-  late FirebaseMessaging messaging;
   Future<String> Loadprefs() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token') ?? '';
   }
 
-
   @override
   void initState() {
-    messaging = FirebaseMessaging.instance;
-
-    // messaging.getToken().then((value) {
-    //   print('firabase token: $value');
-    //   ///TODO
-    // });
-    IoSNotifcationHandler();
+    ioSNotifcationHandler();
     notificationOnMessagehandler();
     notificationOnMessageOpened();
     super.initState();
     Loadprefs().then((token) async {
+      print("TOKEN $token");
       if (token == '' || token == null) {
         Timer(
             Duration(seconds: 2),
             () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => WelcomeScreen(
-                      title: 'WelcomeScreen',
-                    ))));
+                builder: (BuildContext context) => WelcomeScreen())));
       } else {
         final prefs = await SharedPreferences.getInstance();
+        String yearlyExpiryDatestr =
+            prefs.getString("yearly_pkg_cancel_at") ?? '';
+        String montlyExpiryDatestr =
+            prefs.getString("four_month_pkg_cancel_at") ?? '';
+        DateTime? YearlyDate;
+        DateTime? monthlyDate;
+        bool isExpired = false;
+        if (yearlyExpiryDatestr != '' && yearlyExpiryDatestr != null) {
+          YearlyDate = DateTime.parse(yearlyExpiryDatestr);
+          isExpired = !YearlyDate.isAfter(DateTime.now());
+          print("YEAERLY EXPIRED $isExpired");
+        }
+        if (montlyExpiryDatestr != '' && montlyExpiryDatestr != null) {
+          monthlyDate = DateTime.parse(montlyExpiryDatestr);
 
-       bool ispremium = prefs.getString('isYearlyPkg') == '1'
-            ? true
-            : prefs.getString('isFourMonthPkg') == '1'
-            ? true
-            : false;
+          isExpired = !monthlyDate.isAfter(DateTime.now());
+          print("MONTHLY EXPIRED $isExpired");
+        }
+
+        ///TODO CHAIRMANS EXPIRY
+        bool ispremium =
+            (prefs.getString('isYearlyPkg') == '1') && isExpired == false
+                ? true
+                : prefs.getString('isFourMonthPkg') == '1' && isExpired == false
+                    ? true
+                    : false;
         print("ISPREMIUM FROM SHAREDPREF $ispremium");
         Timer(
             Duration(seconds: 2),
@@ -70,70 +78,73 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
   }
-  Future IoSNotifcationHandler() async {
+
+  Future ioSNotifcationHandler() async {
     if (Platform.isIOS) {
       FirebaseMessaging.instance.requestPermission();
-
     }
   }
-notificationOnMessagehandler(){
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    print("foreground handler${message.data}");
-    print(message);
-    if (notification != null && android != null) {
-      print('here !!!');
-      print('notification title: ${notification.title}');
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              enableVibration: true,
-              enableLights: true,
 
-              channelDescription: channel.description,
-              color: Colors.blue,
-              playSound: true,
-              icon: '@mipmap/ic_launcher',
-            ),
-          ));
-    } else {
-      print('inside else');
-    }
-  });
-
-}
-notificationOnMessageOpened(){
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //AwesomeNotifications().cancelAll();
-    print("onmesage open handler${message.data}");
-    print(message);
-    print('A new onMessageOpenedApp event was published!');
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
-      showDialog(
-          context: context,
-          builder: (_) {
-            return AlertDialog(
-              title: Text(notification.title.toString()),
-              content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text(notification.body.toString())],
-                ),
+  notificationOnMessagehandler() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      print("foreground handler${message.data}");
+      print(message);
+      if (notification != null && android != null) {
+        print('here !!!');
+        print('notification title: ${notification.title}');
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title.toString(),
+            notification.body.toString(),
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id.toString(),
+                channel.name.toString(),
+                enableVibration: true,
+                enableLights: true,
+                importance: Importance.max,
+                priority: Priority.max,
+                channelDescription: channel.description,
+                playSound: true,
+                color: Color(0xff009E61),
+                icon: '@drawable/ic_notification_icon',
               ),
-            );
-          });
-    }
-  });
+            ));
+        Navigator.of(navigatorKey.currentState!.context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (BuildContext context) => HomeScreen(
+                      title: 'token',
+                      ispremiumUser: true,
+                    )),
+            (route) => false);
+      } else {
+        print('inside else');
+      }
+    });
+  }
 
-}
+  notificationOnMessageOpened() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      //AwesomeNotifications().cancelAll();
+      print("onmesage open handler${message.data}");
+      print(message);
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        Navigator.of(navigatorKey.currentState!.context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (BuildContext context) => HomeScreen(
+                      title: 'token',
+                      ispremiumUser: true,
+                    )),
+            (route) => false);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,8 +185,8 @@ notificationOnMessageOpened(){
               //   ),
               // ),
               child: SvgPicture.asset(
-                "assets/images/splashLogo.svg",
-                color: Colors.white,
+                "assets/images/welcomelogo.svg",
+                //  color: Colors.white,
               ))
         ],
       ),

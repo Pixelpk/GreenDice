@@ -43,6 +43,7 @@ class Data {
   }
 }
 
+
 class User {
   int? id;
   int? roleId;
@@ -59,22 +60,34 @@ class User {
   int? isYearlyPkg;
   int? isFourMonthPkg;
   int? isChairman;
-
+  String? yearlyPkgSubId;
+  String? fourMonthPkgSubId;
+  String? chairmanPkgSubId;
+  String? yearlyPkgCancelAt;
+  String? fourMonthPkgCancelAt;
+  String? chairmanPkgCancelAt;
   User(
       {this.id,
-        this.roleId,
-        this.firstName,
-        this.lastName,
-        this.email,
-        this.phone,
-        this.emailVerifiedAt,
-        this.photo,
-        this.status,
-        this.verificationCode,
-        this.createdAt,   this.isYearlyPkg,
-        this.isFourMonthPkg,
-        this.isChairman,
-        this.updatedAt});
+      this.roleId,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.phone,
+      this.emailVerifiedAt,
+      this.photo,
+      this.status,
+      this.verificationCode,
+      this.createdAt,
+      this.isYearlyPkg,
+      this.isFourMonthPkg,
+      this.yearlyPkgSubId,
+      this.fourMonthPkgSubId,
+      this.chairmanPkgSubId,
+      this.yearlyPkgCancelAt,
+      this.fourMonthPkgCancelAt,
+      this.chairmanPkgCancelAt,
+      this.isChairman,
+      this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -92,7 +105,12 @@ class User {
     isFourMonthPkg = json['is_four_month_pkg'];
     isChairman = json['is_chairman'];
     updatedAt = json['updated_at'];
-
+    yearlyPkgSubId = json['yearly_pkg_sub_id'] ?? '';
+    fourMonthPkgSubId = json['four_month_pkg_sub_id'] ?? '';
+    chairmanPkgSubId = json['chairman_pkg_sub_id'] ?? '';
+    yearlyPkgCancelAt = json['yearly_pkg_cancel_at'] ?? '';
+    fourMonthPkgCancelAt = json['four_month_pkg_cancel_at'] ?? '';
+    chairmanPkgCancelAt = json['chairman_pkg_cancel_at'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -112,7 +130,12 @@ class User {
     data['is_yearly_pkg'] = this.isYearlyPkg;
     data['is_four_month_pkg'] = this.isFourMonthPkg;
     data['is_chairman'] = this.isChairman;
-
+    data['yearly_pkg_sub_id'] = this.yearlyPkgSubId;
+    data['four_month_pkg_sub_id'] = this.fourMonthPkgSubId;
+    data['chairman_pkg_sub_id'] = this.chairmanPkgSubId;
+    data['yearly_pkg_cancel_at'] = this.yearlyPkgCancelAt;
+    data['four_month_pkg_cancel_at'] = this.fourMonthPkgCancelAt;
+    data['chairman_pkg_cancel_at'] = this.chairmanPkgCancelAt;
     return data;
   }
 }
